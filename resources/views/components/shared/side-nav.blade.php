@@ -36,21 +36,21 @@
                         <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
                             <!-- User stat item -->
                             <div>
-                                <h6 class="mb-0">256</h6>
-                                <small>Post</small>
+                                <h6 class="mb-0">{{$user->posts->count()}}</h6>
+                                <small>Posts</small>
                             </div>
                             <!-- Divider -->
                             <div class="vr"></div>
                             <!-- User stat item -->
                             <div>
-                                <h6 class="mb-0">2.5K</h6>
+                                <h6 class="mb-0">{{$user->followers->count()}}</h6>
                                 <small>Followers</small>
                             </div>
                             <!-- Divider -->
                             <div class="vr"></div>
                             <!-- User stat item -->
                             <div>
-                                <h6 class="mb-0">365</h6>
+                                <h6 class="mb-0">{{$user->followings->count()}}</h6>
                                 <small>Following</small>
                             </div>
                         </div>
