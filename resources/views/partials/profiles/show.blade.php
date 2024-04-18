@@ -25,7 +25,6 @@
                                     <h1 class="mb-0 h5">{{ $profile->name }}
                                         <i class="bi bi-patch-check-fill text-success small"></i>
                                     </h1>
-                                    <p>250 connections</p>
                                 </div>
                                 <!-- Button -->
                                 <div class="d-flex mt-3 justify-content-center ms-sm-auto">
@@ -61,8 +60,9 @@
                                 <li class="nav-item"><a class="nav-link  profile-link" href="#about-tab"> About </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link profile-link" href="#connections-tab"> Connections
-                                        <span class="badge bg-success bg-opacity-10 text-success small"> 230</span> </a>
+                                    <a class="nav-link profile-link" href="#followers-tab"> Following
+                                        <span class="badge bg-success bg-opacity-10 text-success small"> {{$profile->followings->count()}}</span>
+                                    </a>
                                 </li>
                                 <li class="nav-item"><a class="nav-link  profile-link" href="#media-tab">
                                         Media</a></li>
@@ -188,7 +188,8 @@
                                         <div class="d-flex align-items-center rounded border px-3 py-2">
                                             <!-- Date -->
                                             <p class="mb-0">
-                                                <i class="bi bi-calendar-date fa-fw me-2"></i> Born: <strong> {{ \Carbon\Carbon::parse($profile->date_of_birth)->format('jS \\o\\f F, Y') }} </strong>
+                                                <i class="bi bi-calendar-date fa-fw me-2"></i> Born:
+                                                <strong> {{ \Carbon\Carbon::parse($profile->date_of_birth)->format('jS \\o\\f F, Y') }} </strong>
                                             </p>
                                             <div class="dropdown ms-auto">
                                                 <!-- Card share action menu -->
@@ -211,7 +212,8 @@
                                         <div class="d-flex align-items-center rounded border px-3 py-2">
                                             <!-- Date -->
                                             <p class="mb-0">
-                                                <i class="bi bi-heart fa-fw me-2"></i> Status: <strong> {{ $profile->relationship->name }} </strong>
+                                                <i class="bi bi-heart fa-fw me-2"></i> Status:
+                                                <strong> {{ $profile->relationship->name }} </strong>
                                             </p>
                                             <div class="dropdown ms-auto">
                                                 <!-- Card share action menu -->
@@ -234,7 +236,8 @@
                                         <div class="d-flex align-items-center rounded border px-3 py-2">
                                             <!-- Date -->
                                             <p class="mb-0">
-                                                <i class="bi bi-briefcase fa-fw me-2"></i> <strong> {{ $profile->role . ' at ' . $profile->company }} </strong>
+                                                <i class="bi bi-briefcase fa-fw me-2"></i>
+                                                <strong> {{ $profile->role . ' at ' . $profile->company }} </strong>
                                             </p>
                                             <div class="dropdown ms-auto">
                                                 <!-- Card share action menu -->
@@ -257,7 +260,8 @@
                                         <div class="d-flex align-items-center rounded border px-3 py-2">
                                             <!-- Date -->
                                             <p class="mb-0">
-                                                <i class="bi bi-telephone fa-fw me-2"></i> Phone Number: <strong> {{ $profile->number }} </strong>
+                                                <i class="bi bi-telephone fa-fw me-2"></i> Phone Number:
+                                                <strong> {{ $profile->number }} </strong>
                                             </p>
                                             <div class="dropdown ms-auto">
                                                 <!-- Card share action menu -->
@@ -280,7 +284,8 @@
                                         <div class="d-flex align-items-center rounded border px-3 py-2">
                                             <!-- Date -->
                                             <p class="mb-0">
-                                                <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on: <strong> {{ $profile->created_at->format('jS \\o\\f F, Y') }} </strong>
+                                                <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on:
+                                                <strong> {{ $profile->created_at->format('jS \\o\\f F, Y') }} </strong>
                                             </p>
                                             <div class="dropdown ms-auto">
                                                 <!-- Card share action menu -->
@@ -304,7 +309,7 @@
                                             <!-- Date -->
                                             <p class="mb-0">
                                                 <i class="bi bi-envelope fa-fw me-2"></i> Email: <strong>
-                                                {{ $profile->email }} </strong>
+                                                    {{ $profile->email }} </strong>
                                             </p>
                                             <div class="dropdown ms-auto">
                                                 <!-- Card share action menu -->
@@ -413,195 +418,53 @@
                         <!-- Card body END -->
                     </div>
 
-                    <!-- Card Connections START -->
-                    <div class="profile-section" id="connections-tab"  style="display: none">
+                    <!-- Card Followers START -->
+                    <div class="profile-section" id="followers-tab" style="display: none">
                         <div class="card my-4">
                             <!-- Card header START -->
                             <div class="card-header border-0 pb-0">
-                                <h5 class="card-title"> Connections</h5>
+                                <h5 class="card-title"> Following ({{$profile->followings->count()}})</h5>
                             </div>
                             <!-- Card header END -->
                             <!-- Card body START -->
                             <div class="card-body">
-                                <!-- Connections Item -->
-                                <div class="d-md-flex align-items-center mb-4">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3 mb-3 mb-md-0">
-                                        <a href="#!">
-                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div class="w-100">
-                                        <div class="d-sm-flex align-items-start">
-                                            <h6 class="mb-0"><a href="#!">Lori Ferguson </a></h6>
-                                            <p class="small ms-sm-2 mb-0">Full Stack Web Developer</p>
-                                        </div>
-                                        <!-- Connections START -->
-                                        <ul class="avatar-group mt-1 list-unstyled align-items-sm-center">
-                                            <li class="avatar avatar-xxs">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-xxs">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/02.jpg" alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-xxs">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-xxs">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-xxs">
-                                                <div class="avatar-img rounded-circle bg-primary">
-                                                    <span class="smaller text-white position-absolute top-50 start-50 translate-middle">+2</span>
-                                                </div>
-                                            </li>
-                                            <li class="small ms-3">
-                                                Carolyn Ortiz, Frances Guerrero, and 20 other shared connections
-                                            </li>
-                                        </ul>
-                                        <!-- Connections END -->
-                                    </div>
-                                    <!-- Button -->
-                                    <div class="ms-md-auto d-flex">
-                                        <button class="btn btn-danger-soft btn-sm mb-0 me-2"> Remove</button>
-                                        <button class="btn btn-primary-soft btn-sm mb-0"> Message</button>
-                                    </div>
-                                </div>
+                                @foreach($profile->followings as $following)
+                                    <x-profile.following-card-row :user="$following" :profile="$profile" :self="$user"/>
+                                @endforeach
 
-                                <!-- Connections Item -->
-                                <div class="d-md-flex align-items-center mb-4">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3 mb-3 mb-md-0">
-                                        <a href="#!">
-                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/02.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div class="w-100">
-                                        <div class="d-sm-flex align-items-start">
-                                            <h6 class="mb-0"><a href="#!">Carolyn Ortiz </a></h6>
-                                            <p class="small ms-sm-2 mb-0">Web Developer | Freelancer</p>
-                                        </div>
-                                        <!-- Connections START -->
-                                        <ul class="avatar-group mt-1 list-unstyled align-items-sm-center">
-                                            <li class="avatar avatar-xxs">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-xxs">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/06.jpg" alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-xxs">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/07.jpg" alt="avatar">
-                                            </li>
-                                            <li class="avatar avatar-xxs">
-                                                <div class="avatar-img rounded-circle bg-primary">
-                                                    <span class="smaller text-white position-absolute top-50 start-50 translate-middle">+5</span>
-                                                </div>
-                                            </li>
-                                            <li class="small ms-3">
-                                                Amanda Reed, Lori Stevens, and 10 other shared connections
-                                            </li>
-                                        </ul>
-                                        <!-- Connections END -->
-                                    </div>
-                                    <!-- Button -->
-                                    <div class="ms-md-auto d-flex">
-                                        <button class="btn btn-danger-soft btn-sm mb-0 me-2"> Remove</button>
-                                        <button class="btn btn-primary-soft btn-sm mb-0"> Message</button>
-                                    </div>
-                                </div>
-
-                                <!-- Connections Item -->
-                                <div class="d-md-flex align-items-center mb-4">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3 mb-3 mb-md-0">
-                                        <a href="#!">
-                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div class="w-100">
-                                        <div class="d-sm-flex align-items-start">
-                                            <h6 class="mb-0"><a href="#!">Lori Ferguson </a></h6>
-                                            <p class="small ms-sm-2 mb-0">Full Stack Web Developer</p>
-                                        </div>
-                                        <!-- Connections START -->
-                                        <ul class="avatar-group mt-1 list-unstyled align-items-sm-center">
-                                            <li class="small">
-                                                Joan Wallace and Larry Lawson shared connections
-                                            </li>
-                                        </ul>
-                                        <!-- Connections END -->
-                                    </div>
-                                    <!-- Button -->
-                                    <div class="ms-md-auto d-flex">
-                                        <button class="btn btn-danger-soft btn-sm mb-0 me-2"> Remove</button>
-                                        <button class="btn btn-primary-soft btn-sm mb-0"> Message</button>
-                                    </div>
-                                </div>
-
-                                <!-- Connections Item -->
-                                <div class="d-md-flex align-items-center mb-4">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3 mb-3 mb-md-0">
-                                        <a href="#!">
-                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div class="w-100">
-                                        <div class="d-sm-flex align-items-start">
-                                            <h6 class="mb-0"><a href="#!">Lori Ferguson </a></h6>
-                                            <p class="small ms-sm-2 mb-0">Full Stack Web Developer</p>
-                                        </div>
-                                        <!-- Connections START -->
-                                        <ul class="avatar-group mt-1 list-unstyled align-items-sm-center">
-                                            <li class="small">
-                                                Samuel Bishop, Judy Nguyen, and 115 other shared connections
-                                            </li>
-                                        </ul>
-                                        <!-- Connections END -->
-                                    </div>
-                                    <!-- Button -->
-                                    <div class="ms-md-auto d-flex">
-                                        <button class="btn btn-danger-soft btn-sm mb-0 me-2"> Remove</button>
-                                        <button class="btn btn-primary-soft btn-sm mb-0"> Message</button>
-                                    </div>
-                                </div>
-
-                                <!-- Connections Item -->
-                                <div class="d-md-flex align-items-center mb-4">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3 mb-3 mb-md-0">
-                                        <a href="#!">
-                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div class="w-100">
-                                        <div class="d-sm-flex align-items-start">
-                                            <h6 class="mb-0"><a href="#!">Lori Ferguson </a></h6>
-                                            <p class="small ms-sm-2 mb-0">Full Stack Web Developer</p>
-                                        </div>
-                                        <!-- Connections START -->
-                                        <ul class="avatar-group mt-1 list-unstyled align-items-sm-center">
-                                            <li class="small">
-                                                Bryan Knight and Billy Vasquez shared connections
-                                            </li>
-                                        </ul>
-                                        <!-- Connections END -->
-                                    </div>
-                                    <!-- Button -->
-                                    <div class="ms-md-auto d-flex">
-                                        <button class="btn btn-danger-soft btn-sm mb-0 me-2"> Remove</button>
-                                        <button class="btn btn-primary-soft btn-sm mb-0"> Message</button>
-                                    </div>
-                                </div>
                                 <div class="d-grid">
                                     <!-- Load more button START -->
                                     <a href="#!" role="button" class="btn btn-sm btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
-                                        <span class="load-text"> Load more connections </span>
+                                        <span class="load-text"> Load more followers </span>
+                                        <div class="load-icon">
+                                            <div class="spinner-grow spinner-grow-sm" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- Load more button END -->
+                                </div>
+
+                            </div>
+                            <!-- Card body END -->
+                        </div>
+
+                        <div class="card my-4">
+                            <!-- Card header START -->
+                            <div class="card-header border-0 pb-0">
+                                <h5 class="card-title"> Followers ({{$profile->followers->count()}})</h5>
+                            </div>
+                            <!-- Card header END -->
+                            <!-- Card body START -->
+                            <div class="card-body">
+                                @foreach($profile->followers as $follower)
+                                    <x-profile.following-card-row :user="$follower" :profile="$profile" :self="$user"/>
+                                @endforeach
+
+                                <div class="d-grid">
+                                    <!-- Load more button START -->
+                                    <a href="#!" role="button" class="btn btn-sm btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
+                                        <span class="load-text"> Load more followers </span>
                                         <div class="load-icon">
                                             <div class="spinner-grow spinner-grow-sm" role="status">
                                                 <span class="visually-hidden">Loading...</span>
@@ -615,7 +478,8 @@
                             <!-- Card body END -->
                         </div>
                     </div>
-                    <!-- Card Connections END -->
+                    <!-- Card Followers END -->
+
 
                     <div class="profile-section" id="media-tab" style="display: none">
                         <!-- media START -->
@@ -1623,83 +1487,85 @@
                         <!-- media END -->
                     </div>
 
-                <div class="profile-section" id="events-tab" style="display: none">
-                    <!-- Events START -->
-                    <div class="card">
-                        <!-- Card header START -->
-                        <div class="card-header d-sm-flex align-items-center justify-content-between border-0 pb-0">
-                            <h5 class="card-title mb-sm-0">Discover Events</h5>
-                            <!-- Button modal -->
-                            <a class="btn btn-primary-soft btn-sm" href="#"> <i class="fa-solid fa-plus pe-1"></i>
-                                Create events</a>
-                        </div>
-                        <!-- Card header END -->
-                        <!-- Card body START -->
-                        <div class="card-body">
-                            <!-- Upcoming event START -->
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Upcoming event:</strong> The learning conference on Sep 19 2022
-                                <a href="events.html" class="btn btn-xs btn-success ms-md-4">View event</a>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="profile-section" id="events-tab" style="display: none">
+                        <!-- Events START -->
+                        <div class="card">
+                            <!-- Card header START -->
+                            <div class="card-header d-sm-flex align-items-center justify-content-between border-0 pb-0">
+                                <h5 class="card-title mb-sm-0">Discover Events</h5>
+                                <!-- Button modal -->
+                                <a class="btn btn-primary-soft btn-sm" href="#"> <i class="fa-solid fa-plus pe-1"></i>
+                                    Create events</a>
                             </div>
-                            <!-- Upcoming event END -->
-                            <!-- Events list START -->
-                            <div class="row">
-                                <div class="d-sm-flex align-items-center">
-                                    <!-- Avatar -->
-                                    <div class="avatar avatar-xl">
-                                        <a href="#!"><img class="avatar-img rounded border border-white border-3" src="assets/images/events/01.jpg" alt=""></a>
-                                    </div>
-                                    <div class="ms-sm-4 mt-2 mt-sm-0">
-                                        <!-- Info -->
-                                        <h5 class="mb-1"><a href="event-details.html"> Comedy on the green </a></h5>
-                                        <ul class="nav nav-stack small">
-                                            <li class="nav-item">
-                                                <i class="bi bi-calendar-check pe-1"></i> Mon, Sep 25, 2020 at 9:30 AM
-                                            </li>
-                                            <li class="nav-item">
-                                                <i class="bi bi-geo-alt pe-1"></i> San francisco
-                                            </li>
-                                            <li class="nav-item">
-                                                <i class="bi bi-people pe-1"></i> 77 going
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!-- Button -->
-                                    <div class="d-flex mt-3 ms-auto">
-                                        <div class="dropdown">
-                                            <!-- Card share action menu -->
-                                            <button class="icon-md btn btn-secondary-soft" type="button" id="profileAction" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
-                                            <!-- Card share action dropdown menu -->
-                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileAction">
-                                                <li><a class="dropdown-item" href="#">
-                                                        <i class="bi bi-bookmark fa-fw pe-2"></i>Share profile in a
-                                                        message</a></li>
-                                                <li><a class="dropdown-item" href="#">
-                                                        <i class="bi bi-file-earmark-pdf fa-fw pe-2"></i>Save your
-                                                        profile to PDF</a></li>
-                                                <li><a class="dropdown-item" href="#">
-                                                        <i class="bi bi-lock fa-fw pe-2"></i>Lock profile</a></li>
-                                                <li>
-                                                    <hr class="dropdown-divider">
+                            <!-- Card header END -->
+                            <!-- Card body START -->
+                            <div class="card-body">
+                                <!-- Upcoming event START -->
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Upcoming event:</strong> The learning conference on Sep 19 2022
+                                    <a href="events.html" class="btn btn-xs btn-success ms-md-4">View event</a>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <!-- Upcoming event END -->
+                                <!-- Events list START -->
+                                <div class="row">
+                                    <div class="d-sm-flex align-items-center">
+                                        <!-- Avatar -->
+                                        <div class="avatar avatar-xl">
+                                            <a href="#!"><img class="avatar-img rounded border border-white border-3" src="assets/images/events/01.jpg" alt=""></a>
+                                        </div>
+                                        <div class="ms-sm-4 mt-2 mt-sm-0">
+                                            <!-- Info -->
+                                            <h5 class="mb-1"><a href="event-details.html"> Comedy on the green </a></h5>
+                                            <ul class="nav nav-stack small">
+                                                <li class="nav-item">
+                                                    <i class="bi bi-calendar-check pe-1"></i> Mon, Sep 25, 2020 at 9:30
+                                                    AM
                                                 </li>
-                                                <li><a class="dropdown-item" href="#">
-                                                        <i class="bi bi-gear fa-fw pe-2"></i>Profile settings</a></li>
+                                                <li class="nav-item">
+                                                    <i class="bi bi-geo-alt pe-1"></i> San francisco
+                                                </li>
+                                                <li class="nav-item">
+                                                    <i class="bi bi-people pe-1"></i> 77 going
+                                                </li>
                                             </ul>
+                                        </div>
+                                        <!-- Button -->
+                                        <div class="d-flex mt-3 ms-auto">
+                                            <div class="dropdown">
+                                                <!-- Card share action menu -->
+                                                <button class="icon-md btn btn-secondary-soft" type="button" id="profileAction" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-three-dots"></i>
+                                                </button>
+                                                <!-- Card share action dropdown menu -->
+                                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileAction">
+                                                    <li><a class="dropdown-item" href="#">
+                                                            <i class="bi bi-bookmark fa-fw pe-2"></i>Share profile in a
+                                                            message</a></li>
+                                                    <li><a class="dropdown-item" href="#">
+                                                            <i class="bi bi-file-earmark-pdf fa-fw pe-2"></i>Save your
+                                                            profile to PDF</a></li>
+                                                    <li><a class="dropdown-item" href="#">
+                                                            <i class="bi bi-lock fa-fw pe-2"></i>Lock profile</a></li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#">
+                                                            <i class="bi bi-gear fa-fw pe-2"></i>Profile settings</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Events list END -->
                             </div>
-                            <!-- Events list END -->
+                            <!-- Card body END -->
                         </div>
-                        <!-- Card body END -->
+                        <!-- Events END -->
+
+
                     </div>
-                    <!-- Events END -->
-
-
-                </div>
                     <div class="profile-section" id="activity-tab" style="display: none">
                         <!-- Activity feed START -->
                         <div class="card">
@@ -1850,7 +1716,7 @@
                         </div>
                         <!-- Activity feed END -->
                     </div>
-            </div>
+                </div>
             </div>
             <!-- Main content END -->
 
@@ -2023,102 +1889,19 @@
                         <div class="card">
                             <!-- Card header START -->
                             <div class="card-header d-sm-flex justify-content-between align-items-center border-0">
-                                <h5 class="card-title">Friends <span class="badge bg-danger bg-opacity-10 text-danger">230</span>
+                                <h5 class="card-title">Following
+                                    <span class="badge bg-success bg-opacity-10 text-success">{{$profile->followings->count()}}</span>
                                 </h5>
-                                <a class="btn btn-primary-soft btn-sm" href="#!"> See all friends</a>
+                                <a class="btn btn-primary-soft btn-sm" href="#followers-tab"> See all follows</a>
                             </div>
                             <!-- Card header END -->
                             <!-- Card body START -->
                             <div class="card-body position-relative pt-0">
                                 <div class="row g-3">
 
-                                    <div class="col-6">
-                                        <!-- Friends item START -->
-                                        <div class="card shadow-none text-center h-100">
-                                            <!-- Card body -->
-                                            <div class="card-body p-2 pb-0">
-                                                <div class="avatar avatar-story avatar-xl">
-                                                    <a href="#!"><img class="avatar-img rounded-circle" src="{{asset('assets/images/avatar/02.jpg')}}" alt=""></a>
-                                                </div>
-                                                <h6 class="card-title mb-1 mt-3"><a href="#!"> Amanda Reed </a></h6>
-                                                <p class="mb-0 small lh-sm">16 mutual connections</p>
-                                            </div>
-                                            <!-- Card footer -->
-                                            <div class="card-footer p-2 border-0">
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message">
-                                                    <i class="bi bi-chat-left-text"></i></button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove friend">
-                                                    <i class="bi bi-person-x"></i></button>
-                                            </div>
-                                        </div>
-                                        <!-- Friends item END -->
-                                    </div>
-
-                                    <div class="col-6">
-                                        <!-- Friends item START -->
-                                        <div class="card shadow-none text-center h-100">
-                                            <!-- Card body -->
-                                            <div class="card-body p-2 pb-0">
-                                                <div class="avatar avatar-xl">
-                                                    <a href="#!"><img class="avatar-img rounded-circle" src="{{asset('assets/images/avatar/03.jpg')}}" alt=""></a>
-                                                </div>
-                                                <h6 class="card-title mb-1 mt-3"><a href="#!"> Samuel Bishop </a></h6>
-                                                <p class="mb-0 small lh-sm">22 mutual connections</p>
-                                            </div>
-                                            <!-- Card footer -->
-                                            <div class="card-footer p-2 border-0">
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message">
-                                                    <i class="bi bi-chat-left-text"></i></button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove friend">
-                                                    <i class="bi bi-person-x"></i></button>
-                                            </div>
-                                        </div>
-                                        <!-- Friends item END -->
-                                    </div>
-
-                                    <div class="col-6">
-                                        <!-- Friends item START -->
-                                        <div class="card shadow-none text-center h-100">
-                                            <!-- Card body -->
-                                            <div class="card-body p-2 pb-0">
-                                                <div class="avatar avatar-xl">
-                                                    <a href="#!"><img class="avatar-img rounded-circle" src="{{asset('assets/images/avatar/04.jpg')}}" alt=""></a>
-                                                </div>
-                                                <h6 class="card-title mb-1 mt-3"><a href="#"> Bryan Knight </a></h6>
-                                                <p class="mb-0 small lh-sm">1 mutual connection</p>
-                                            </div>
-                                            <!-- Card footer -->
-                                            <div class="card-footer p-2 border-0">
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message">
-                                                    <i class="bi bi-chat-left-text"></i></button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove friend">
-                                                    <i class="bi bi-person-x"></i></button>
-                                            </div>
-                                        </div>
-                                        <!-- Friends item END -->
-                                    </div>
-
-                                    <div class="col-6">
-                                        <!-- Friends item START -->
-                                        <div class="card shadow-none text-center h-100">
-                                            <!-- Card body -->
-                                            <div class="card-body p-2 pb-0">
-                                                <div class="avatar avatar-xl">
-                                                    <a href="#!"><img class="avatar-img rounded-circle" src="{{asset('assets/images/avatar/05.jpg')}}" alt=""></a>
-                                                </div>
-                                                <h6 class="card-title mb-1 mt-3"><a href="#!"> Amanda Reed </a></h6>
-                                                <p class="mb-0 small lh-sm">15 mutual connections</p>
-                                            </div>
-                                            <!-- Card footer -->
-                                            <div class="card-footer p-2 border-0">
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message">
-                                                    <i class="bi bi-chat-left-text"></i></button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove friend">
-                                                    <i class="bi bi-person-x"></i></button>
-                                            </div>
-                                        </div>
-                                        <!-- Friends item END -->
-                                    </div>
+                                    @foreach($profile->followings->slice(0, 4) as $following)
+                                        <x-profile.following-card :user="$following" :profile="$profile" :self="$user" />
+                                    @endforeach
 
                                 </div>
                             </div>

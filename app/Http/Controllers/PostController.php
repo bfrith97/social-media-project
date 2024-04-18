@@ -14,7 +14,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('user')->orderByDesc('created_at')->get();
+        $posts = Post::with('user', 'comments', 'comments.user', 'comments.likes', 'likes')->orderByDesc('created_at')->get();
+
         $usersToFollow = User::inRandomOrder()->take(5)->get();
 
         return view('posts.index')->with([

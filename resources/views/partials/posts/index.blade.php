@@ -91,7 +91,7 @@ Header END -->
                 <!-- Share feed END -->
 
                 @foreach($posts as $post)
-                    <x-posts.post-card :post="$post"/>
+                    <x-posts.post-card :post="$post" />
                 @endforeach
 
                 <!-- Load more button START -->

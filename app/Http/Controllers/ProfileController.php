@@ -27,6 +27,8 @@ class ProfileController extends Controller
     {
         $profile = User::with([
             'relationship',
+            'followings',
+            'followers',
             'posts' => fn ($query) => $query->orderBy('created_at', 'desc'),
         ])->find($id);
 
