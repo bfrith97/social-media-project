@@ -220,7 +220,7 @@
               <div class="hstack gap-2 mb-3">
                 <!-- Avatar -->
                 <div class="avatar">
-                  <a href="#"> <img class="avatar-img rounded-circle" src="assets/images/avatar/11.jpg" alt=""> </a>
+                  <a href="#"> <img class="avatar-img rounded-circle" src="" alt=""> </a>
                 </div>
                 <!-- Title -->
                 <div class="overflow-hidden">

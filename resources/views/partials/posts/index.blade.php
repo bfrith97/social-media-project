@@ -1,5 +1,4 @@
 <body>
-
 <!-- =======================
 Header START -->
 
@@ -8,7 +7,6 @@ Header END -->
 
 <!-- **************** MAIN CONTENT START **************** -->
 <main>
-
     <!-- Container START -->
     <div class="container">
         <div class="row g-4">
@@ -43,7 +41,7 @@ Header END -->
                         <!-- Avatar -->
                         <div class="avatar avatar-xs me-2">
                             <a href="#">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt=""> </a>
+                                <img class="avatar-img rounded-circle" src="{{ asset($user->picture) }}" alt=""> </a>
                         </div>
                         <!-- Post input -->
                         <form class="w-100">
@@ -91,7 +89,7 @@ Header END -->
                 <!-- Share feed END -->
 
                 @foreach($posts as $post)
-                    <x-posts.post-card :post="$post" />
+                    <x-posts.post-card :post="$post" :user="$user"/>
                 @endforeach
 
                 <!-- Load more button START -->
@@ -126,7 +124,7 @@ Header END -->
                                     <div class="hstack gap-2 mb-3">
                                         <!-- Avatar -->
                                         <div class="avatar">
-                                            <a href="{{ route('profiles.show', $userToFollow->id) }}"><img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt=""></a>
+                                            <a href="{{ route('profiles.show', $userToFollow->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($userToFollow->picture) }}" alt=""></a>
                                         </div>
                                         <!-- Title -->
                                         <div class="overflow-hidden">
@@ -163,25 +161,29 @@ Header END -->
                             <div class="card-body">
                                 <!-- News item -->
                                 <div class="mb-3">
-                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Ten questions you should answer
+                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Ten questions you should
+                                            answer
                                             truthfully</a></h6>
                                     <small>2hr</small>
                                 </div>
                                 <!-- News item -->
                                 <div class="mb-3">
-                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Five unbelievable facts about money</a>
+                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Five unbelievable facts about
+                                            money</a>
                                     </h6>
                                     <small>3hr</small>
                                 </div>
                                 <!-- News item -->
                                 <div class="mb-3">
-                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Best Pinterest Boards for learning
+                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Best Pinterest Boards for
+                                            learning
                                             about business</a></h6>
                                     <small>4hr</small>
                                 </div>
                                 <!-- News item -->
                                 <div class="mb-3">
-                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Skills that you can learn from
+                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Skills that you can learn
+                                            from
                                             business</a></h6>
                                     <small>6hr</small>
                                 </div>
@@ -1097,3 +1099,5 @@ Header END -->
         </div>
     </div>
 </div>
+
+<script src="{{ asset('js/posts/comment.js') }}"></script>

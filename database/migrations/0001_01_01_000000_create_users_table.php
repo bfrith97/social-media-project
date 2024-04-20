@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('company')->nullable();
             $table->string('info')->nullable();
             $table->string('email')->unique();
+            $table->text('picture')->nullable();
             $table->unsignedBigInteger('number')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->foreignId('relationship_id')->nullable()->constrained('relationships')->onDelete('set null');

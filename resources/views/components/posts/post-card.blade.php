@@ -7,13 +7,14 @@
                 <!-- Avatar -->
                 <div class="avatar avatar-story me-2">
                     <a href="#!">
-                        <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                        <img class="avatar-img rounded-circle" src="{{ asset($post->user->picture) }}" alt="">
                     </a>
                 </div>
                 <!-- Info -->
                 <div>
                     <div class="nav nav-divider">
-                        <h6 class="nav-item card-title mb-0"><a href="{{ route('profiles.show', $post->user->id) }}"> {{ $post->user->name }} </a></h6>
+                        <h6 class="nav-item card-title mb-0">
+                            <a href="{{ route('profiles.show', $post->user->id) }}"> {{ $post->user->name }} </a></h6>
                         <span class="nav-item small"> {{ Carbon\Carbon::parse($post->created_at)->timezone('Europe/London')->diffForHumans() }} </span>
                     </div>
                     <p class="mb-0 small">{{ $post->user->role . ' at ' . $post->user-> company }}</p>
@@ -54,9 +55,8 @@
                 <a class="nav-link active" href="#!" @if(count($post->likes)) data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title=" @foreach($post->likes as $user) {{$user->name}}<br> @endforeach "@endif>
                     <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked {{ $post->likes->count() }}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#!"> <i class="bi bi-chat-fill pe-1"></i>Comments ({{$post->comments->count()}})</a>
-            </li>
+                <span class="comment-count"> <i class="bi bi-chat-fill pe-1"></i>Comments
+                    ({{$post->comments->count()}})</span>
             <!-- Card share action START -->
             <li class="nav-item dropdown ms-sm-auto">
                 <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
@@ -88,21 +88,26 @@
             <!-- Avatar -->
             <div class="avatar avatar-xs me-2">
                 <a href="#!">
-                    <img class="avatar-img rounded-circle" src="assets/images/avatar/12.jpg" alt="">
+                    <img class="avatar-img rounded-circle" src="{{ asset($user->picture) }}" alt="">
                 </a>
             </div>
             <!-- Comment box  -->
-            <form class="nav nav-item w-100 position-relative">
-                <textarea data-autoresize class="form-control pe-5 bg-light" rows="1" placeholder="Add a comment..."></textarea>
-                <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0" type="submit">
+            <form class="nav nav-item w-100 position-relative comment-form" action="{{ route('comments.store') }}" method="post">
+                @csrf
+                <input type="hidden" id="post_id" name="post_id" value="{{$post->id}}"/>
+                <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}"/>
+                <input type="text" class="form-control pe-5 bg-light" placeholder="Add a comment..." id="content" name="content">
+                <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0 comment-submit-btn" type="submit">
                     <i class="bi bi-send-fill"> </i>
                 </button>
             </form>
         </div>
 
-        @foreach($post->comments->slice(0,6) as $comment)
-            <x-posts.post-comment :comment="$comment" />
-        @endforeach
+        <ul class="comment-wrap list-unstyled">
+            @foreach($post->comments as $comment)
+                <x-posts.post-comment :comment="$comment"/>
+            @endforeach
+        </ul>
     </div>
     <!-- Card body END -->
     <!-- Card footer START -->
@@ -120,3 +125,5 @@
     <!-- Card footer END -->
 </div>
 <!-- Card feed item END -->
+
+

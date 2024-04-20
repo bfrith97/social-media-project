@@ -25,6 +25,7 @@ class User extends Authenticatable
         'company',
         'info',
         'email',
+        'picture',
         'number',
         'date_of_birth',
         'relationship_id',

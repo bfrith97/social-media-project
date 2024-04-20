@@ -3,7 +3,7 @@
     <!-- Avatar -->
     <div class="avatar me-3 mb-3 mb-md-0">
         <a href="{{ route('profiles.show', $user->id) }}">
-            <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
+            <img class="avatar-img rounded-circle" src="{{ asset($user->picture) }}" alt="">
         </a>
     </div>
     <!-- Info -->

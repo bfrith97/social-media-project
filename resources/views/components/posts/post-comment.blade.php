@@ -1,11 +1,9 @@
-<!-- Comment wrap START -->
-<ul class="comment-wrap list-unstyled">
     <!-- Comment item START -->
     <li class="comment-item">
         <div class="d-flex position-relative">
             <!-- Avatar -->
             <div class="avatar avatar-xs">
-                <a href="{{ route('profiles.show', $comment->user->id) }}"><img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt=""></a>
+                <a href="{{ route('profiles.show', $comment->user->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($comment->user->picture) }}" alt=""></a>
             </div>
             <div class="ms-2">
                 <!-- Comment by -->
@@ -27,5 +25,3 @@
         <!-- Load more replies -->
     </li>
     <!-- Comment item END -->
-</ul>
-<!-- Comment wrap END -->

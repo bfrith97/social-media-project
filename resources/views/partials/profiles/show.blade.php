@@ -17,7 +17,7 @@
                                 <div>
                                     <!-- Avatar -->
                                     <div class="avatar avatar-xxl mt-n5 mb-3">
-                                        <img class="avatar-img rounded-circle border border-white border-3" src="{{asset('assets/images/avatar/07.jpg')}}" alt="">
+                                        <img class="avatar-img rounded-circle border border-white border-3" src="{{ asset($profile->picture) }}" alt="">
                                     </div>
                                 </div>
                                 <div class="ms-sm-4 mt-sm-3">
@@ -84,7 +84,7 @@
                                     <!-- Avatar -->
                                     <div class="avatar avatar-xs me-2">
                                         <a href="#">
-                                            <img class="avatar-img rounded-circle" src="{{asset('assets/images/avatar/07.jpg')}}" alt="">
+                                            <img class="avatar-img rounded-circle" src="{{ asset($profile->picture) }}" alt="">
                                         </a>
                                     </div>
                                     <!-- Post input -->
@@ -141,7 +141,7 @@
                         <!-- Card feed item START -->
                         @if(count($profile->posts))
                             @foreach($profile->posts as $post)
-                                <x-posts.post-card :post="$post" onProfile="true"/>
+                                <x-posts.post-card :post="$post" :user="$user" onProfile="true"/>
                             @endforeach
                         @else
                             <div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GroupController;
@@ -18,7 +19,7 @@ Route::get('/', function () {
 //})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::resource('/news', NewsController::class);
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
     Route::resource('/events', EventController::class);
 
@@ -28,14 +29,16 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/messages', MessageController::class);
 
+    Route::resource('/news', NewsController::class);
+
     Route::resource('/profiles', ProfileController::class);
-
-    Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
-    Route::put('/settings/account', [SettingController::class, 'accountUpdate'])->name('settings.account_update');
-
     Route::get('/profiles', [ProfileController::class, 'edit'])->name('profiles.edit');
     Route::patch('/profiles', [ProfileController::class, 'update'])->name('profiles.update');
     Route::delete('/profiles', [ProfileController::class, 'destroy'])->name('profiles.destroy');
+
+    Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+
+    Route::put('/settings/account', [SettingController::class, 'accountUpdate'])->name('settings.account_update');
 });
 
 require __DIR__ . '/auth.php';

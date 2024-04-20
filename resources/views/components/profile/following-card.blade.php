@@ -4,7 +4,7 @@
         <!-- Card body -->
         <div class="card-body p-2 pb-0">
             <div class="avatar avatar-story avatar-xl">
-                <a href="{{ route('profiles.show', $user->id) }}"><img class="avatar-img rounded-circle" src="{{asset('assets/images/avatar/02.jpg')}}" alt=""></a>
+                <a href="{{ route('profiles.show', $user->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($user->picture) }}" alt=""></a>
             </div>
             <h6 class="card-title mb-1 mt-3"><a href="{{ route('profiles.show', $user->id) }}"> {{ $user->name }} </a></h6>
             <p class="mb-0 small lh-sm">{{ $user->role }}</p>
