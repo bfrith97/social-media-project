@@ -1,5 +1,5 @@
 <!-- Card feed item START -->
-<div class="card @if(isset($onProfile)) my-4 @endif">
+<div class="card mb-4">
     <!-- Card header START -->
     <div class="card-header border-0 pb-0">
         <div class="d-flex align-items-center justify-content-between">
@@ -60,7 +60,7 @@
             <!-- Card share action START -->
             <li class="nav-item dropdown ms-sm-auto">
                 <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-reply-fill flip-horizontal ps-1"></i>Share (3)
+                    <i class="bi bi-reply-fill flip-horizontal ps-1"></i>Share (0)
                 </a>
                 <!-- Card share action dropdown menu -->
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">

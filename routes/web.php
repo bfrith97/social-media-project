@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/events', EventController::class);
 
     Route::get('/feed', [PostController::class, 'index'])->name('posts.index');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
     Route::resource('/groups', GroupController::class);
 

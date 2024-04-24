@@ -1,14 +1,16 @@
-let commentForms = document.querySelectorAll('.comment-form');
-commentForms.forEach((form, index) => {
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+    let commentForms = document.querySelectorAll('.comment-form');
+    commentForms.forEach((form, index) => {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-        let body = new FormData(form);
-        const csrfToken = body.get('_token');
+            let body = new FormData(form);
+            const csrfToken = body.get('_token');
 
-        submitComment(form, body, csrfToken);
+            submitComment(form, body, csrfToken);
+        })
     })
-})
+});
 
 function submitComment(form, body, csrfToken) {
     fetch(form.action, {

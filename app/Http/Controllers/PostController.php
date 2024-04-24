@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+use ConsoleTVs\Profanity\Facades\Profanity;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Snipe\BanBuilder\CensorWords;
 
 class PostController extends Controller
 {
@@ -39,7 +42,31 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'content' => 'required|string',
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+
+        $validatedData['content'] = Profanity::blocker($validatedData['content'])->strict(false)->strictClean(true)->filter();
+
+        $post = Post::create($validatedData);
+
+        return response()->json([
+            'message' => 'Post added successfully',
+            'post' => [
+                'id' => $post->id,
+                'user' => [
+                    'id' => $post->user->id,
+                    'name' => $post->user->name,
+                    'role' => $post->user->role,
+                    'company' => $post->user->company,
+                    'picture' => asset($post->user->picture),
+                ],
+                'content' => $post->content,
+                'comment_route' => route('comments.store'),
+                'csrf' => csrf_token(),
+            ],
+        ]);
     }
 
     /**

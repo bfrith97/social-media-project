@@ -67,7 +67,7 @@
                                 <img class="me-2 h-20px fa-fw" src="assets/images/icon/home-outline-filled.svg" alt=""><span>Feed </span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('profiles.show', $user->id) . '#connections-tab' }}">
+                            <a class="nav-link" href="{{ route('profiles.show', $user->id) . '#followers-tab' }}">
                                 <img class="me-2 h-20px fa-fw" src="assets/images/icon/person-outline-filled.svg" alt=""><span>Connections </span></a>
                         </li>
                         <li class="nav-item">

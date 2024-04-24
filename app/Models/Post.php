@@ -13,7 +13,7 @@ class Post extends Model
     use Notifiable;
 
     protected $fillable = [
-        'text',
+        'content',
         'user_id',
     ];
 

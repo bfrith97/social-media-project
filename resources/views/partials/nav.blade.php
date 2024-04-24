@@ -48,7 +48,7 @@
 
                     <!-- Nav item 4 Mega menu -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profiles.show', $user->id) . '#connections-tab' }}">My network</a>
+                        <a class="nav-link" href="{{ route('profiles.show', $user->id) . '#followers-tab' }}">My network</a>
                     </li>
                 </ul>
             </div>

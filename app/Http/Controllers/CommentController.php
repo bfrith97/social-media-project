@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Snipe\BanBuilder\CensorWords;
 
 class CommentController extends Controller
 {
@@ -31,32 +33,30 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $validatedData = $request->validate([
-                'content' => 'required|string',
-                'user_id' => 'required|integer|exists:users,id',
-                'post_id' => 'required|integer|exists:posts,id',
-            ]);
+        $validatedData = $request->validate([
+            'content' => 'required|string',
+            'user_id' => 'required|integer|exists:users,id',
+            'post_id' => 'required|integer|exists:posts,id',
+        ]);
 
-            $comment = Comment::create($validatedData);
-            $commentNumber = Comment::where('post_id', $validatedData['post_id'])->count();
+        $validatedData['content'] = Profanity::blocker($validatedData['content'])->strict(false)->strictClean(true)->filter();
 
-            return response()->json([
-                'message' => 'Comment added successfully',
-                'comment' => [
-                    'id' => $comment->id,
-                    'user' => [
-                        'id' => $comment->user->id,
-                        'name' => $comment->user->name,
-                        'picture' => asset($comment->user->picture),
-                    ],
-                    'content' => $comment->content,
-                    'comment_count' => $commentNumber,
-                ]
-            ]);
-        } catch (\Exception $exception) {
-            return response()->json($exception);
-        }
+        $comment = Comment::create($validatedData);
+        $commentNumber = Comment::where('post_id', $validatedData['post_id'])->count();
+
+        return response()->json([
+            'message' => 'Comment added successfully',
+            'comment' => [
+                'id' => $comment->id,
+                'user' => [
+                    'id' => $comment->user->id,
+                    'name' => $comment->user->name,
+                    'picture' => asset($comment->user->picture),
+                ],
+                'content' => $comment->content,
+                'comment_count' => $commentNumber,
+            ],
+        ]);
     }
 
     /**

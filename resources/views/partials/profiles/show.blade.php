@@ -5,7 +5,7 @@
         <div class="row g-4">
 
             <!-- Main content START -->
-            <div class="col-lg-8 vstack">
+            <div class="col-lg-8 vstack" id="main-content">
                 <div>
                     <!-- My profiles-breeze START -->
                     <div class="card mb-4">
@@ -78,78 +78,24 @@
                     <!-- My profiles-breeze END -->
                     <div class="profile-section" id="posts-tab" style="display: none">
                         @if($profile->id == $user->id)
-                            <!-- Share feed START -->
-                            <div class="card card-body my-4">
-                                <div class="d-flex mb-3">
-                                    <!-- Avatar -->
-                                    <div class="avatar avatar-xs me-2">
-                                        <a href="#">
-                                            <img class="avatar-img rounded-circle" src="{{ asset($profile->picture) }}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Post input -->
-                                    <form class="w-100">
-                                        <input class="form-control pe-4 border-0" placeholder="Share your thoughts..." data-bs-toggle="modal" data-bs-target="#modalCreateFeed">
-                                    </form>
-                                </div>
-                                <!-- Share feed toolbar START -->
-                                <ul class="nav nav-pills nav-stack small fw-normal">
-                                    <li class="nav-item">
-                                        <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionPhoto">
-                                            <i class="bi bi-image-fill text-success pe-2"></i>Photo</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionVideo">
-                                            <i class="bi bi-camera-reels-fill text-info pe-2"></i>Video</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link bg-light py-1 px-2 mb-0" data-bs-toggle="modal" data-bs-target="#modalCreateEvents">
-                                            <i class="bi bi-calendar2-event-fill text-danger pe-2"></i>Event </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#modalCreateFeed">
-                                            <i class="bi bi-emoji-smile-fill text-warning pe-2"></i>Feeling
-                                            /Activity</a>
-                                    </li>
-                                    <li class="nav-item dropdown ms-sm-auto">
-                                        <a class="nav-link bg-light py-1 px-2 mb-0" href="#" id="feedActionShare" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-three-dots"></i>
-                                        </a>
-                                        <!-- Dropdown menu -->
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="feedActionShare">
-                                            <li><a class="dropdown-item" href="#">
-                                                    <i class="bi bi-envelope fa-fw pe-2"></i>Create
-                                                    a
-                                                    poll</a></li>
-                                            <li><a class="dropdown-item" href="#">
-                                                    <i class="bi bi-bookmark-check fa-fw pe-2"></i>Ask
-                                                    a question </a></li>
-                                            <li>
-                                                <hr class="dropdown-divider">
-                                            </li>
-                                            <li><a class="dropdown-item" href="#">
-                                                    <i class="bi bi-pencil-square fa-fw pe-2"></i>Help</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <!-- Share feed toolbar END -->
-                            </div>
-                            <!-- Share feed END -->
+                            <x-posts.post-creation :user="$user" onProfile="true"/>
                         @endif
 
-                        <!-- Card feed item START -->
-                        @if(count($profile->posts))
-                            @foreach($profile->posts as $post)
-                                <x-posts.post-card :post="$post" :user="$user" onProfile="true"/>
-                            @endforeach
-                        @else
-                            <div>
-                                <div class="card card-body my-4">
-                                    This user does not have any posts :(
+                        <div id="posts">
+
+                            <!-- Card feed item START -->
+                            @if(count($profile->posts))
+                                @foreach($profile->posts as $post)
+                                    <x-posts.post-card :post="$post" :user="$user" onProfile="true"/>
+                                @endforeach
+                            @else
+                                <div>
+                                    <div class="card card-body my-4">
+                                        This user does not have any posts :(
+                                    </div>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
                     </div>
 
 
@@ -1900,7 +1846,7 @@
                                 <div class="row g-3">
 
                                     @foreach($profile->followings->slice(0, 4) as $following)
-                                        <x-profile.following-card :user="$following" :profile="$profile" :self="$user" />
+                                        <x-profile.following-card :user="$following" :profile="$profile" :self="$user"/>
                                     @endforeach
 
                                 </div>
@@ -1965,3 +1911,6 @@
     }
 
 </script>
+
+<script src="{{ asset('js/profile/post.js') }}"></script>
+<script src="{{ asset('js/posts/comment.js') }}"></script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Relationship;
 use App\Models\User;
+use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,6 +67,10 @@ class SettingController extends Controller
                 'date_of_birth'   => 'nullable|date',
                 'relationship_id' => 'nullable|integer|exists:relationships,id',
             ]);
+
+            foreach($validatedData as &$data) {
+                $data = Profanity::blocker($data)->strict(false)->strictClean(true)->filter();
+            }
 
             User::find($request->user_id)->update($validatedData);
 
