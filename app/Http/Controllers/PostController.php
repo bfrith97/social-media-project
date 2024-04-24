@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use ConsoleTVs\Profanity\Facades\Profanity;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Snipe\BanBuilder\CensorWords;
 
 class PostController extends Controller
 {
