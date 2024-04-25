@@ -7,6 +7,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profiles', [ProfileController::class, 'edit'])->name('profiles.edit');
     Route::patch('/profiles', [ProfileController::class, 'update'])->name('profiles.update');
     Route::delete('/profiles', [ProfileController::class, 'destroy'])->name('profiles.destroy');
+
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
 
     Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
 

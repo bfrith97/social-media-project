@@ -17,7 +17,7 @@
                     <div class="text-center">
                         <!-- Avatar -->
                         <div class="avatar avatar-lg mt-n5 mb-3">
-                            <a href="#!"><img class="avatar-img rounded border border-white border-3" src="{{ asset($user->picture) }}" alt=""></a>
+                            <a href="{{ route('profiles.show', $user->id) }}"><img class="avatar-img rounded border border-white border-3" src="{{ asset($user->picture) }}" alt=""></a>
                         </div>
                         <!-- Info -->
                         <h5 class="mb-0"><a href="{{ route('profiles.show', $user->id) }}">{{$user->name}}</a></h5>

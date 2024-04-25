@@ -17,7 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $e, $request) {
-            dd($e);
+            if($e->getMessage() !== 'Unauthenticated.') {
+                dd($e);
+            }
         });
     })->create();
 
