@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
-use App\Models\Post;
 use App\Models\PostLike;
-use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 
 class PostLikeController extends Controller
