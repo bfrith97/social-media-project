@@ -15,14 +15,18 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('user', 'comments', 'comments.user', 'comments.likes', 'likes')->orderByDesc('created_at')->get();
+        $posts = Post::with('user', 'comments', 'comments.user', 'comments.likes', 'postLikes')
+            ->orderByDesc('created_at')
+            ->get();
 
-        $usersToFollow = User::inRandomOrder()->take(5)->get();
+        $usersToFollow = User::inRandomOrder()
+            ->take(5)
+            ->get();
 
         return view('posts.index')->with([
             'user' => Auth::user(),
             'usersToFollow' => $usersToFollow,
-            'posts' => $posts
+            'posts' => $posts,
         ]);
     }
 
@@ -44,7 +48,10 @@ class PostController extends Controller
             'user_id' => 'required|integer|exists:users,id',
         ]);
 
-        $validatedData['content'] = Profanity::blocker($validatedData['content'])->strict(false)->strictClean(true)->filter();
+        $validatedData['content'] = Profanity::blocker($validatedData['content'])
+            ->strict(false)
+            ->strictClean(true)
+            ->filter();
 
         $post = Post::create($validatedData);
 

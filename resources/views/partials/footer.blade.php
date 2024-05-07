@@ -42,6 +42,9 @@
 <script src="{{ asset('assets/vendor/zuck.js/dist/zuck.min.js') }}"></script>
 <script src="{{ asset('assets/js/zuck-stories.js') }}"></script>
 
+<!-- Stacked JS -->
+@stack('js')
+
 <!-- Theme Functions -->
 <script src="{{ asset('assets/js/functions.js') }}"></script>
 <script src="{{ asset('js/nav/search.js') }}"></script>

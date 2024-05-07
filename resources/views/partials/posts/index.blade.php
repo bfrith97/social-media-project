@@ -1053,5 +1053,4 @@ Header END -->
     </div>
 </div>
 
-<script src="{{ asset('js/posts/post.js') }}"></script>
-<script src="{{ asset('js/posts/comment.js') }}"></script>
+

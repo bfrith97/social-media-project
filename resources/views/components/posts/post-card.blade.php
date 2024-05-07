@@ -27,19 +27,16 @@
                 </a>
                 <!-- Card feed action dropdown menu -->
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save
-                            post</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow
-                            lori ferguson </a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide
-                            post</a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>
+                    <li><a class="dropdown-item" href="#">
+                            <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow {{$post->user->name}} </a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide post</a></li>
                     <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a>
                     </li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report
-                            post</a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report post</a></li>
                 </ul>
             </div>
             <!-- Card feed action dropdown END -->
@@ -51,12 +48,20 @@
         <p>{{$post->content}}</p>
         <!-- Feed react START -->
         <ul class="nav nav-stack pb-2 small">
-            <li class="nav-item">
-                <a class="nav-link active" href="#!" @if(count($post->likes)) data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title=" @foreach($post->likes as $user) {{$user->name}}<br> @endforeach "@endif>
-                    <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked {{ $post->likes->count() }}</a>
-            </li>
-                <span class="comment-count"> <i class="bi bi-chat-fill pe-1"></i>Comments
-                    ({{$post->comments->count()}})</span>
+            <form class="like-form" action="{{ $post->liked_by_current_user ? route('post_likes.destroy') : route('post_likes.store')}}" method="post">
+                @csrf
+                @if($post->liked_by_current_user)
+                    <input class="delete_method" type="hidden" name="_method" value="DELETE">
+                @endif
+                <input type="hidden" id="post_id" name="post_id" value="{{$post->id}}"/>
+                <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}"/>
+                <li class="nav-item">
+                    <button class="nav-link {{$post->liked_by_current_user ? 'active' : ''}} like-button" type="submit" @if(count($post->postLikes)) data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title=" @foreach($post->postLikes as $postLike) {{$postLike->user->name}}<br> @endforeach "@endif>
+                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>{{$post->liked_by_current_user ? 'Liked' : 'Like'}} ({{ $post->postLikes->count() }})
+                    </button>
+                </li>
+            </form>
+            <span class="comment-count"> <i class="bi bi-chat-fill pe-1"></i>Comments ({{$post->comments->count()}})</span>
             <!-- Card share action START -->
             <li class="nav-item dropdown ms-sm-auto">
                 <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
@@ -64,14 +69,14 @@
                 </a>
                 <!-- Card share action dropdown menu -->
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send
-                            via Direct Message</a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct
+                            Message</a></li>
                     <li><a class="dropdown-item" href="#">
                             <i class="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark </a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy
-                            link to post</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share
-                            post via …</a></li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy link to post</a>
+                    </li>
+                    <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share post via …</a>
+                    </li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -125,5 +130,3 @@
     <!-- Card footer END -->
 </div>
 <!-- Card feed item END -->
-
-

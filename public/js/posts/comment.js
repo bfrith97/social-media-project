@@ -69,6 +69,10 @@ function addNewCommentHtml(form, comment) {
     commentList.prepend(documentFragment);
     form.reset();
 
-    form.closest('.card-body').querySelector('.comment-count').innerHTML = `<i class="bi bi-chat-fill pe-1"></i>Comments
-                    (${comment.comment_count})`;
+    let commentCount = form.closest('.card-body').querySelector('.comment-count');
+    let commentCountHTML = commentCount.innerHTML;
+    let parts = commentCountHTML.split("(");
+    let commentCountNumber = parseInt(parts[1]) + 1
+
+    commentCount.innerHTML = parts[0] + '(' + commentCountNumber + ')';
 }

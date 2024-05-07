@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -11,6 +12,8 @@ use Illuminate\Notifications\Notifiable;
 class Post extends Model
 {
     use Notifiable;
+
+    protected $appends = ['liked_by_current_user'];
 
     protected $fillable = [
         'content',
@@ -27,9 +30,14 @@ class Post extends Model
         return $this->hasMany(Comment::class)->orderByDesc('created_at');
     }
 
-    public function likes(): BelongsToMany
+    public function postLikes(): HasMany
     {
-        return $this->belongsToMany(User::class, 'post_likes', 'user_id', 'post_id')
-            ->withTimestamps();
+        return $this->hasMany(PostLike::class)->with('user')->orderByDesc('created_at');
+    }
+
+    public function getLikedByCurrentUserAttribute(): bool
+    {
+        $user = auth()->id();
+        return $this->postLikes()->where('user_id', $user)->exists();
     }
 }

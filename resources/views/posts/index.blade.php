@@ -3,4 +3,10 @@
 
 @include('partials.posts.index')
 
+@push('js')
+    <script src="{{ asset('js/posts/post.js') }}"></script>
+    <script src="{{ asset('js/posts/comment.js') }}"></script>
+    <script src="{{ asset('js/posts/post-like.js') }}"></script>
+@endpush
+
 @include('partials.footer')

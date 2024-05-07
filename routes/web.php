@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GroupController;
@@ -28,6 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
     Route::resource('/groups', GroupController::class);
+
+    Route::post('/post_likes', [PostLikeController::class, 'store'])->name('post_likes.store');
+    Route::delete('/post_likes', [PostLikeController::class, 'destroy'])->name('post_likes.destroy');
 
     Route::resource('/messages', MessageController::class);
 
