@@ -10,6 +10,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\WhoToFollowController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,8 +31,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/groups', GroupController::class);
 
-    Route::post('/post_likes', [PostLikeController::class, 'store'])->name('post_likes.store');
-    Route::delete('/post_likes', [PostLikeController::class, 'destroy'])->name('post_likes.destroy');
+    Route::post('/post-likes', [PostLikeController::class, 'store'])->name('post_likes.store');
+    Route::delete('/post-likes', [PostLikeController::class, 'destroy'])->name('post_likes.destroy');
 
     Route::resource('/messages', MessageController::class);
 
@@ -45,8 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/search', [SearchController::class, 'search'])->name('search');
 
     Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
-
     Route::put('/settings/account', [SettingController::class, 'accountUpdate'])->name('settings.account_update');
+
+    Route::get('/who-to-follow', [WhoToFollowController::class, 'index'])->name('who_to_follow.index');
 });
 
 require __DIR__ . '/auth.php';

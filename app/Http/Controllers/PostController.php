@@ -15,11 +15,16 @@ class PostController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+
         $posts = Post::with('user', 'comments', 'comments.user', 'comments.likes', 'postLikes')
             ->orderByDesc('created_at')
             ->get();
 
-        $usersToFollow = User::inRandomOrder()
+        $usersToFollow = User::whereDoesntHave('followers', function ($query) use ($user) {
+            $query->where('follower_id', $user->id);
+        })
+            ->inRandomOrder()
             ->take(5)
             ->get();
 

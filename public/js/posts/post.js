@@ -104,8 +104,8 @@ function addNewPostHtml(form, post) {
                 <!-- Feed react START -->
                 <ul class="nav nav-stack pb-2 small">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#!" data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title="">
-                            <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked (0)</a>
+                        <a class="nav-link" href="#!" data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title="">
+                            <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Like (0)</a>
                     </li>
                         <span class="comment-count"> <i class="bi bi-chat-fill pe-1"></i>Comments (0)</span>
                     <!-- Card share action START -->
