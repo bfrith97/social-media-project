@@ -34,20 +34,28 @@ class PostLikeController extends Controller
         ]);
 
         $like = PostLike::create($validatedData);
-        $currentLikes = PostLike::with('user')->where('post_id', $validatedData['post_id'])->get();
+        $currentLikes = PostLike::with('user')
+            ->where('post_id', $validatedData['post_id'])
+            ->get();
 
-        return response()->json([
-            'message' => 'Like added successfully',
-            'like' => [
-                'id' => $like->id,
-                'user' => [
-                    'id' => $like->user->id,
-                    'name' => $like->user->name,
-                    'picture' => asset($like->user->picture),
+        if ($like) {
+            return response()->json([
+                'message' => 'Like added successfully',
+                'like' => [
+                    'id' => $like->id,
+                    'user' => [
+                        'id' => $like->user->id,
+                        'name' => $like->user->name,
+                        'picture' => asset($like->user->picture),
+                    ],
                 ],
-            ],
-            'current_likes' => $currentLikes
-        ]);
+                'current_likes' => $currentLikes,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Like not added',
+            ]);
+        }
     }
 
     /**
@@ -84,13 +92,16 @@ class PostLikeController extends Controller
             'post_id' => 'required|integer|exists:posts,id',
         ]);
 
-        $deleted = PostLike::where($validatedData)->delete();
-        $currentLikes = PostLike::with('user')->where('post_id', $validatedData['post_id'])->get();
+        $deleted = PostLike::where($validatedData)
+            ->delete();
+        $currentLikes = PostLike::with('user')
+            ->where('post_id', $validatedData['post_id'])
+            ->get();
 
         if ($deleted) {
             return response()->json([
                 'message' => 'Like removed successfully',
-                'current_likes' => $currentLikes
+                'current_likes' => $currentLikes,
             ]);
         } else {
             return response()->json([

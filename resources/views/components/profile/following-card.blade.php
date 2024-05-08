@@ -13,10 +13,6 @@
         <div class="card-footer p-2 border-0">
             <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message">
                 <i class="bi bi-chat-left-text"></i></button>
-            @if($profile->id === $self->id)
-                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Unfollow">
-                    <i class="bi bi-person-x"></i></button>
-            @endif
         </div>
     </div>
     <!-- Friends item END -->

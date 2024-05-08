@@ -3,25 +3,27 @@ document.addEventListener('DOMContentLoaded', function () {
     let postForm = document.querySelector('#post-creation-form');
     let postFormSubmitBtn = document.querySelector('#post-creation-form-submit');
 
-    postFormSubmitBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('submitting');
+    if (postFormSubmitBtn) {
+        postFormSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('submitting');
 
-        let body = new FormData(postForm);
-        const csrfToken = body.get('_token');
+            let body = new FormData(postForm);
+            const csrfToken = body.get('_token');
 
-        submitPost(postForm, body, csrfToken);
-    })
+            submitPost(postForm, body, csrfToken);
+        })
 
-    postForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        console.log('submitting');
+        postForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('submitting');
 
-        let body = new FormData(postForm);
-        const csrfToken = body.get('_token');
+            let body = new FormData(postForm);
+            const csrfToken = body.get('_token');
 
-        submitPost(postForm, body, csrfToken);
-    })
+            submitPost(postForm, body, csrfToken);
+        })
+    }
 });
 
 function submitPost(form, body, csrfToken) {

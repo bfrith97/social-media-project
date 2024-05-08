@@ -36,22 +36,28 @@
                         <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
                             <!-- User stat item -->
                             <div>
-                                <h6 class="mb-0">{{$user->posts->count()}}</h6>
-                                <small>Posts</small>
+                                <a class="text-black" href="{{ route('profiles.show', $user->id) . '#posts-tab' }}">
+                                    <h6 class="mb-0">{{$user->posts->count()}}</h6>
+                                    <small>Posts</small>
+                                </a>
                             </div>
                             <!-- Divider -->
                             <div class="vr"></div>
                             <!-- User stat item -->
                             <div>
-                                <h6 class="mb-0">{{$user->followers->count()}}</h6>
-                                <small>Followers</small>
+                                <a class="text-black" href="{{ route('profiles.show', $user->id) . '#followers-tab' }}">
+                                    <h6 class="mb-0">{{$user->followers->count()}}</h6>
+                                    <small>Followers</small>
+                                </a>
                             </div>
                             <!-- Divider -->
                             <div class="vr"></div>
                             <!-- User stat item -->
                             <div>
-                                <h6 class="mb-0">{{$user->followings->count()}}</h6>
-                                <small>Following</small>
+                                <a class="text-black" href="{{ route('profiles.show', $user->id) . '#followers-tab' }}">
+                                    <h6 class="mb-0">{{$user->followings->count()}}</h6>
+                                    <small>Following</small>
+                                </a>
                             </div>
                         </div>
                         <!-- User stat END -->

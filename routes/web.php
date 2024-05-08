@@ -10,7 +10,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\WhoToFollowController;
+use App\Http\Controllers\FollowController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -48,7 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('/settings/account', [SettingController::class, 'accountUpdate'])->name('settings.account_update');
 
-    Route::get('/who-to-follow', [WhoToFollowController::class, 'index'])->name('who_to_follow.index');
+    Route::get('/who-to-follow', [FollowController::class, 'index'])->name('who_to_follow.index');
+    Route::post('/follows', [FollowController::class, 'store'])->name('follows.store');
+    Route::delete('/follows', [FollowController::class, 'destroy'])->name('follows.destroy');
 });
 
 require __DIR__ . '/auth.php';

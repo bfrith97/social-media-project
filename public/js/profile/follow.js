@@ -1,25 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
-    let likeButtons = document.querySelectorAll('.like-button');
+    let followButtons = document.querySelectorAll('.follow-button');
 
-    likeButtons.forEach((btn) => {
+    followButtons.forEach((btn) => {
         // Add a check to ensure the event is only bound once
-        if (!btn.classList.contains('like-event-bound')) {
-            btn.classList.add('like-event-bound');
+        if (!btn.classList.contains('follow-event-bound')) {
+            btn.classList.add('follow-event-bound');
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                let form = btn.closest('.like-form');
+                let form = btn.closest('.follow-form');
                 let body = new FormData(form);
                 const csrfToken = body.get('_token');
 
-                submitLike(form, body, csrfToken, btn);
+                submitFollow(form, body, csrfToken, btn);
             });
         }
     });
 });
 
-function submitLike(form, body, csrfToken, likeBtn) {
+function submitFollow(form, body, csrfToken, followBtn) {
     fetch(form.action, {
         method: 'POST', body: body, headers: {
             'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json'
@@ -32,25 +32,19 @@ function submitLike(form, body, csrfToken, likeBtn) {
             return response.json();
         })
         .then(data => {
-            changeLikeHtml(likeBtn, data, form);
+            changeFollowHtml(followBtn, data, form);
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
 
-function changeLikeHtml(likeBtn, data, form) {
-    let likeBtnHTML = likeBtn.innerHTML;
-    let parts = likeBtnHTML.split("(");
-    let likeCountNumber;
-
-    if(data['message'] === 'Like added successfully') {
-        likeCountNumber = parseInt(parts[1]) + 1
-
-        likeBtn.classList.add('active');
-        likeBtn.innerHTML = `
-                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked (${likeCountNumber})
-            `
+function changeFollowHtml(followBtn, data, form) {
+    if (data['message'] === 'Follow added successfully') {
+        followBtn.classList.add('active');
+        followBtn.outerHTML = `
+            <button type="submit" class="btn btn-sm btn-danger-soft follow-button">Unfollow </button>
+        `
 
         let methodInput = document.createElement('input');
         methodInput.setAttribute('type', 'hidden');
@@ -60,13 +54,9 @@ function changeLikeHtml(likeBtn, data, form) {
 
         form.appendChild(methodInput);
     } else {
-        likeCountNumber = parseInt(parts[1]) - 1
-
-        likeBtn.classList.remove('active');
-        likeBtn.innerHTML = `
-                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Like (${likeCountNumber})
-            `
-
+        followBtn.outerHTML = `
+              <button type="submit" class="btn btn-sm btn-success-soft follow-button">Follow </button>
+        `
 
         form.querySelector('.delete_method').remove();
     }

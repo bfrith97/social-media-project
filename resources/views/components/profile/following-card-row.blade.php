@@ -22,12 +22,28 @@
         <!-- Connections END -->
     </div>
     <!-- Button -->
-    <div class="ms-md-auto d-flex mb-auto">
-        @if($profile->id === $self->id)
-            <button class="btn btn-danger-soft btn-sm mb-0 me-2"> Unfollow</button>
+    <form action="{{ route('follows.store') }}" method="post" class="follow-form ms-md-auto d-flex mb-auto">
+        @csrf
+        <input type="hidden" name="followee_id" value="{{$user->id}}">
+        <input type="hidden" name="follower_id" value="{{$self->id}}">
+        @if($user->followed_by_current_user)
+            <input class="delete_method" type="hidden" name="_method" value="DELETE">
         @endif
-        <button class="btn btn-primary-soft btn-sm mb-0"> Message</button>
-    </div>
+
+        @if($user->id != $self->id)
+            @if($user->followed_by_current_user)
+                <button type="submit" class="btn btn-sm btn-danger-soft follow-button">
+                    Unfollow
+                </button>
+            @else
+                <button type="submit" class="btn btn-sm btn-success-soft follow-button">
+                    Follow
+                </button>
+            @endif
+        <button class="btn btn-primary-soft btn-sm mb-0 ms-2"> Message</button>
+        @endif
+
+    </form>
 </div>
 <!-- Connections Item -->
 

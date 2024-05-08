@@ -29,9 +29,28 @@
                                 <!-- Button -->
                                 <div class="d-flex mt-3 justify-content-center ms-sm-auto">
                                     @if($profile->id === $user->id)
-                                        <a href="{{route('settings.edit')}}" class="btn btn-danger-soft">
+                                        <a href="{{route('settings.edit')}}" class="btn btn-sm btn-danger-soft">
                                             <i class="bi bi-pencil-fill pe-1"></i> Edit profile
                                         </a>
+                                    @else
+                                        <form action="{{ route('follows.store') }}" method="post" class="follow-form">
+                                            @csrf
+                                            <input type="hidden" name="followee_id" value="{{$profile->id}}">
+                                            <input type="hidden" name="follower_id" value="{{$user->id}}">
+                                            @if($profile->followed_by_current_user)
+                                                <input class="delete_method" type="hidden" name="_method" value="DELETE">
+                                            @endif
+
+                                            @if($profile->followed_by_current_user)
+                                                <button type="submit" class="btn btn-sm btn-danger-soft follow-button">
+                                                     Unfollow
+                                                </button>
+                                            @else
+                                                <button type="submit" class="btn btn-sm btn-success-soft follow-button">
+                                                     Follow
+                                                </button>
+                                            @endif
+                                        </form>
                                     @endif
                                 </div>
                             </div>
@@ -159,7 +178,7 @@
                                             <!-- Date -->
                                             <p class="mb-0">
                                                 <i class="bi bi-heart fa-fw me-2"></i> Status:
-                                                <strong> {{ $profile->relationship->name }} </strong>
+                                                <strong> {{ $profile->relationship->name ?? 'No information' }} </strong> @if($profile->partner) with <a class="nav-item" href="{{ route('profiles.show', $user->partner->id) }}" >{{ $user->partner->name }} </a> @endif
                                             </p>
                                             <div class="dropdown ms-auto">
                                                 <!-- Card share action menu -->
@@ -1688,7 +1707,7 @@
                                     </li>
                                     @isset($profile->relationship)
                                         <li class="mb-2"><i class="bi bi-heart fa-fw pe-1"></i> Status: <strong>
-                                                {{ $profile->relationship->name }} </strong>
+                                                {{ $profile->relationship->name }} </strong> @if($profile->partner) with <a class="nav-item" href="{{ route('profiles.show', $user->partner->id) }}" >{{ $user->partner->name }} </a> @endif
                                         </li>
                                     @endisset
                                     <li><i class="bi bi-envelope fa-fw pe-1"></i> Email: <strong>

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('number')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->foreignId('relationship_id')->nullable()->constrained('relationships')->onDelete('set null');
+            $table->foreignId('partner_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

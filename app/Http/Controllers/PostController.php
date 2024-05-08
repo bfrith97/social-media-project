@@ -21,9 +21,10 @@ class PostController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $usersToFollow = User::whereDoesntHave('followers', function ($query) use ($user) {
-            $query->where('follower_id', $user->id);
-        })
+        $usersToFollow = User::where('id', '!=', $user->id)
+            ->whereDoesntHave('followers', function ($query) use ($user) {
+                $query->where('follower_id', $user->id);
+            })
             ->inRandomOrder()
             ->take(5)
             ->get();
