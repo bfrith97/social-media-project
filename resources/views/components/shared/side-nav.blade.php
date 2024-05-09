@@ -11,7 +11,7 @@
             <!-- Card START -->
             <div class="card overflow-hidden">
                 <!-- Cover image -->
-                <div class="h-50px" style="background-image:url(assets/images/bg/01.jpg); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                <div class="h-50px" style="background-image:url({{asset('assets/images/bg/01.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
                 <!-- Card body START -->
                 <div class="card-body pt-0">
                     <div class="text-center">
@@ -37,7 +37,7 @@
                             <!-- User stat item -->
                             <div>
                                 <a class="text-black" href="{{ route('profiles.show', $user->id) . '#posts-tab' }}">
-                                    <h6 class="mb-0">{{$user->posts->count()}}</h6>
+                                    <h6 class="mb-0">{{$user->ownPosts->count()}}</h6>
                                     <small>Posts</small>
                                 </a>
                             </div>
@@ -70,31 +70,31 @@
                     <ul class="nav nav-link-secondary flex-column fw-bold gap-2">
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('posts.index')}}">
-                                <img class="me-2 h-20px fa-fw" src="assets/images/icon/home-outline-filled.svg" alt=""><span>Feed </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/home-outline-filled.svg')}}" alt=""><span>Feed </span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('profiles.show', $user->id) . '#followers-tab' }}">
-                                <img class="me-2 h-20px fa-fw" src="assets/images/icon/person-outline-filled.svg" alt=""><span>Connections </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/person-outline-filled.svg')}}" alt=""><span>Connections </span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('news.index')}}">
-                                <img class="me-2 h-20px fa-fw" src="assets/images/icon/earth-outline-filled.svg" alt=""><span>Latest News </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/earth-outline-filled.svg')}}" alt=""><span>Latest News </span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('events.index')}}">
-                                <img class="me-2 h-20px fa-fw" src="assets/images/icon/calendar-outline-filled.svg" alt=""><span>Events </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/calendar-outline-filled.svg')}}" alt=""><span>Events </span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('groups.index')}}">
-                                <img class="me-2 h-20px fa-fw" src="assets/images/icon/chat-outline-filled.svg" alt=""><span>Groups </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/chat-outline-filled.svg')}}" alt=""><span>Groups </span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="notifications.html">
-                                <img class="me-2 h-20px fa-fw" src="assets/images/icon/notification-outlined-filled.svg" alt=""><span>Notifications </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/notification-outlined-filled.svg')}}" alt=""><span>Notifications </span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('settings.edit')}}">
-                                <img class="me-2 h-20px fa-fw" src="assets/images/icon/cog-outline-filled.svg" alt=""><span>Settings </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/cog-outline-filled.svg')}}" alt=""><span>Settings </span></a>
                         </li>
                     </ul>
                     <!-- Side Nav END -->

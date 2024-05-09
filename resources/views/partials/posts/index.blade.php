@@ -39,7 +39,7 @@ Header END -->
 
                 <div id="posts">
                     @foreach($posts as $post)
-                        <x-posts.post-card :post="$post" :user="$user"/>
+                        <x-posts.post-card :post="$post" :user="$user" has-margin="true"/>
                     @endforeach
                 </div>
 
@@ -1062,3 +1062,7 @@ Header END -->
         </div>
     </div>
 </div>
+
+<script>
+    console.log('hello');
+</script>

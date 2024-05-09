@@ -9,7 +9,13 @@
         <!-- Post input -->
         <form class="w-100" id="post-creation-form" method="post" action="{{route('posts.store')}}">
             @csrf
-            <input type="hidden" name="user_id" value="{{$user->id}}" />
+            <input type="hidden" name="user_id" value="{{$user->id}}"/>
+            @isset($profile)
+                <input type="hidden" name="profile_id" value="{{$profile->id}}"/>
+            @endisset
+            @isset($group)
+                <input type="hidden" name="group_id" value="{{$group->id}}"/>
+            @endisset
             <textarea class="form-control pe-4 border-0" rows="2" data-autoresize placeholder="Share your thoughts..." name="content"></textarea>
         </form>
     </div>

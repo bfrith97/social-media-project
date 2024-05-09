@@ -11,6 +11,8 @@ class Comment extends Model
 {
     use Notifiable;
 
+    protected $appends = ['liked_by_current_user'];
+
     protected $fillable = [
         'content',
         'user_id',
@@ -27,9 +29,15 @@ class Comment extends Model
         return $this->belongsTo(Post::class);
     }
 
-    public function likes(): BelongsToMany
+    public function commentLikes(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'comment_likes', 'comment_id', 'user_id')
             ->withTimestamps();
+    }
+
+    public function getLikedByCurrentUserAttribute(): bool
+    {
+        $user = auth()->id();
+        return $this->commentLikes()->where('user_id', $user)->exists();
     }
 }

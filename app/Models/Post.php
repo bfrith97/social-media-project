@@ -18,6 +18,8 @@ class Post extends Model
     protected $fillable = [
         'content',
         'user_id',
+        'profile_id',
+        'group_id',
     ];
 
     public function user(): BelongsTo

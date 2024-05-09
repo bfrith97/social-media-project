@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.preventDefault();
                 e.stopPropagation();
 
-                let form = btn.closest('.like-form');
+                let form = btn.closest('.post-like-form');
                 let body = new FormData(form);
                 const csrfToken = body.get('_token');
 
@@ -44,13 +44,15 @@ function changeLikeHtml(likeBtn, data, form) {
     let parts = likeBtnHTML.split("(");
     let likeCountNumber;
 
-    if(data['message'] === 'Like added successfully') {
+    if (data['message'] === 'Like added successfully') {
         likeCountNumber = parseInt(parts[1]) + 1
 
         likeBtn.classList.add('active');
-        likeBtn.innerHTML = `
-                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked (${likeCountNumber})
-            `
+        likeBtn.innerHTML = '';
+        if (!likeBtn.classList.contains('comment-like')) {
+            likeBtn.innerHTML = `<i class="bi bi-hand-thumbs-up-fill pe-1"></i>`
+        }
+        likeBtn.innerHTML += `Liked (${likeCountNumber})`
 
         let methodInput = document.createElement('input');
         methodInput.setAttribute('type', 'hidden');
@@ -63,9 +65,11 @@ function changeLikeHtml(likeBtn, data, form) {
         likeCountNumber = parseInt(parts[1]) - 1
 
         likeBtn.classList.remove('active');
-        likeBtn.innerHTML = `
-                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Like (${likeCountNumber})
-            `
+        likeBtn.innerHTML = '';
+        if (!likeBtn.classList.contains('comment-like')) {
+            likeBtn.innerHTML = `<i class="bi bi-hand-thumbs-up-fill pe-1"></i>`
+        }
+        likeBtn.innerHTML += `Like (${likeCountNumber})`
 
 
         form.querySelector('.delete_method').remove();

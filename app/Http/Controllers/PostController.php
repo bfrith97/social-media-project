@@ -17,7 +17,8 @@ class PostController extends Controller
     {
         $user = Auth::user();
 
-        $posts = Post::with('user', 'comments', 'comments.user', 'comments.likes', 'postLikes')
+        $posts = Post::with('user', 'comments', 'comments.user', 'comments.commentLikes', 'postLikes')
+            ->whereNull(['group_id', 'profile_id'])
             ->orderByDesc('created_at')
             ->get();
 
@@ -52,6 +53,8 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'content' => 'required|string',
             'user_id' => 'required|integer|exists:users,id',
+            'group_id' => 'nullable|integer|exists:groups,id',
+            'profile_id' => 'nullable|integer|exists:users,id',
         ]);
 
         $validatedData['content'] = Profanity::blocker($validatedData['content'])

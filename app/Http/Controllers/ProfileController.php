@@ -29,12 +29,28 @@ class ProfileController extends Controller
             'partner',
             'followings',
             'followers',
-            'posts' => fn ($query) => $query->orderBy('created_at', 'desc'),
-        ])->find($id);
+            'ownPosts' => function ($query) use($id) {
+                $query->whereNull('group_id'); // Exclude posts with a group_id
+                $query->where(function($subQuery) use ($id) {
+                    $subQuery->whereNull('profile_id') // Include posts without a profile_id (general posts)
+                    ->orWhere('profile_id', $id); // Include posts where profile_id matches the current profile being viewed
+                });
+                $query->orderBy('created_at', 'desc');
+            },
+            'otherPosts'
+        ])
+            ->find($id);
+
+        $combinedPosts = $profile->ownPosts->merge($profile->otherPosts);
+
+        // Optionally, sort the combined collection by creation date if needed
+        $combinedPosts = $combinedPosts->sortByDesc('created_at');
+
 
         return view('profiles.show')->with([
             'user' => Auth::user(),
             'profile' => $profile,
+            'combinedPosts' => $combinedPosts
         ]);
     }
 
@@ -43,15 +59,19 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $request->user()
+            ->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
+        if ($request->user()
+            ->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $request->user()
+            ->save();
 
-        return Redirect::route('profiles-breeze.edit')->with('status', 'profiles-breeze-updated');
+        return Redirect::route('profiles-breeze.edit')
+            ->with('status', 'profiles-breeze-updated');
     }
 
     /**
@@ -60,7 +80,10 @@ class ProfileController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+            'password' => [
+                'required',
+                'current_password',
+            ],
         ]);
 
         $user = $request->user();
@@ -69,8 +92,10 @@ class ProfileController extends Controller
 
         $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->session()
+            ->invalidate();
+        $request->session()
+            ->regenerateToken();
 
         return Redirect::to('/');
     }

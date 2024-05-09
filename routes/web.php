@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommentLikeController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\EventController;
@@ -23,6 +24,9 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
+    Route::post('/comment-likes', [CommentLikeController::class, 'store'])->name('comment_likes.store');
+    Route::delete('/comment-likes', [CommentLikeController::class, 'destroy'])->name('comment_likes.destroy');
 
     Route::resource('/events', EventController::class);
 

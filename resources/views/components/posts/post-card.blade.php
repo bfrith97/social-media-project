@@ -1,5 +1,5 @@
 <!-- Card feed item START -->
-<div class="card mb-4">
+<div class="card @isset($hasMargin) mb-4 @endisset">
     <!-- Card header START -->
     <div class="card-header border-0 pb-0">
         <div class="d-flex align-items-center justify-content-between">
@@ -48,7 +48,7 @@
         <p>{{$post->content}}</p>
         <!-- Feed react START -->
         <ul class="nav nav-stack pb-2 small">
-            <form class="like-form" action="{{ $post->liked_by_current_user ? route('post_likes.destroy') : route('post_likes.store')}}" method="post">
+            <form class="post-like-form" action="{{ $post->liked_by_current_user ? route('post_likes.destroy') : route('post_likes.store')}}" method="post">
                 @csrf
                 @if($post->liked_by_current_user)
                     <input class="delete_method" type="hidden" name="_method" value="DELETE">
@@ -110,7 +110,7 @@
 
         <ul class="comment-wrap list-unstyled">
             @foreach($post->comments as $comment)
-                <x-posts.post-comment :comment="$comment"/>
+                <x-posts.post-comment :comment="$comment" :user="$user"/>
             @endforeach
         </ul>
     </div>

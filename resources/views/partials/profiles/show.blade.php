@@ -43,11 +43,11 @@
 
                                             @if($profile->followed_by_current_user)
                                                 <button type="submit" class="btn btn-sm btn-danger-soft follow-button">
-                                                     Unfollow
+                                                    Unfollow
                                                 </button>
                                             @else
                                                 <button type="submit" class="btn btn-sm btn-success-soft follow-button">
-                                                     Follow
+                                                    Follow
                                                 </button>
                                             @endif
                                         </form>
@@ -96,16 +96,14 @@
 
                     <!-- My profiles-breeze END -->
                     <div class="profile-section" id="posts-tab" style="display: none">
-                        @if($profile->id == $user->id)
-                            <x-posts.post-creation :user="$user" onProfile="true"/>
-                        @endif
+                        <x-posts.post-creation :user="$user" :profile="$profile" onProfile="true"/>
 
                         <div id="posts">
 
                             <!-- Card feed item START -->
-                            @if(count($profile->posts))
-                                @foreach($profile->posts as $post)
-                                    <x-posts.post-card :post="$post" :user="$user" onProfile="true"/>
+                            @if(count($combinedPosts))
+                                @foreach($combinedPosts as $post)
+                                    <x-posts.post-card :post="$post" :user="$user" has-margin="true"/>
                                 @endforeach
                             @else
                                 <div>
@@ -178,7 +176,10 @@
                                             <!-- Date -->
                                             <p class="mb-0">
                                                 <i class="bi bi-heart fa-fw me-2"></i> Status:
-                                                <strong> {{ $profile->relationship->name ?? 'No information' }} </strong> @if($profile->partner) with <a class="nav-item" href="{{ route('profiles.show', $user->partner->id) }}" >{{ $user->partner->name }} </a> @endif
+                                                <strong> {{ $profile->relationship->name ?? 'No information' }} </strong> @if($profile->partner)
+                                                    with
+                                                    <a class="nav-item" href="{{ route('profiles.show', $user->partner->id) }}">{{ $user->partner->name }} </a>
+                                                @endif
                                             </p>
                                             <div class="dropdown ms-auto">
                                                 <!-- Card share action menu -->
@@ -1707,7 +1708,10 @@
                                     </li>
                                     @isset($profile->relationship)
                                         <li class="mb-2"><i class="bi bi-heart fa-fw pe-1"></i> Status: <strong>
-                                                {{ $profile->relationship->name }} </strong> @if($profile->partner) with <a class="nav-item" href="{{ route('profiles.show', $user->partner->id) }}" >{{ $user->partner->name }} </a> @endif
+                                                {{ $profile->relationship->name }} </strong> @if($profile->partner)
+                                                with
+                                                <a class="nav-item" href="{{ route('profiles.show', $user->partner->id) }}">{{ $user->partner->name }} </a>
+                                            @endif
                                         </li>
                                     @endisset
                                     <li><i class="bi bi-envelope fa-fw pe-1"></i> Email: <strong>

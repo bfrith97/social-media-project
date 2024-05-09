@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,8 +13,11 @@ class GroupController extends Controller
      */
     public function index()
     {
+        $allGroups = Group::with('members', 'posts', 'posts.user')->orderBy('name')->get();
+
         return view('groups.index')->with([
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'allGroups' => $allGroups
         ]);
     }
 
@@ -38,7 +42,12 @@ class GroupController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $group = Group::with('members', 'posts')->find($id);
+
+        return view('groups.show')->with([
+            'user' => Auth::user(),
+            'group' => $group
+        ]);
     }
 
     /**

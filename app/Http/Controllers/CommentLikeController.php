@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PostLike;
+use App\Models\CommentLike;
 use Illuminate\Http\Request;
 
-class PostLikeController extends Controller
+class CommentLikeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,10 +30,10 @@ class PostLikeController extends Controller
     {
         $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'post_id' => 'required|integer|exists:posts,id',
+            'comment_id' => 'required|integer|exists:comments,id',
         ]);
 
-        $like = PostLike::create($validatedData);
+        $like = CommentLike::create($validatedData);
 
         if ($like) {
             return response()->json([
@@ -85,10 +85,10 @@ class PostLikeController extends Controller
     {
         $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'post_id' => 'required|integer|exists:posts,id',
+            'comment_id' => 'required|integer|exists:comments,id',
         ]);
 
-        $deleted = PostLike::where($validatedData)
+        $deleted = CommentLike::where($validatedData)
             ->delete();
 
         if ($deleted) {
