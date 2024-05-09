@@ -1,5 +1,4 @@
 <header class="navbar-light fixed-top header-static bg-mode">
-
     <!-- Logo Nav START -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
@@ -22,7 +21,7 @@
             <!-- Main navbar START -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
 
-                <x-nav.search />
+                <x-nav.search/>
 
                 <ul class="navbar-nav navbar-nav-scroll ms-auto">
                     <!-- Nav item 2 Pages -->
@@ -38,7 +37,8 @@
 
                     <!-- Nav item 4 Mega menu -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profiles.show', $user->id) . '#followers-tab' }}">My network</a>
+                        <a class="nav-link" href="{{ route('profiles.show', $user->id) . '#followers-tab' }}">My
+                            network</a>
                     </li>
                 </ul>
             </div>
@@ -71,72 +71,23 @@
                             <div class="card-body p-0">
                                 <ul class="list-group list-group-flush list-unstyled p-2">
                                     <!-- Notif item -->
-                                    <li>
-                                        <div class="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <img class="avatar-img rounded-circle" src="{{ asset('assets/images/avatar/01.jpg') }}" alt="">
-                                            </div>
-                                            <div class="ms-sm-3">
-                                                <div class=" d-flex">
-                                                    <p class="small mb-2"><b>Judy Nguyen</b> sent you a friend request.
-                                                    </p>
-                                                    <p class="small ms-3 text-nowrap">Just now</p>
+                                    @foreach($user->notifications as $notification)
+                                        <li>
+                                            <a href="{!! $notification->data['href']!!}" class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3 @if(!$notification->read_at) badge-unread @endif">
+                                                <div class="avatar text-center d-none d-sm-inline-block">
+                                                    <div class="avatar-img rounded-circle bg-success">
+                                                        <span class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span>
+                                                    </div>
                                                 </div>
-                                                <div class="d-flex">
-                                                    <button class="btn btn-sm py-1 btn-primary me-2">Accept</button>
-                                                    <button class="btn btn-sm py-1 btn-danger-soft">Delete</button>
+                                                <div class="ms-sm-3">
+                                                    <div class="d-flex">
+                                                        <p class="small mb-2">{{$notification->data['message']}}</p>
+                                                        <p class="small ms-3">{{Carbon\Carbon::parse($notification->created_at)->timezone('Europe/London')->diffForHumans()}}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- Notif item -->
-                                    <li>
-                                        <div class="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3 position-relative">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <img class="avatar-img rounded-circle" src="{{ asset('assets/images/avatar/02.jpg') }}" alt="">
-                                            </div>
-                                            <div class="ms-sm-3 d-flex">
-                                                <div>
-                                                    <p class="small mb-2">Wish <b>Amanda Reed</b> a happy birthday (Nov
-                                                        12)</p>
-                                                    <button class="btn btn-sm btn-outline-light py-1 me-2">Say happy
-                                                        birthday 🎂
-                                                    </button>
-                                                </div>
-                                                <p class="small ms-3">2min</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- Notif item -->
-                                    <li>
-                                        <a href="#" class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <div class="avatar-img rounded-circle bg-success">
-                                                    <span class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span>
-                                                </div>
-                                            </div>
-                                            <div class="ms-sm-3">
-                                                <div class="d-flex">
-                                                    <p class="small mb-2">Webestica has 15 like and 1 new activity</p>
-                                                    <p class="small ms-3">1hr</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <!-- Notif item -->
-                                    <li>
-                                        <a href="#" class="list-group-item list-group-item-action rounded d-flex border-0 p-3 mb-1">
-                                            <div class="avatar text-center d-none d-sm-inline-block">
-                                                <img class="avatar-img rounded-circle" src="{{ asset('assets/images/logo/12.svg') }}" alt="">
-                                            </div>
-                                            <div class="ms-sm-3 d-flex">
-                                                <p class="small mb-2"><b>Bootstrap in the news:</b> The search giant’s
-                                                    parent company, Alphabet, just joined an exclusive club of tech
-                                                    stocks.</p>
-                                                <p class="small ms-3">4hr</p>
-                                            </div>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </div>
                             <div class="card-footer text-center">
@@ -171,8 +122,10 @@
                         <li>
                             <form action="{{ route('logout') }}" method="post">
                                 @csrf
-                                <button type="submit" class="dropdown-item bg-danger-soft-hover" ><i class="bi bi-power fa-fw me-2"></i>Log
-                                    Out</button>
+                                <button type="submit" class="dropdown-item bg-danger-soft-hover">
+                                    <i class="bi bi-power fa-fw me-2"></i>Log
+                                    Out
+                                </button>
                             </form>
                         </li>
                         <li>

@@ -13,6 +13,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\FollowController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\RetrieveNotifications;
 
 Route::get('/', function () {
     return redirect()->route('posts.index');
@@ -22,7 +23,7 @@ Route::get('/', function () {
 //    return view('dashboard');
 //})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
     Route::post('/comment-likes', [CommentLikeController::class, 'store'])->name('comment_likes.store');
@@ -55,6 +56,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/who-to-follow', [FollowController::class, 'index'])->name('who_to_follow.index');
     Route::post('/follows', [FollowController::class, 'store'])->name('follows.store');
     Route::delete('/follows', [FollowController::class, 'destroy'])->name('follows.destroy');
-});
+})->middleware('auth:web');
 
 require __DIR__ . '/auth.php';

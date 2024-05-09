@@ -8,8 +8,6 @@ use Illuminate\Notifications\Notifiable;
 
 class PostLike extends Model
 {
-    use Notifiable;
-
     protected $fillable = [
         'user_id',
         'post_id',

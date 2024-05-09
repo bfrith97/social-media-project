@@ -11,8 +11,6 @@ use Illuminate\Notifications\Notifiable;
 
 class Post extends Model
 {
-    use Notifiable;
-
     protected $appends = ['liked_by_current_user'];
 
     protected $fillable = [

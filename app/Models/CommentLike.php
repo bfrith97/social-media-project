@@ -8,8 +8,6 @@ use Illuminate\Notifications\Notifiable;
 
 class CommentLike extends Model
 {
-    use Notifiable;
-
     protected $fillable = [
         'user_id',
         'comment_id',

@@ -15,7 +15,7 @@
         <!-- Connections START -->
         <ul class="avatar-group mt-1 list-unstyled align-items-sm-center">
             <li class="small">
-                Following
+                {{ $section }}
                 for {{ Carbon\Carbon::parse($user->pivot->created_at)->timezone('Europe/London')->longAbsoluteDiffForHumans() }}
             </li>
         </ul>

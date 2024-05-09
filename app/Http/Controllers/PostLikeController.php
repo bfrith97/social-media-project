@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\PostLike;
+use App\Models\User;
+use App\Notifications\NewLike;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PostLikeController extends Controller
 {
@@ -33,7 +37,10 @@ class PostLikeController extends Controller
             'post_id' => 'required|integer|exists:posts,id',
         ]);
 
-        $like = PostLike::create($validatedData);
+        $post = Post::with('user')->find($validatedData['post_id']);
+        $like = $post->postLikes()->create($validatedData);
+
+        $post->user->notify(new NewLike($like->user));
 
         if ($like) {
             return response()->json([

@@ -8,8 +8,6 @@ use Illuminate\Notifications\Notifiable;
 
 class Follow extends Model
 {
-    use Notifiable;
-
     protected $fillable = [
         'follower_id',
         'followee_id',

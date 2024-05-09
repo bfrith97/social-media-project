@@ -7,6 +7,8 @@ use App\Models\User;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Session;
 
 class PostController extends Controller
 {
@@ -17,8 +19,23 @@ class PostController extends Controller
     {
         $user = Auth::user();
 
-        $posts = Post::with('user', 'comments', 'comments.user', 'comments.commentLikes', 'postLikes')
-            ->whereNull(['group_id', 'profile_id'])
+        $posts = Post::with([
+            'user',
+            'comments',
+            'comments.user',
+            'comments.commentLikes',
+            'postLikes',
+        ])
+            ->whereHas('user', function ($query) use ($user) {
+                $query->whereHas('followers', function ($subQuery) use ($user) {
+                    $subQuery->where('follower_id', $user->id);
+                });
+                $query->orWhere('user_id', $user->id);
+            })
+            ->whereNull([
+                'group_id',
+                'profile_id',
+            ])
             ->orderByDesc('created_at')
             ->get();
 

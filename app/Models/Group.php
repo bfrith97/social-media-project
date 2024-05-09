@@ -9,8 +9,6 @@ use Illuminate\Notifications\Notifiable;
 
 class Group extends Model
 {
-    use Notifiable;
-
     protected $fillable = [
         'name',
         'description',
