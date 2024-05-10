@@ -284,20 +284,21 @@
 
 <!-- Modal create group START -->
 <div class="modal fade" id="modalCreateGroup" tabindex="-1" aria-labelledby="modalLabelCreateGroup" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Title -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabelCreateGroup">Create Group</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Form START -->
-                <form>
+    <form action="{{ route('groups.store') }}" method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Title -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabelCreateGroup">Create Group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form START -->
+                    @csrf
                     <!-- Group name -->
                     <div class="mb-3">
                         <label class="form-label">Group name</label>
-                        <input type="text" class="form-control" placeholder="Add Group name here">
+                        <input name="name" type="text" class="form-control" placeholder="Add Group name here" required>
                     </div>
                     <!-- Group picture -->
                     <div class="mb-3">
@@ -326,11 +327,11 @@
                     <div class="mb-3">
                         <label class="form-label d-block">Select audience</label>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="PublicRadioOptions" id="publicRadio1" value="option1">
+                            <input class="form-check-input" type="radio" name="private" id="publicRadio1" value="0" checked>
                             <label class="form-check-label" for="publicRadio1">Public</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="PublicRadioOptions" id="privateRadio2" value="option2">
+                            <input class="form-check-input" type="radio" name="private" id="privateRadio2" value="1">
                             <label class="form-check-label" for="privateRadio2">Private</label>
                         </div>
                     </div>
@@ -342,15 +343,20 @@
                     <!-- Group description -->
                     <div class="mb-3">
                         <label class="form-label">Group description </label>
-                        <textarea class="form-control" rows="3" placeholder="Description here"></textarea>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Description here" required></textarea>
                     </div>
-                </form>
-                <!-- Form END -->
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success-soft">Create now</button>
+                    <!-- Group website -->
+                    <div class="mb-3">
+                        <label class="form-label">Group website </label>
+                        <input name="website" type="text" class="form-control" placeholder="Add website here" required>
+                    </div>
+                    <!-- Form END -->
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success-soft">Create now</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>

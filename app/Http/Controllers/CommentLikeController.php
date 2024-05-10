@@ -36,10 +36,10 @@ class CommentLikeController extends Controller
             'comment_id' => 'required|integer|exists:comments,id',
         ]);
 
-        $comment = Comment::with('user')->find($validatedData['comment_id']);
+        $comment = Comment::with('user', 'post')->find($validatedData['comment_id']);
         $like = $comment->commentLikes()->create($validatedData);
 
-        $comment->user->notify(new NewLike($like->user, 'comment'));
+        $comment->user->notify(new NewLike($like->user, $comment,'comment'));
 
         if ($like) {
             return response()->json([

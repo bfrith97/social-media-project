@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,10 +13,12 @@ class NewComment extends Notification implements ShouldQueue
     use Queueable;
 
     protected User $commenter;
+    protected Post $post;
 
-    public function __construct(User $commenter)
+    public function __construct(User $commenter, Post $post)
     {
         $this->commenter = $commenter;
+        $this->post = $post;
     }
 
 
@@ -28,7 +31,7 @@ class NewComment extends Notification implements ShouldQueue
     {
         return [
             'message' => "{$this->commenter->name} commented on your post",
-            'href' => route('profiles.show', $this->commenter->id),
+            'href' => route('posts.show', $this->post->id),
             'picture' => $this->commenter->picture
         ];
     }

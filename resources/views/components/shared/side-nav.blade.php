@@ -89,7 +89,7 @@
                                 <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/chat-outline-filled.svg')}}" alt=""><span>Groups </span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="notifications.html">
+                            <a class="nav-link" href="{{ route('notifications.index') }}">
                                 <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/notification-outlined-filled.svg')}}" alt=""><span>Notifications </span></a>
                         </li>
                         <li class="nav-item">

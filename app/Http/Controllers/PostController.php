@@ -80,8 +80,9 @@ class PostController extends Controller
             ->filter();
 
         $post = Post::create($validatedData);
+        $post->load('user');
 
-        if($validatedData['profile_id']) {
+        if (isset($validatedData['profile_id'])) {
             $user = User::find($validatedData['profile_id']);
             $user->notify(new NewProfilePost($post->user));
         }
@@ -109,7 +110,14 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post = Post::with('user')->find($id);
+        if(!$post) {
+            return redirect()->back();
+        }
+
+        return view('posts.show')->with([
+            'post' => $post
+        ]);
     }
 
     /**

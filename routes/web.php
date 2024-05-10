@@ -34,8 +34,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/feed', [PostController::class, 'index'])->name('posts.index');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
 
-    Route::resource('/groups', GroupController::class);
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+    Route::get('/groups/{id}', [GroupController::class, 'show'])->name('groups.show');
+    Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
 
     Route::post('/post-likes', [PostLikeController::class, 'store'])->name('post_likes.store');
     Route::delete('/post-likes', [PostLikeController::class, 'destroy'])->name('post_likes.destroy');

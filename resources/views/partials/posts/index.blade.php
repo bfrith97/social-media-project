@@ -1,10 +1,3 @@
-<body>
-<!-- =======================
-Header START -->
-
-<!-- =======================
-Header END -->
-
 <!-- **************** MAIN CONTENT START **************** -->
 <main>
     <!-- Container START -->
@@ -176,7 +169,7 @@ Header END -->
 <!-- Main Chat START -->
 <div class="d-none d-lg-block">
     <!-- Button -->
-    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0 me-5 mb-5" data-bs-toggle="offcanvas" href="#offcanvasChat" role="button" aria-controls="offcanvasChat">
+    <a class="icon-md btn btn-primary position-fixed end-0 bottom-0 me-3 mb-3" data-bs-toggle="offcanvas" href="#offcanvasChat" role="button" aria-controls="offcanvasChat">
         <i class="bi bi-chat-left-text-fill"></i>
     </a>
     <!-- Chat sidebar START -->

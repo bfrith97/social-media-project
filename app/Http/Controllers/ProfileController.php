@@ -30,10 +30,10 @@ class ProfileController extends Controller
             'followings',
             'followers',
             'ownPosts' => function ($query) use($id) {
-                $query->whereNull('group_id'); // Exclude posts with a group_id
+                $query->whereNull('group_id');
                 $query->where(function($subQuery) use ($id) {
-                    $subQuery->whereNull('profile_id') // Include posts without a profile_id (general posts)
-                    ->orWhere('profile_id', $id); // Include posts where profile_id matches the current profile being viewed
+                    $subQuery->whereNull('profile_id')
+                    ->orWhere('profile_id', $id);
                 });
                 $query->orderBy('created_at', 'desc');
             },
@@ -41,9 +41,11 @@ class ProfileController extends Controller
         ])
             ->find($id);
 
-        $combinedPosts = $profile->ownPosts->merge($profile->otherPosts);
+        if(!$profile) {
+            return redirect()->back();
+        }
 
-        // Optionally, sort the combined collection by creation date if needed
+        $combinedPosts = $profile->ownPosts->merge($profile->otherPosts);
         $combinedPosts = $combinedPosts->sortByDesc('created_at');
 
         return view('profiles.show')->with([

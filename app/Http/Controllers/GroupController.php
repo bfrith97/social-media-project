@@ -33,7 +33,18 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'website' => 'required|string|max:255',
+            'private' => 'required|boolean',
+        ]);
+
+        Group::create($validatedData);
+
+        return response()->json([
+            'message' => 'Post added successfully',
+        ]);
     }
 
     /**
@@ -42,6 +53,9 @@ class GroupController extends Controller
     public function show(string $id)
     {
         $group = Group::with('members', 'posts')->find($id);
+        if(!$group) {
+            return redirect()->back();
+        }
 
         return view('groups.show')->with([
             'group' => $group

@@ -43,7 +43,7 @@ class CommentController extends Controller
         $post = Post::with('user')->find($validatedData['post_id']);
         $comment = $post->comments()->create($validatedData);
 
-        $post->user->notify(new NewComment($comment->user));
+        $post->user->notify(new NewComment($comment->user, $post));
 
         return response()->json([
             'message' => 'Comment added successfully',

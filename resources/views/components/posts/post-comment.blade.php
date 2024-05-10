@@ -25,7 +25,7 @@
                     <input type="hidden" id="comment_id" name="comment_id" value="{{$comment->id}}"/>
                     <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}"/>
                     <li class="nav-item">
-                        <button type="submit" class="nav-link {{$comment->liked_by_current_user ? 'active' : ''}} like-button comment-like" @if(count($comment->commentLikes)) data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title=" @foreach($comment->commentLikes as $user) {{$user->name}}<br> @endforeach " @endif>
+                        <button type="submit" class="nav-link {{$comment->liked_by_current_user ? 'active' : ''}} like-button comment-like" @if(count($comment->commentLikes)) data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title=" @foreach($comment->commentLikes as $likeUser) {{$likeUser->user->name}}<br> @endforeach " @endif>
                            {{$comment->liked_by_current_user ? 'Liked' : 'Like'}} ({{ $comment->commentLikes->count() }})
                         </button>
                     </li>

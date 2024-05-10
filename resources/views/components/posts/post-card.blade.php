@@ -17,7 +17,12 @@
                             <a href="{{ route('profiles.show', $post->user->id) }}"> {{ $post->user->name }} </a></h6>
                         <span class="nav-item small"> {{ Carbon\Carbon::parse($post->created_at)->timezone('Europe/London')->diffForHumans() }} </span>
                     </div>
-                    <p class="mb-0 small">{{ $post->user->role . ' at ' . $post->user-> company }}</p>
+                    <p class="mb-0 small">
+                        {{ $post->user->role ?? '' }}
+                        {{ ($post->user->role && $post->user->company) ? 'at' : '' }}
+                        {{ $post->user->company ?? '' }}
+                    </p>
+
                 </div>
             </div>
             <!-- Card feed action dropdown START -->
@@ -57,7 +62,8 @@
                 <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}"/>
                 <li class="nav-item">
                     <button class="nav-link {{$post->liked_by_current_user ? 'active' : ''}} like-button" type="submit" @if(count($post->postLikes)) data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title=" @foreach($post->postLikes as $postLike) {{$postLike->user->name}}<br> @endforeach "@endif>
-                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>{{$post->liked_by_current_user ? 'Liked' : 'Like'}} ({{ $post->postLikes->count() }})
+                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>{{$post->liked_by_current_user ? 'Liked' : 'Like'}}
+                        ({{ $post->postLikes->count() }})
                     </button>
                 </li>
             </form>
