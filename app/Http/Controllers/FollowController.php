@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Follow;
 use App\Models\User;
+use App\Notifications\NewFollower;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +25,6 @@ class FollowController extends Controller
             ->get();
 
         return view('who-to-follow.index')->with([
-            'user' => Auth::user(),
             'usersToFollow' => $usersToFollow,
         ]);
     }
@@ -48,6 +48,11 @@ class FollowController extends Controller
         ]);
 
         $follow = Follow::create($validatedData);
+
+        $follower = User::find($validatedData['follower_id']);
+        $followee = User::find($validatedData['followee_id']);
+
+        $followee->notify(new NewFollower($follower));
 
         if ($follow) {
             return response()->json([

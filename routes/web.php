@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommentLikeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\EventController;
@@ -42,6 +43,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/messages', MessageController::class);
 
     Route::resource('/news', NewsController::class);
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark_all_read');
 
     Route::resource('/profiles', ProfileController::class);
     Route::get('/profiles', [ProfileController::class, 'edit'])->name('profiles.edit');

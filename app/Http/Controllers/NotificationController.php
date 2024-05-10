@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class MessageController extends Controller
+class NotificationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('messages.index')->with([
+        return view('notifications.index')->with([
         ]);
     }
 
@@ -62,5 +62,15 @@ class MessageController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function markAllRead()
+    {
+        $user = Auth::user();
+        $user->unreadNotifications->markasRead();
+
+        return response()->json([
+            'message' => 'Notifications have been marked as read'
+        ]);
     }
 }

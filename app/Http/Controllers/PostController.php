@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\NewProfilePost;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,6 @@ class PostController extends Controller
             ->get();
 
         return view('posts.index')->with([
-            'user' => Auth::user(),
             'usersToFollow' => $usersToFollow,
             'posts' => $posts,
         ]);
@@ -80,6 +80,11 @@ class PostController extends Controller
             ->filter();
 
         $post = Post::create($validatedData);
+
+        if($validatedData['profile_id']) {
+            $user = User::find($validatedData['profile_id']);
+            $user->notify(new NewProfilePost($post->user));
+        }
 
         return response()->json([
             'message' => 'Post added successfully',

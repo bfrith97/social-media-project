@@ -16,7 +16,6 @@ class GroupController extends Controller
         $allGroups = Group::with('members', 'posts', 'posts.user')->orderBy('name')->get();
 
         return view('groups.index')->with([
-            'user' => Auth::user(),
             'allGroups' => $allGroups
         ]);
     }
@@ -45,7 +44,6 @@ class GroupController extends Controller
         $group = Group::with('members', 'posts')->find($id);
 
         return view('groups.show')->with([
-            'user' => Auth::user(),
             'group' => $group
         ]);
     }

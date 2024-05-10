@@ -12,10 +12,12 @@ class NewLike extends Notification implements ShouldQueue
     use Queueable;
 
     protected User $liker;
+    protected string $item;
 
-    public function __construct(User $liker)
+    public function __construct(User $liker, string $item)
     {
         $this->liker = $liker;
+        $this->item = $item;
     }
 
 
@@ -27,8 +29,9 @@ class NewLike extends Notification implements ShouldQueue
     public function toArray($notifiable): array
     {
         return [
-            'message' => "{$this->liker->name} liked your post.",
+            'message' => "{$this->liker->name} liked your " . $this->item,
             'href' => route('profiles.show', $this->liker->id),
+            'picture' => $this->liker->picture
         ];
     }
 }

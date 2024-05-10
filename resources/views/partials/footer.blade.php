@@ -44,10 +44,11 @@
 
 <!-- Stacked JS -->
 @stack('js')
+<script src="{{ asset('js/nav/search.js') }}"></script>
+<script src="{{ asset('js/nav/notifications.js') }}"></script>
 
 <!-- Theme Functions -->
 <script src="{{ asset('assets/js/functions.js') }}"></script>
-<script src="{{ asset('js/nav/search.js') }}"></script>
 
 </body>
 </html>

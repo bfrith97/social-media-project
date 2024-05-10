@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Post;
+use App\Notifications\NewComment;
+use App\Notifications\NewLike;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 
@@ -37,8 +40,10 @@ class CommentController extends Controller
 
         $validatedData['content'] = Profanity::blocker($validatedData['content'])->strict(false)->strictClean(true)->filter();
 
-        $comment = Comment::create($validatedData);
-        $commentNumber = Comment::where('post_id', $validatedData['post_id'])->count();
+        $post = Post::with('user')->find($validatedData['post_id']);
+        $comment = $post->comments()->create($validatedData);
+
+        $post->user->notify(new NewComment($comment->user));
 
         return response()->json([
             'message' => 'Comment added successfully',
@@ -50,7 +55,6 @@ class CommentController extends Controller
                     'picture' => asset($comment->user->picture),
                 ],
                 'content' => $comment->content,
-                'comment_count' => $commentNumber,
             ],
         ]);
     }

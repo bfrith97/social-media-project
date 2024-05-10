@@ -40,7 +40,7 @@ class PostLikeController extends Controller
         $post = Post::with('user')->find($validatedData['post_id']);
         $like = $post->postLikes()->create($validatedData);
 
-        $post->user->notify(new NewLike($like->user));
+        $post->user->notify(new NewLike($like->user, 'post'));
 
         if ($like) {
             return response()->json([

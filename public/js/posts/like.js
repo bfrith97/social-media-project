@@ -61,7 +61,7 @@ function changeLikeHtml(likeBtn, data, form) {
         methodInput.classList.add('delete_method');
 
         form.appendChild(methodInput);
-    } else {
+    } else if (data['message'] === 'Like removed successfully') {
         likeCountNumber = parseInt(parts[1]) - 1
 
         likeBtn.classList.remove('active');

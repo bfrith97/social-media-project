@@ -57,44 +57,50 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown ms-2">
-                    <a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                        <span class="badge-notif animation-blink"></span>
-                        <i class="bi bi-bell-fill fs-6"> </i>
-                    </a>
-                    <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0" aria-labelledby="notifDropdown">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="m-0">Notifications
-                                    <span class="badge bg-danger bg-opacity-10 text-danger ms-2">{{ $user->unreadNotifications()->count() }} new</span></h6>
-                                <a class="small" href="#">Clear all</a>
-                            </div>
-                            <div class="card-body p-0">
-                                <ul class="list-group list-group-flush list-unstyled p-2">
-                                    <!-- Notif item -->
-                                    @foreach($user->notifications as $notification)
-                                        <li>
-                                            <a href="{!! $notification->data['href']!!}" class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3 @if(!$notification->read_at) badge-unread @endif">
-                                                <div class="avatar text-center d-none d-sm-inline-block">
-                                                    <div class="avatar-img rounded-circle bg-success">
-                                                        <span class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span>
+                    <form id="mark-notifications-read-form" method="post" action="{{ route('notifications.mark_all_read') }}">
+                        <a class="nav-link bg-light icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                            <span class="badge-notif animation-blink @if(!$notificationsCount) d-none @endif"></span>
+                            <i class="bi bi-bell-fill fs-6"> </i>
+                        </a>
+                        <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0" aria-labelledby="notifDropdown">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center px-4 py-2">
+                                    <h6 class="m-0">Notifications
+                                        <span id="notifcation-count" class="badge bg-opacity-10 {{ $notificationsCount > 0 ? 'bg-danger text-danger' : 'bg-success text-success' }} ms-2">{{ $notificationsCount }} new</span>
+                                    </h6>
+                                    @csrf
+                                    <button class="btn btn-sm text-primary pe-0 mark-notifications-read-button" type="submit">
+                                        Mark all as
+                                        read
+                                    </button>
+                                </div>
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush list-unstyled p-2">
+                                        @foreach($user->notifications->take(5) as $notification)
+                                            <!-- Notification item -->
+                                            <li>
+                                                <a href="{!! $notification->data['href']!!}" class="notification list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3 @if(!$notification->read_at) badge-unread @endif">
+                                                    <div class="avatar text-center d-none d-sm-inline-block">
+                                                        <img class="avatar-img rounded-circle" src="{{asset($notification->data['picture'])}}">
                                                     </div>
-                                                </div>
-                                                <div class="ms-sm-3">
-                                                    <div class="d-flex">
-                                                        <p class="small mb-2">{{$notification->data['message']}}</p>
-                                                        <p class="small ms-3">{{Carbon\Carbon::parse($notification->created_at)->timezone('Europe/London')->diffForHumans()}}</p>
+                                                    <div class="ms-sm-3">
+                                                        <div class="d-flex">
+                                                            <p class="small mb-2">{{$notification->data['message']}}</p>
+                                                            <p class="small ms-3" style="white-space: nowrap">{{Carbon\Carbon::parse($notification->created_at)->timezone('Europe/London')->diffForHumans()}}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div class="card-footer text-center">
-                                <a href="#" class="btn btn-sm btn-primary-soft">See all incoming activity</a>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                <div class="card-footer text-center p-2">
+                                    <a href="{{ route('notifications.index') }}" class="btn btn-sm btn-primary-soft">See
+                                        all notifications</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </li>
                 <!-- Notification dropdown END -->
 
@@ -161,3 +167,4 @@
     </nav>
     <!-- Logo Nav END -->
 </header>
+

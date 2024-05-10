@@ -50,7 +50,6 @@ class SettingController extends Controller
         $relationshipOptions = Relationship::all();
 
         return view('settings.edit')->with([
-            'user'                => Auth::user(),
             'relationshipOptions' => $relationshipOptions,
         ]);
     }

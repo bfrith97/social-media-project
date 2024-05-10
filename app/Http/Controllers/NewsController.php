@@ -13,7 +13,6 @@ class NewsController extends Controller
     public function index()
     {
         return view('news.index')->with([
-            'user' => Auth::user()
         ]);
     }
 
@@ -39,7 +38,6 @@ class NewsController extends Controller
     public function show(string $id)
     {
         return view('news.show')->with([
-            'user' => Auth::user()
         ]);
     }
 

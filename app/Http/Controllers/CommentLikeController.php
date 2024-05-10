@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\CommentLike;
+use App\Models\Post;
+use App\Notifications\NewLike;
 use Illuminate\Http\Request;
 
 class CommentLikeController extends Controller
@@ -33,7 +36,10 @@ class CommentLikeController extends Controller
             'comment_id' => 'required|integer|exists:comments,id',
         ]);
 
-        $like = CommentLike::create($validatedData);
+        $comment = Comment::with('user')->find($validatedData['comment_id']);
+        $like = $comment->commentLikes()->create($validatedData);
+
+        $comment->user->notify(new NewLike($like->user, 'comment'));
 
         if ($like) {
             return response()->json([

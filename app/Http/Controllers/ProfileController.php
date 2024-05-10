@@ -46,9 +46,7 @@ class ProfileController extends Controller
         // Optionally, sort the combined collection by creation date if needed
         $combinedPosts = $combinedPosts->sortByDesc('created_at');
 
-
         return view('profiles.show')->with([
-            'user' => Auth::user(),
             'profile' => $profile,
             'combinedPosts' => $combinedPosts
         ]);
