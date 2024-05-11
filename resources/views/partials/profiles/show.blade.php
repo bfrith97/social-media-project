@@ -303,81 +303,28 @@
                         <div class="card">
                             <!-- Card header START -->
                             <div class="card-header d-sm-flex justify-content-between border-0 pb-0">
-                                <h5 class="card-title">Interests</h5>
-                                <a class="btn btn-primary-soft btn-sm" href="#!"> See all</a>
+                                <h5 class="card-title">Groups</h5>
                             </div>
                             <!-- Card header END -->
                             <!-- Card body START -->
                             <div class="card-body">
                                 <div class="row g-4">
-                                    <div class="col-sm-6 col-lg-4">
-                                        <!-- Interests item START -->
-                                        <div class="d-flex align-items-center position-relative">
-                                            <div class="avatar">
-                                                <img class="avatar-img" src="assets/images/logo/04.svg" alt="">
+                                    @foreach($profile->groups as $group)
+                                        <div class="col-sm-6 col-lg-4">
+                                            <!-- Interests item START -->
+                                            <div class="d-flex align-items-center position-relative">
+                                                <div class="avatar">
+                                                    <img class="avatar-img" src="assets/images/logo/04.svg" alt="">
+                                                </div>
+                                                <div class="ms-2">
+                                                    <h6 class="mb-0"><a class="stretched-link" href="{{ route('groups.show', $group->id) }}"> {{$group->name}} </a>
+                                                    </h6>
+                                                    <p class="small mb-0">{{$group->members->count()}} members</p>
+                                                </div>
                                             </div>
-                                            <div class="ms-2">
-                                                <h6 class="mb-0"><a class="stretched-link" href="#"> Oracle </a></h6>
-                                                <p class="small mb-0">7,546,224 followers</p>
-                                            </div>
+                                            <!-- Interests item END -->
                                         </div>
-                                        <!-- Interests item END -->
-                                    </div>
-                                    <div class="col-sm-6 col-lg-4">
-                                        <!-- Interests item START -->
-                                        <div class="d-flex align-items-center position-relative">
-                                            <div class="avatar">
-                                                <img class="avatar-img" src="assets/images/logo/13.svg" alt="">
-                                            </div>
-                                            <div class="ms-2">
-                                                <h6 class="mb-0"><a class="stretched-link" href="#"> Apple </a></h6>
-                                                <p class="small mb-0">102B followers</p>
-                                            </div>
-                                        </div>
-                                        <!-- Interests item END -->
-                                    </div>
-                                    <div class="col-sm-6 col-lg-4">
-                                        <!-- Interests item START -->
-                                        <div class="d-flex align-items-center position-relative">
-                                            <div class="avatar">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/placeholder.jpg" alt="">
-                                            </div>
-                                            <div class="ms-2">
-                                                <h6 class="mb-0"><a class="stretched-link" href="#"> Elon musk </a></h6>
-                                                <p class="small mb-0"> CEO and Product Architect of Tesla, Inc 41B
-                                                    followers</p>
-                                            </div>
-                                        </div>
-                                        <!-- Interests item END -->
-                                    </div>
-                                    <div class="col-sm-6 col-lg-4">
-                                        <!-- Interests item START -->
-                                        <div class="d-flex align-items-center position-relative">
-                                            <div class="avatar">
-                                                <img class="avatar-img" src="assets/images/events/04.jpg" alt="">
-                                            </div>
-                                            <div class="ms-2">
-                                                <h6 class="mb-0"><a class="stretched-link" href="#"> The X Factor </a>
-                                                </h6>
-                                                <p class="small mb-0">9,654 followers</p>
-                                            </div>
-                                        </div>
-                                        <!-- Interests item END -->
-                                    </div>
-                                    <div class="col-sm-6 col-lg-4">
-                                        <!-- Interests item START -->
-                                        <div class="d-flex align-items-center position-relative">
-                                            <div class="avatar">
-                                                <img class="avatar-img rounded-circle" src="assets/images/logo/12.svg" alt="">
-                                            </div>
-                                            <div class="ms-2">
-                                                <h6 class="mb-0"><a class="stretched-link" href="#"> Getbootstrap </a>
-                                                </h6>
-                                                <p class="small mb-0">8,457,224 followers</p>
-                                            </div>
-                                        </div>
-                                        <!-- Interests item END -->
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

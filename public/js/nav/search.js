@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', function () {
             data.forEach(item => {
                 let html = `
                 <li class="d-flex nav-link dropdown-item">
-                    <a class="btn icon-md p-0" href="/profiles/${item.id}" >
+                    <a class="btn icon-md p-0" href="/${item.group === true ? 'groups' : 'profiles'}/${item.id}" >
                         <img class="avatar-img rounded-2" src="http://127.0.0.1:8000/${item.picture}" alt="">
                     </a>
-                        <a class="dropdown-item pt-0" href="/profiles/${item.id}">
+                        <a class="dropdown-item pt-0" href="/${item.group === true ? 'groups' : 'profiles'}/${item.id}">
                             ${item.name}
                             <br><small><i>${item.subtitle}</i></small>
                         </a>

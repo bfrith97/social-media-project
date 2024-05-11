@@ -24,7 +24,7 @@ class FollowController extends Controller
             ->inRandomOrder()
             ->get();
 
-        return view('who-to-follow.index')->with([
+        return view('who_to_follow.index')->with([
             'usersToFollow' => $usersToFollow,
         ]);
     }

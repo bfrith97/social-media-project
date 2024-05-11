@@ -37,7 +37,8 @@ class ProfileController extends Controller
                 });
                 $query->orderBy('created_at', 'desc');
             },
-            'otherPosts'
+            'otherPosts',
+            'groups.members'
         ])
             ->find($id);
 

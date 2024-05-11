@@ -17,7 +17,7 @@
                 <!-- Advanced filter responsive toggler END -->
 
                 <!-- Navbar START-->
-                <x-shared.side-nav :user="$user"/>
+                <x-shared.left-side-nav :user="$user"/>
                 <!-- Navbar END-->
             </div>
             <!-- Sidenav END -->

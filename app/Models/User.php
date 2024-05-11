@@ -82,20 +82,30 @@ class User extends Authenticatable
     // Users that this user follows
     public function followings(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followee_id')->orderByDesc('follows.created_at')
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followee_id')
+            ->orderByDesc('follows.created_at')
             ->withTimestamps();
     }
 
     // Users that follow this user
     public function followers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'follows', 'followee_id', 'follower_id')->orderByDesc('follows.created_at')
+        return $this->belongsToMany(User::class, 'follows', 'followee_id', 'follower_id')
+            ->orderByDesc('follows.created_at')
+            ->withTimestamps();
+    }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_users', 'user_id', 'group_id')
             ->withTimestamps();
     }
 
     public function getFollowedByCurrentUserAttribute(): bool
     {
         $user = auth()->id();
-        return $this->followers()->where('follower_id', $user)->exists();
+        return $this->followers()
+            ->where('follower_id', $user)
+            ->exists();
     }
 }

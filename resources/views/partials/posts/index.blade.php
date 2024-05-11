@@ -6,7 +6,7 @@
 
             <!-- Sidenav START -->
             <div class="col-lg-3">
-                <x-shared.side-nav :user="$user"/>
+                <x-shared.left-side-nav :user="$user"/>
             </div>
             <!-- Sidenav END -->
 
@@ -50,114 +50,7 @@
             </div>
             <!-- Main content END -->
 
-            <!-- Right sidebar START -->
-            <div class="col-lg-3">
-                <div class="row g-4">
-                    <!-- Card follow START -->
-                    <div class="col-sm-6 col-lg-12">
-                        <div class="card">
-                            <!-- Card header START -->
-                            <div class="card-header pb-0 border-0">
-                                <h5 class="card-title mb-0">Who to follow</h5>
-                            </div>
-                            <!-- Card header END -->
-                            <!-- Card body START -->
-                            <div class="card-body">
-                                <!-- Connection item START -->
-                                @foreach($usersToFollow as $userToFollow)
-                                    <form action="{{route('follows.store')}}" method="post" class="follow-form">
-                                        @csrf
-                                        <input type="hidden" name="followee_id" value="{{$userToFollow->id}}">
-                                        <input type="hidden" name="follower_id" value="{{$user->id}}">
-                                        @if($userToFollow->followed_by_current_user)
-                                            <input class="delete_method" type="hidden" name="_method" value="DELETE">
-                                        @endif
-
-                                        <div class="hstack gap-2 mb-3">
-                                            <!-- Avatar -->
-                                            <div class="avatar">
-                                                <a href="{{ route('profiles.show', $userToFollow->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($userToFollow->picture) }}" alt="Image of {{$userToFollow->name}}"></a>
-                                            </div>
-                                            <!-- Title -->
-                                            <div class="overflow-hidden">
-                                                <a class="h6 mb-0" href="{{ route('profiles.show', $userToFollow->id) }}"> {{ $userToFollow->name }} </a>
-                                                <p class="mb-0 small text-truncate">{{ $userToFollow->role }}</p>
-                                            </div>
-                                            <!-- Button -->
-                                            <button type="submit" class="btn btn-primary-soft rounded-circle icon-md ms-auto follow-button">
-                                                <i class="fa-solid fa-plus"> </i></button>
-                                        </div>
-                                    </form>
-                                @endforeach
-
-                                <!-- Connection item END -->
-                                <!-- Connection item END -->
-
-                                <!-- View more button -->
-                                <div class="d-grid mt-3">
-                                    <a class="btn btn-sm btn-primary-soft" href="who-to-follow">View more</a>
-                                </div>
-                            </div>
-                            <!-- Card body END -->
-                        </div>
-                    </div>
-                    <!-- Card follow START -->
-
-                    <!-- Card News START -->
-                    <div class="col-sm-6 col-lg-12">
-                        <div class="card">
-                            <!-- Card header START -->
-                            <div class="card-header pb-0 border-0">
-                                <h5 class="card-title mb-0">Today’s news</h5>
-                            </div>
-                            <!-- Card header END -->
-                            <!-- Card body START -->
-                            <div class="card-body">
-                                <!-- News item -->
-                                <div class="mb-3">
-                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Ten questions you should
-                                            answer
-                                            truthfully</a></h6>
-                                    <small>2hr</small>
-                                </div>
-                                <!-- News item -->
-                                <div class="mb-3">
-                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Five unbelievable facts about
-                                            money</a>
-                                    </h6>
-                                    <small>3hr</small>
-                                </div>
-                                <!-- News item -->
-                                <div class="mb-3">
-                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Best Pinterest Boards for
-                                            learning
-                                            about business</a></h6>
-                                    <small>4hr</small>
-                                </div>
-                                <!-- News item -->
-                                <div class="mb-3">
-                                    <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">Skills that you can learn
-                                            from
-                                            business</a></h6>
-                                    <small>6hr</small>
-                                </div>
-                                <!-- Load more comments -->
-                                <a href="#!" role="button" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center" data-bs-toggle="button" aria-pressed="true">
-                                    <div class="spinner-dots me-2">
-                                        <span class="spinner-dot"></span>
-                                        <span class="spinner-dot"></span>
-                                        <span class="spinner-dot"></span>
-                                    </div>
-                                    View all latest news
-                                </a>
-                            </div>
-                            <!-- Card body END -->
-                        </div>
-                    </div>
-                    <!-- Card News END -->
-                </div>
-            </div>
-            <!-- Right sidebar END -->
+            <x-shared.right-side-nav :usersToFollow="$usersToFollow" :news="$news"/>
 
         </div> <!-- Row END -->
     </div>

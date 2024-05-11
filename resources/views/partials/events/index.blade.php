@@ -6,7 +6,7 @@
 
             <!-- Sidenav START -->
             <div class="col-lg-3">
-                <x-shared.side-nav :user="$user"/>
+                <x-shared.left-side-nav :user="$user"/>
             </div>
             <!-- Sidenav END -->
 

@@ -5,14 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewProfilePost;
+use App\Services\NewsService;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Session;
 
 class PostController extends Controller
 {
+    private NewsService $newsService;
+
+    public function __construct(NewsService $newsService) {
+        $this->newsService = $newsService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -48,9 +53,12 @@ class PostController extends Controller
             ->take(5)
             ->get();
 
+        $news = $this->newsService->getNewsHeadlines();
+
         return view('posts.index')->with([
             'usersToFollow' => $usersToFollow,
             'posts' => $posts,
+            'news' => $news,
         ]);
     }
 
@@ -110,13 +118,14 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = Post::with('user')->find($id);
-        if(!$post) {
+        $post = Post::with('user')
+            ->find($id);
+        if (!$post) {
             return redirect()->back();
         }
 
         return view('posts.show')->with([
-            'post' => $post
+            'post' => $post,
         ]);
     }
 

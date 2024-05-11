@@ -4,7 +4,7 @@
         <div class="row g-4">
 
             <div class="col-lg-3">
-                <x-shared.side-nav :user="$user"/>
+                <x-shared.left-side-nav :user="$user"/>
             </div>
             <div class="col-lg-9">
 
