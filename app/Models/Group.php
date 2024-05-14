@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class Group extends Model
 {
+    protected $appends = ['joined_by_current_user'];
+
     protected $fillable = [
         'name',
         'description',
@@ -24,5 +26,13 @@ class Group extends Model
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'group_id')->orderByDesc('created_at');
+    }
+
+    public function getJoinedByCurrentUserAttribute(): bool
+    {
+        $user = auth()->id();
+        return $this->members()
+            ->where('user_id', $user)
+            ->exists();
     }
 }

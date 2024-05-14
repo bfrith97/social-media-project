@@ -245,8 +245,23 @@
                                                     <!-- Card body END -->
                                                     <!-- Card Footer START -->
                                                     <div class="card-footer text-center">
-                                                        <a class="btn btn-success-soft btn-sm" href="#!"> Join
-                                                            group </a>
+                                                        <form action="{{ route('group_users.store') }}" method="post">
+                                                            @csrf
+                                                            @if($group->joined_by_current_user)
+                                                                @method('DELETE')
+                                                            @endif
+                                                            <input type="hidden" name="group_id" value="{{$group->id}}"/>
+                                                            <input type="hidden" name="user_id" value="{{$user->id}}"/>
+                                                            @if($group->joined_by_current_user)
+                                                                <button type="submit" class="btn btn-danger-soft btn-sm">
+                                                                    Leave group
+                                                                </button>
+                                                            @else
+                                                                <button type="submit" class="btn btn-success-soft btn-sm">
+                                                                    Join group
+                                                                </button>
+                                                            @endif
+                                                        </form>
                                                     </div>
                                                     <!-- Card Footer END -->
                                                 </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommentLikeController;
+use App\Http\Controllers\GroupUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\NewsController;
@@ -39,6 +40,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
     Route::get('/groups/{id}', [GroupController::class, 'show'])->name('groups.show');
     Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
+
+    Route::get('/groups_users', [GroupUserController::class, 'index'])->name('group_users.index');
+    Route::post('/groups_users', [GroupUserController::class, 'store'])->name('group_users.store');
+    Route::delete('/groups_users', [GroupUserController::class, 'destroy'])->name('group_users.destroy');
 
     Route::post('/post-likes', [PostLikeController::class, 'store'])->name('post_likes.store');
     Route::delete('/post-likes', [PostLikeController::class, 'destroy'])->name('post_likes.destroy');
