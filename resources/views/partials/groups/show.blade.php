@@ -46,10 +46,24 @@
                             </div>
                             <!-- Button -->
                             <div class="d-flex justify-content-center justify-content-md-start align-items-center mt-3 ms-lg-auto">
-                                <button class="btn btn-sm btn-primary-soft me-2" type="button">
-                                    <i class="bi bi-person-check-fill pe-1"></i> Joined
-                                </button>
-                                <button class="btn btn-sm btn-success me-2" type="button">
+                                <form action="{{ route('group_users.store') }}" method="post" class="follow-form">
+                                    @csrf
+                                    @if($group->joined_by_current_user)
+                                        <input type="hidden" name="_method" value="DELETE" class="delete_method">
+                                    @endif
+                                    <input type="hidden" name="group_id" value="{{$group->id}}"/>
+                                    <input type="hidden" name="user_id" value="{{$user->id}}"/>
+                                    @if($group->joined_by_current_user)
+                                        <button type="button" class="btn btn-danger-soft btn-sm join-button">
+                                            Leave group
+                                        </button>
+                                    @else
+                                        <button type="button" class="btn btn-success-soft btn-sm join-button">
+                                            Join group
+                                        </button>
+                                    @endif
+                                </form>
+                                <button class="btn btn-sm btn-success mx-2" type="button">
                                     <i class="fa-solid fa-plus pe-1"></i> Invite
                                 </button>
                                 <div class="dropdown">
@@ -148,9 +162,11 @@
                             <div class="col-lg-8 vstack gap-4">
                                 <x-posts.post-creation :user="$user" :group="$group"/>
 
-                                @foreach($group->posts as $post)
-                                    <x-posts.post-card :post="$post" :user="$user" />
-                                @endforeach
+                                <div id="posts">
+                                    @foreach($group->posts as $post)
+                                        <x-posts.post-card :post="$post" :user="$user" has-margin="true"/>
+                                    @endforeach
+                                </div>
                             </div>
 
                             <div class="col-lg-4">

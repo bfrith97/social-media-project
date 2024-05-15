@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +13,10 @@ class EventController extends Controller
      */
     public function index()
     {
+        $events = Event::with('eventType', 'eventLocation')->get();
+
         return view('events.index')->with([
+            'events' => $events
         ]);
     }
 
@@ -37,7 +41,10 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $event = Event::find($id);
+        return view('events.show')->with([
+            'event' => $event
+        ]);
     }
 
     /**

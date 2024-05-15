@@ -8,6 +8,7 @@ use App\Notifications\NewProfilePost;
 use App\Services\NewsService;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -92,7 +93,7 @@ class PostController extends Controller
 
         if (isset($validatedData['profile_id'])) {
             $user = User::find($validatedData['profile_id']);
-            $user->notify(new NewProfilePost($post->user));
+            $user->notify(new NewProfilePost($post->user, $post));
         }
 
         return response()->json([

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Connex</title>
+    <title>{{ ucwords(str_replace('_', ' ',explode('.', Route::currentRouteName())[0])) }} | Connex</title>
 
     <!-- Meta Tags -->
     <meta charset="utf-8">

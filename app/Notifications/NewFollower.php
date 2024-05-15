@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class NewFollower extends Notification implements ShouldQueue
@@ -21,7 +22,10 @@ class NewFollower extends Notification implements ShouldQueue
 
     public function via($notifiable): array
     {
-        return ['database'];
+        return [
+            'database',
+            'mail',
+        ];
     }
 
     public function toArray($notifiable): array
@@ -29,7 +33,16 @@ class NewFollower extends Notification implements ShouldQueue
         return [
             'message' => "{$this->follower->name} started following you",
             'href' => route('profiles.show', $this->follower->id),
-            'picture' => $this->follower->picture
+            'picture' => $this->follower->picture,
         ];
+    }
+
+    public function toMail($notifiable): MailMessage
+    {
+        return (new MailMessage)->subject('New Follow Notification')
+            ->greeting('Hello, ' . $notifiable->name . '!')
+            ->line($this->follower->name . ' has just followed you ')
+            ->action('View follower', route('profiles.show', $this->follower->id))
+            ->line('Thank you for using Connex!');
     }
 }

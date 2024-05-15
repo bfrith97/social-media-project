@@ -48,7 +48,7 @@ function submitPost(form, body, csrfToken) {
 }
 
 function addNewPostHtml(form, post) {
-    let formContainer = form.closest('#main-content').querySelector('#posts') // Use a class that wraps both the form and the comment list
+    let formContainer = form.closest('main').querySelector('#posts')
 
     // Create the new comment HTML
     const newCommentHtml = `
