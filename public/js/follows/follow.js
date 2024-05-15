@@ -43,7 +43,7 @@ function changeFollowHtml(followBtn, data, form) {
     if (data['message'] === 'Follow added successfully') {
         followBtn.classList.add('active');
         followBtn.innerHTML = `
-            <button type="submit" class="btn btn-primary rounded-circle icon-md ms-auto"><i class="bi bi-person-check-fill"> </i></button>
+            <button type="button" class="btn btn-primary rounded-circle icon-md ms-auto"><i class="bi bi-person-check-fill"> </i></button>
         `
 
         let methodInput = document.createElement('input');
@@ -55,7 +55,7 @@ function changeFollowHtml(followBtn, data, form) {
         form.appendChild(methodInput);
     } else {
         followBtn.innerHTML = `
-              <button type="submit" class="btn btn-primary-soft rounded-circle icon-md ms-auto follow-button"><i class="fa-solid fa-plus"></i></button>
+              <button type="button" class="btn btn-primary-soft rounded-circle icon-md ms-auto follow-button"><i class="fa-solid fa-plus"></i></button>
         `
 
         form.querySelector('.delete_method').remove();

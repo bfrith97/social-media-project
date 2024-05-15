@@ -42,11 +42,11 @@
                                             @endif
 
                                             @if($profile->followed_by_current_user)
-                                                <button type="submit" class="btn btn-sm btn-danger-soft follow-button">
+                                                <button type="button" class="btn btn-sm btn-danger-soft follow-button">
                                                     Unfollow
                                                 </button>
                                             @else
-                                                <button type="submit" class="btn btn-sm btn-success-soft follow-button">
+                                                <button type="button" class="btn btn-sm btn-success-soft follow-button">
                                                     Follow
                                                 </button>
                                             @endif
