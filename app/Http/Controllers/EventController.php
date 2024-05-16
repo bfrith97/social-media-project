@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventDate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,10 +14,15 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::with('eventType', 'eventLocation')->get();
+        $eventDates  = EventDate::with('event', 'event.eventType', 'event.eventLocation')->get();
+
+        $eventDatesOnline = $eventDates->filter(function ($eventDate) {
+            return $eventDate->event->event_location_id == 1;
+        });
 
         return view('events.index')->with([
-            'events' => $events
+            'eventDates' => $eventDates,
+            'eventDatesOnline' => $eventDatesOnline,
         ]);
     }
 

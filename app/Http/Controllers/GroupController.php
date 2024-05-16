@@ -13,10 +13,18 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $allGroups = Group::with('members', 'posts', 'posts.user')->orderBy('name')->get();
+        $groups = Group::with(['members', 'posts', 'posts.user'])
+            ->withCount('members', 'posts')
+            ->get();
 
+        $allGroups = $groups->sortBy('name');
+        $mostPopularGroups = $groups->sortByDesc('members_count');
+
+        // Pass the sorted collections to the view
         return view('groups.index')->with([
-            'allGroups' => $allGroups
+            'allGroups' => $allGroups,
+            'mostPopularGroups' => $mostPopularGroups,
+            'suggestedGroups' => [],
         ]);
     }
 
