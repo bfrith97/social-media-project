@@ -41,10 +41,10 @@ function submitFollow(form, body, csrfToken, followBtn) {
 
 function changeFollowHtml(followBtn, data, form) {
     if (data['message'] === 'Follow added successfully') {
-        followBtn.classList.add('active');
-        followBtn.outerHTML = `
-            <button type="submit" class="btn btn-sm btn-danger-soft follow-button">Unfollow </button>
-        `
+        console.log('follow added')
+        followBtn.classList.remove('btn-success-soft');
+        followBtn.classList.add('btn-danger-soft');
+        followBtn.textContent = 'Unfollow'
 
         let methodInput = document.createElement('input');
         methodInput.setAttribute('type', 'hidden');
@@ -54,9 +54,10 @@ function changeFollowHtml(followBtn, data, form) {
 
         form.appendChild(methodInput);
     } else {
-        followBtn.outerHTML = `
-              <button type="submit" class="btn btn-sm btn-success-soft follow-button">Follow </button>
-        `
+        console.log('follow removed')
+        followBtn.classList.add('btn-success-soft');
+        followBtn.classList.remove('btn-danger-soft');
+        followBtn.textContent = 'Follow'
 
         form.querySelector('.delete_method').remove();
     }

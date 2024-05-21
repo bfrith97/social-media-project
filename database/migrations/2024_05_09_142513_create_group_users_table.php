@@ -10,6 +10,7 @@ return new class extends Migration {
         Schema::create('group_users', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('group_id')->constrained('groups')->onDelete('cascade');
+            $table->boolean('is_admin')->default(0);
 
             $table->timestamps();
 

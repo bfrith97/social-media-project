@@ -60,13 +60,16 @@ class GroupController extends Controller
      */
     public function show(string $id)
     {
-        $group = Group::with('members', 'posts')->find($id);
+        $group = Group::with('members', 'posts', 'events', 'groupCategory')->withCount('members', 'posts', 'events')->find($id);
         if(!$group) {
             return redirect()->back();
         }
 
+        $memberNames = $group->members->pluck('name');
+
         return view('groups.show')->with([
-            'group' => $group
+            'group' => $group,
+            'memberNames' => $memberNames
         ]);
     }
 

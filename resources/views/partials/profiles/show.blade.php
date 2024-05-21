@@ -1799,7 +1799,6 @@
                         </div>
                     </div>
                     <!-- Card END -->
-
                     <!-- Card START -->
                     <div class="col-md-6 col-lg-12">
                         <div class="card">
@@ -1814,9 +1813,8 @@
                             <!-- Card body START -->
                             <div class="card-body position-relative pt-0">
                                 <div class="row g-3">
-
-                                    @foreach($profile->followings->slice(0, 4) as $following)
-                                        <x-profile.following-card :user="$following" :profile="$profile" :self="$user"/>
+                                    @foreach($profile->followings->take(4) as $following)
+                                        <x-profile.following-card :following="$following" :profile="$profile" :self="$user"/>
                                     @endforeach
 
                                 </div>

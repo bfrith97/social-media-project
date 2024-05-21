@@ -1,5 +1,4 @@
 <main>
-
     <!-- Container START -->
     <div class="container">
         <div class="row g-4">
@@ -32,7 +31,7 @@
                             <div class="mb-2">
                                 <!-- Avatar -->
                                 <div class="avatar avatar-xl">
-                                    <img class="avatar-img border-0" src="assets/images/logo/13.svg" alt="">
+                                    <img class="avatar-img border-0" src="" alt="">
                                 </div>
                             </div>
                             <div class="ms-md-4 mt-3">
@@ -72,63 +71,48 @@
                                         <i class="bi bi-three-dots"></i>
                                     </button>
                                     <!-- Group share action dropdown menu -->
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="groupAction">
-                                        <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Share
-                                                profile in a message</a></li>
+                                    <ul class="dropdown-menu dropdown-menu-end py-2" aria-labelledby="groupAction">
                                         <li><a class="dropdown-item" href="#">
-                                                <i class="bi bi-file-earmark-pdf fa-fw pe-2"></i>Save your profile to
-                                                PDF</a></li>
-                                        <li><a class="dropdown-item" href="#"> <i class="bi bi-lock fa-fw pe-2"></i>Lock
-                                                profile</a></li>
-                                        <li>
-                                            <hr class="dropdown-divider">
+                                                <i class="bi bi-chat-left-text fa-fw pe-2"></i>Share
+                                                as a message</a>
                                         </li>
-                                        <li><a class="dropdown-item" href="#"> <i class="bi bi-gear fa-fw pe-2"></i>Profile
-                                                settings</a></li>
+                                        <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share
+                                                as a post<a>
+                                        </li>
+                                        @if($group->current_user_is_admin)
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item" href="#"> <i class="bi bi-gear fa-fw pe-2"></i>Group
+                                                    settings</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <!-- Join group START -->
                         <ul class="avatar-group list-unstyled justify-content-center justify-content-md-start align-items-center mb-0 mt-3 flex-wrap">
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="avatar">
+                            @if($group->members_count >= 1)
+                                @foreach($group->members->take(3) as $member)
+                                    <li class="avatar avatar-xs">
+                                        <img class="avatar-img rounded-circle" src="{{ asset($member->picture) }}" alt="Image of {{$member->name}}">
+                                    </li>
+                                @endforeach
+                            @endif
+                            <li class="small text-center ms-3">
+                                @if ($group->members_count == 1)
+                                    {{$memberNames->first()}} is a member
+                                @elseif ($group->members_count == 2)
+                                    {{$memberNames->join(' and ')}} are members
+                                @elseif ($group->members_count >2)
+                                    {{ $memberNames->take(2)->join(', ') }},
+                                    @if($group->members_count > 2)
+                                        and {{ $group->members_count - 2 }} others are members
+                                    @endif
+                                @endif
                             </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/02.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/06.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/07.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/08.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/09.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/10.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs me-2">
-                                <div class="avatar-img rounded-circle bg-primary">
-                                    <span class="smaller text-white position-absolute top-50 start-50 translate-middle">+19</span>
-                                </div>
-                            </li>
-                            <li class="small text-center">
-                                Carolyn Ortiz, Frances Guerrero, and 20 joined group
-                            </li>
+
                         </ul>
                         <!-- Join group END -->
                     </div>
@@ -140,8 +124,9 @@
                             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#group-tab-2">
                                     About </a></li>
                             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#group-tab-3">
-                                    Connections
-                                    <span class="badge bg-success bg-opacity-10 text-success small"> 230</span> </a>
+                                    Members
+                                    <span class="badge bg-success bg-opacity-10 text-success small"> {{$group->members_count}}</span>
+                                </a>
                             </li>
                             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#group-tab-4"> Media</a>
                             </li>
@@ -181,8 +166,8 @@
                                         <p>{{$group->description}}</p>
                                         <!-- info -->
                                         <ul class="list-unstyled mt-3 mb-0">
-                                            <li class="mb-2"><i class="bi bi-calendar-date fa-fw pe-1"></i> People:
-                                                <strong> {{$group->members->count()}} Members </strong></li>
+                                            <li class="mb-2"><i class="bi bi-calendar-date fa-fw pe-1"></i> Members:
+                                                <strong> {{$group->members->count()}} </strong></li>
                                             <li class="mb-2"><i class="bi bi-heart fa-fw pe-1"></i> Status:
                                                 <strong> {{$group->private ? 'Private' : 'Public'}} </strong></li>
                                             <li class="mb-2"><i class="bi bi-globe2 fa-fw pe-1"></i>
@@ -199,27 +184,113 @@
 
                     <!-- Gruop About tab END -->
                     <div class="tab-pane fade show" id="group-tab-2">
-                        <div class="card card-body">
-                            <div class="my-sm-5 py-sm-5 text-center">
-                                <!-- Icon -->
-                                <i class="display-1 text-body-secondary bi bi-person"> </i>
-                                <!-- Title -->
-                                <h4 class="mt-2 mb-3 text-body">No about details</h4>
-                                <button class="btn btn-primary-soft btn-sm"> Click here to add</button>
+                        <div class="card">
+                            <div class="card-header border-0 pb-0">
+                                <h5 class="card-title"> About</h5>
                             </div>
+                            <div class="card-body">
+                                <div class="rounded border px-3 py-2 mb-3">
+                                    <p class="my-1">{{ $group->description }}</p>
+                                </div>
+                                <div class="row g-4">
+                                    <div class="col-sm-6">
+                                        <!-- Members START -->
+                                        <div class="d-flex align-items-center rounded border px-3 py-2">
+                                            <!-- Date -->
+                                            <p class="my-1">
+                                                <i class="bi bi-people fa-fw me-2"></i> Members:
+                                                <strong> {{ $group->members_count }} </strong>
+                                            </p>
+                                        </div>
+                                        <!-- Members END -->
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- Posts START -->
+                                        <div class="d-flex align-items-center rounded border px-3 py-2">
+                                            <!-- Date -->
+                                            <p class="my-1">
+                                                <i class="bi bi-body-text fa-fw me-2"></i> Posts:
+                                                <strong> {{ $group->posts_count }} </strong>
+                                            </p>
+                                        </div>
+                                        <!-- Posts END -->
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- Created START -->
+                                        <div class="d-flex align-items-center rounded border px-3 py-2">
+                                            <!-- Date -->
+                                            <p class="my-1">
+                                                <i class="bi bi-calendar-date fa-fw me-2"></i> Created on:
+                                                <strong>{{ $group->created_at->format('jS \\o\\f F, Y') }}</strong>
+                                            </p>
+                                        </div>
+                                        <!-- Created END -->
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- Website START -->
+                                        <div class="d-flex align-items-center rounded border px-3 py-2">
+                                            <!-- Date -->
+                                            <p class="my-1">
+                                                <i class="bi bi-globe fa-fw me-2"></i> Website:
+                                                <strong> {{ $group->website }} </strong>
+                                            </p>
+                                        </div>
+                                        <!-- Website END -->
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- Type START -->
+                                        <div class="d-flex align-items-center rounded border px-3 py-2">
+                                            <!-- Date -->
+                                            <p class="my-1">
+                                                <i class="bi bi-tag fa-fw me-2"></i> Type:
+                                                <strong> {{ $group->is_private ? 'Private' : 'Public' }} </strong>
+                                            </p>
+                                        </div>
+                                        <!-- Type END -->
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- Category on START -->
+                                        <div class="d-flex align-items-center rounded border px-3 py-2">
+                                            <!-- Date -->
+                                            <p class="my-1">
+                                                <i class="bi bi-activity fa-fw me-2"></i> Category:
+                                                <strong> {{ $group->groupCategory->name }} </strong>
+                                            </p>
+                                        </div>
+                                        <!-- Category on END -->
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <!-- Gruop About tab END -->
 
                     <!-- Gruop Connections tab END -->
                     <div class="tab-pane fade show" id="group-tab-3">
-                        <div class="card card-body">
-                            <div class="my-sm-5 py-sm-5 text-center">
-                                <!-- Icon -->
-                                <i class="display-1 text-body-secondary bi bi-people"> </i>
-                                <!-- Title -->
-                                <h4 class="mt-2 mb-3 text-body">No connections founds</h4>
-                                <button class="btn btn-primary-soft btn-sm"> Click here to add</button>
+                        <div class="card">
+                            <div class="card-header border-0 pb-0">
+                                @if($group->members_count >= 1)
+                                    <h5 class="card-title mb-3"> Members</h5>
+                                @endif
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    @if($group->members_count >= 1)
+                                        @foreach($group->members as $member)
+                                            <div class="col-sm-6 col-lg-6 mt-0">
+                                                <x-groups.member-card-row :otherUser="$member" :user="$user"/>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="my-sm-5 py-sm-5 text-center">
+                                            <!-- Icon -->
+                                            <i class="display-1 text-body-secondary bi bi-people"> </i>
+                                            <!-- Title -->
+                                            <h4 class="mt-2 mb-3 text-body">No members</h4>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -232,8 +303,7 @@
                                 <!-- Icon -->
                                 <i class="display-1 text-body-secondary bi bi-film"> </i>
                                 <!-- Title -->
-                                <h4 class="mt-2 mb-3 text-body">No media founds</h4>
-                                <button class="btn btn-primary-soft btn-sm"> Click here to add</button>
+                                <h4 class="mt-2 mb-3 text-body">No media</h4>
                             </div>
                         </div>
                     </div>
@@ -246,8 +316,7 @@
                                 <!-- Icon -->
                                 <i class="display-1 text-body-secondary bi bi-camera-reels"> </i>
                                 <!-- Title -->
-                                <h4 class="mt-2 mb-3 text-body">No videos founds</h4>
-                                <button class="btn btn-primary-soft btn-sm"> Click here to add</button>
+                                <h4 class="mt-2 mb-3 text-body">No videos</h4>
                             </div>
                         </div>
                     </div>
@@ -255,13 +324,24 @@
 
                     <!-- Gruop Events tab END -->
                     <div class="tab-pane fade show" id="group-tab-6">
-                        <div class="card card-body">
-                            <div class="my-sm-5 py-sm-5 text-center">
-                                <!-- Icon -->
-                                <i class="display-1 text-body-secondary bi bi-calendar-plus"> </i>
-                                <!-- Title -->
-                                <h4 class="mt-2 mb-3 text-body">No events founds</h4>
-                                <button class="btn btn-primary-soft btn-sm"> Click here to add</button>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    @if($group->events_count >= 1)
+                                        <div class="row g-4">
+                                            @foreach($group->events as $event)
+                                                <x-groups.event-card :event="$event" />
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="my-sm-5 py-sm-5 text-center">
+                                            <!-- Icon -->
+                                            <i class="display-1 text-body-secondary bi bi-people"> </i>
+                                            <!-- Title -->
+                                            <h4 class="mt-2 mb-3 text-body">No events</h4>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -293,7 +373,7 @@
                 <div class="d-flex mb-3">
                     <!-- Avatar -->
                     <div class="avatar avatar-xs me-2">
-                        <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="">
+                        <img class="avatar-img rounded-circle" src="" alt="">
                     </div>
                     <!-- Feed box  -->
                     <form class="w-100">
@@ -362,7 +442,7 @@
                 <div class="d-flex mb-3">
                     <!-- Avatar -->
                     <div class="avatar avatar-xs me-2">
-                        <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="">
+                        <img class="avatar-img rounded-circle" src="" alt="">
                     </div>
                     <!-- Feed box  -->
                     <form class="w-100">
@@ -414,7 +494,7 @@
                 <div class="d-flex mb-3">
                     <!-- Avatar -->
                     <div class="avatar avatar-xs me-2">
-                        <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="">
+                        <img class="avatar-img rounded-circle" src="" alt="">
                     </div>
                     <!-- Feed box  -->
                     <form class="w-100">
@@ -504,25 +584,7 @@
                     <div class="col-12 mt-3">
                         <ul class="avatar-group list-unstyled align-items-center mb-0">
                             <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/02.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/06.jpg" alt="avatar">
-                            </li>
-                            <li class="avatar avatar-xs">
-                                <img class="avatar-img rounded-circle" src="assets/images/avatar/07.jpg" alt="avatar">
+                                <img class="avatar-img rounded-circle" src="" alt="avatar">
                             </li>
                             <li class="ms-3">
                                 <small> +50 </small>

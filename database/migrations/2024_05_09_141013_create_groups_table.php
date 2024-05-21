@@ -13,7 +13,9 @@ return new class extends Migration {
             $table->string('name', 255);
             $table->string('description', 255);
             $table->string('website', 255);
-            $table->boolean('private');
+            $table->boolean('is_private');
+
+            $table->foreignId('group_category_id')->constrained('group_categories');
 
             $table->timestamps();
         });
