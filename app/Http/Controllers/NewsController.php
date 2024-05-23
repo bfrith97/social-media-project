@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsArticle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class NewsController extends Controller
 {
@@ -12,7 +14,30 @@ class NewsController extends Controller
      */
     public function index()
     {
+        $newsArticles = NewsArticle::with('newsArticleCategory')
+            ->orderByDesc('published_at');
+
+
+        $tag = request('tag');
+        if ($tag) {
+            if ($tag === 'all') {
+                Session::remove('tag');
+            } else {
+                Session::put('tag', $tag);
+            }
+        }
+
+        if (Session::get('tag')) {
+            $sessionTag = Session::get('tag');
+            $newsArticles->where('category_id', $sessionTag);
+        }
+
+
+        $newsArticles = $newsArticles->paginate(5);
+
         return view('news.index')->with([
+            'newsArticles' => $newsArticles,
+            'tag' => $sessionTag ?? null,
         ]);
     }
 
@@ -37,7 +62,11 @@ class NewsController extends Controller
      */
     public function show(string $id)
     {
+        $newsArticle = NewsArticle::with('newsArticleCategory')
+            ->find($id);
+
         return view('news.show')->with([
+            'newsArticle' => $newsArticle,
         ]);
     }
 

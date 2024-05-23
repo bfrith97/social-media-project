@@ -11,8 +11,8 @@
             <!-- News item -->
             @foreach($news as $newsItem)
             <div class="mb-3">
-                <h6 class="mb-0"><a href="{{ route('news.show', 1) }}">{{$newsItem['title']}}</a></h6>
-                <small>{{ Carbon\Carbon::parse($newsItem['publishedAt'])->timezone('Europe/London')->diffForHumans() }}</small>
+                <h6 class="mb-0"><a href="{{ route('news.show', $newsItem['id']) }}">{{$newsItem['title']}}</a></h6>
+                <small>{{ Carbon\Carbon::parse($newsItem['published_at'])->timezone('Europe/London')->diffForHumans() }}</small>
             </div>
             @endforeach
             <!-- Load more comments -->

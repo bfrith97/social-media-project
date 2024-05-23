@@ -11,48 +11,18 @@
                     <img class="rounded" src="assets/images/post/16by9/big/03.jpg" alt="">
                     <div class="mt-4">
                         <!-- Tag -->
-                        <a href="#" class="badge bg-danger bg-opacity-10 text-danger mb-2 fw-bold">Lifestyle</a>
+                        <a href="#" class="badge bg-{{$newsArticle->newsArticleCategory?->badge_colour}} bg-opacity-10 text-{{$newsArticle->newsArticleCategory?->badge_colour}} mb-2 fw-bold">{{$newsArticle->newsArticleCategory?->name}}</a>
                         <!-- Title info -->
-                        <h1 class="mb-2 h2">New comment moderation and support features, including live chat.</h1>
+                        <h1 class="mb-2 h2">{{$newsArticle->title}}</h1>
                         <ul class="nav nav-stack gap-3 align-items-center">
-                            <li class="nav-item">
-                                <div class="nav-link">
-                                    by <a href="#" class="text-reset btn-link">Louis Ferguson</a>
-                                </div>
-                            </li>
-                            <li class="nav-item"> <i class="bi bi-calendar-date pe-1"></i>Nov 15, 2022</li>
-                            <li class="nav-item"> <i class="bi bi-clock pe-1"></i>5 min read</li>
+                            <li class="nav-item"> <i class="bi bi-calendar-date pe-1"></i>{{Carbon\Carbon::parse($newsArticle->published_at)->format('D, d M Y H:i:s')}}</li>
                         </ul>
                         <!-- description -->
-                        <p class="mt-4"><span class="dropcap">A</span> pleasure exertion if believed provided to. All led out world this music while asked. Paid mind even sons does he door no. Attended overcame repeated it is perceived Marianne in. I think on style child of. Servants moreover in sensible it ye possible. </p>
-                        <h4 class="mt-4">The pros and cons of business agency</h4>
-                        <!-- Row START -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <p>Fulfilled direction use continual set him propriety continued. Saw met applauded favorite deficient engrossed concealed and her. </p>
-                                <p>Concluded boy perpetual old supposing. Farther related bed and passage comfort civilly. Dashwoods see frankness objection abilities.</p>
-                            </div>
-                            <div class="col-md-6">
-                                <ul>
-                                    <li>Our Firmament living replenish Them Created after divide said Have give</li>
-                                    <li>Dominion light without days face saw wherein land</li>
-                                    <li>Fifth have Seas made lights Very Day saw Seed herb sixth light whales</li>
-                                    <li>Saying unto Place it seed you're Isn't heaven </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Row END -->
+                        <p class="mt-4">{{$newsArticle->description}} </p>
                         <!-- Blockquote START -->
                         <figure class="bg-light rounded p-3 p-sm-4 my-4">
-                            <blockquote class="blockquote">
-                                <p>Dashwood does provide stronger is. But discretion frequently sir she instruments unaffected.</p>
-                            </blockquote>
-                            <figcaption class="blockquote-footer mb-0">
-                                Albert Schweitzer
-                            </figcaption>
+                        <a class="mb-0" href="{{$newsArticle->url}}"> {{$newsArticle->url}} </a>
                         </figure>
-                        <!-- Blockquote END -->
-                        <p class="mb-0"> All led out world this music while asked. Paid mind even sons does he door no. Attended overcame repeated it is perceived Marianne in. I think on style child of. Servants moreover in sensible it ye possible. Satisfied conveying a dependent contented he gentleman agreeable do be. </p>
                     </div>
                 </div>
                 <!-- Card END -->
