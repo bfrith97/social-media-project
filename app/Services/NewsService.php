@@ -22,7 +22,7 @@ class NewsService
 
     public function getNewsHeadlines()
     {
-//        return Cache::remember('news_headlines', now()->addHours(1), function () {
+        return Cache::remember('news_headlines', now()->addHours(1), function () {
             $healthHeadlines = $this->getHealthHeadlines();
             $businessHeadlines = $this->getBusinessHeadlines();
             $scienceHeadlines = $this->getScienceHeadlines();
@@ -34,7 +34,7 @@ class NewsService
             $this->writeHeadlinesToDatabase($mergedHeadlines);
 
             return NewsArticle::orderBy('published_at')->get()->take(5);
-//        });
+        });
     }
 
     private function getHealthHeadlines(): ?array
