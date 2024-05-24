@@ -15,8 +15,14 @@ class Comment extends Model
     protected $fillable = [
         'content',
         'user_id',
-        'post_id',
+        'item_id',
+        'item_type_id',
     ];
+
+    public function commentable()
+    {
+        return $this->morphTo(__FUNCTION__, 'item_type', 'item_id');
+    }
 
     public function user(): BelongsTo
     {

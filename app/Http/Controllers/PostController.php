@@ -8,7 +8,6 @@ use App\Notifications\NewProfilePost;
 use App\Services\NewsService;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -45,6 +44,7 @@ class PostController extends Controller
             ])
             ->orderByDesc('created_at')
             ->get();
+
 
         $usersToFollow = User::where('id', '!=', $user->id)
             ->whereDoesntHave('followers', function ($query) use ($user) {

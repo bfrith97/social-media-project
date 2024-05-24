@@ -13,7 +13,7 @@
                         <a href="{{ route('profiles.show', $comment->user->id) }}"> {{$comment->user->name}} </a></h6>
                     <small class="ms-2">{{ Carbon\Carbon::parse($comment->created_at)->timezone('Europe/London')->diffForHumans() }}</small>
                 </div>
-                <p class="small mb-0"> {{$comment->content}} </p>
+                <p class="small mb-0 text-break"> {{$comment->content}} </p>
             </div>
             <!-- Comment react -->
             <ul class="nav nav-divider pb-2 pt-1 small">

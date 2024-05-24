@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\NewsArticle;
 use App\Models\Post;
 use App\Notifications\NewComment;
 use App\Notifications\NewLike;
@@ -35,15 +36,33 @@ class CommentController extends Controller
         $validatedData = $request->validate([
             'content' => 'required|string',
             'user_id' => 'required|integer|exists:users,id',
-            'post_id' => 'required|integer|exists:posts,id',
+            'item_id' => 'required|integer',
+            'item_type_id' => 'required|integer|exists:comment_item_types,id',
         ]);
 
-        $validatedData['content'] = Profanity::blocker($validatedData['content'])->strict(false)->strictClean(true)->filter();
+        $validatedData['content'] = Profanity::blocker($validatedData['content'])
+            ->strict(false)
+            ->strictClean(true)
+            ->filter();
 
-        $post = Post::with('user')->find($validatedData['post_id']);
-        $comment = $post->comments()->create($validatedData);
+        switch ($validatedData['item_type_id']) {
+            case 1:
+                $post = Post::with('user')
+                    ->find($validatedData['item_id']);
 
-        $post->user->notify(new NewComment($comment->user, $post));
+                $comment = $post->comments()
+                    ->create($validatedData);
+
+                $post->user->notify(new NewComment($comment->user, $post));
+                break;
+
+            case 2:
+                $article = NewsArticle::find($validatedData['item_id']);
+
+                $comment = $article->comments()
+                    ->create($validatedData);
+                break;
+        }
 
         return response()->json([
             'message' => 'Comment added successfully',

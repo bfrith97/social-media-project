@@ -53,7 +53,7 @@ function addNewCommentHtml(form, comment) {
                     </div>
                     <ul class="nav nav-divider pb-2 pt-1 small">
                         <li class="nav-item">
-                            <a class="nav-link" href="#!">Like 0</a>
+                            <a class="nav-link" href="#!">Like (0)</a>
                         </li>
                     </ul>
                 </div>

@@ -32,7 +32,6 @@ class NewsController extends Controller
             $newsArticles->where('category_id', $sessionTag);
         }
 
-
         $newsArticles = $newsArticles->paginate(5);
 
         return view('news.index')->with([

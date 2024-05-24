@@ -3,11 +3,8 @@
 namespace App\Services;
 
 use App\Models\NewsArticle;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
-use Laravolt\Avatar\Avatar;
 
 class NewsService
 {
@@ -33,7 +30,7 @@ class NewsService
 
             $this->writeHeadlinesToDatabase($mergedHeadlines);
 
-            return NewsArticle::orderBy('published_at')->get()->take(5);
+            return NewsArticle::orderByDesc('published_at')->get()->take(5);
         });
     }
 
