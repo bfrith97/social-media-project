@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
 {
-    protected $appends = ['liked_by_current_user'];
+    protected $appends = ['liked_by_current_user', 'has_more_than_five_comments'];
 
     protected $fillable = [
         'content',
@@ -27,6 +27,11 @@ class Post extends Model
         return $this->hasMany(Comment::class, 'item_id')->where('item_type', Post::class)->orderByDesc('created_at');
     }
 
+    public function commentCount(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'item_id')->where('item_type', Post::class)->orderByDesc('created_at');
+    }
+
     public function postLikes(): HasMany
     {
         return $this->hasMany(PostLike::class)->with('user')->orderByDesc('created_at');
@@ -36,5 +41,10 @@ class Post extends Model
     {
         $user = auth()->id();
         return $this->postLikes()->where('user_id', $user)->exists();
+    }
+
+    public function getHasMoreThanFiveCommentsAttribute(): bool
+    {
+        return $this->commentCount->count() > 5;
     }
 }

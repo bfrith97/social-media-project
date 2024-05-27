@@ -31,7 +31,9 @@ class PostController extends Controller
 
         $posts = Post::with([
             'user',
-            'comments',
+            'comments' => function($q) {
+                return $q->limit(5);
+            },
             'comments.user',
             'comments.commentLikes',
             'postLikes',
@@ -48,7 +50,6 @@ class PostController extends Controller
             ])
             ->orderByDesc('created_at')
             ->get();
-
 
         $usersToFollow = User::where('id', '!=', $user->id)
             ->whereDoesntHave('followers', function ($query) use ($user) {

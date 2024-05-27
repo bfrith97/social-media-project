@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\NewsCategory;
 use App\Models\NewsArticle;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -20,11 +21,11 @@ class NewsService
     public function getNewsHeadlines()
     {
         return Cache::remember('news_headlines', now()->addHours(1), function () {
-            $healthHeadlines = $this->getHealthHeadlines();
-            $businessHeadlines = $this->getBusinessHeadlines();
-            $scienceHeadlines = $this->getScienceHeadlines();
-            $sportsHeadlines = $this->getSportsHeadlines();
-            $technologyHeadlines = $this->getTechnologyHeadlines();
+            $healthHeadlines = $this->headlinesRequest('health', NewsCategory::HEALTH);
+            $businessHeadlines = $this->headlinesRequest('business', NewsCategory::BUSINESS);
+            $scienceHeadlines = $this->headlinesRequest('science', NewsCategory::SCIENCE);
+            $sportsHeadlines = $this->headlinesRequest('sports', NewsCategory::HEALTH);
+            $technologyHeadlines = $this->headlinesRequest('technology', NewsCategory::TECHNOLOGY);
 
             $mergedHeadlines = array_merge($healthHeadlines, $businessHeadlines, $scienceHeadlines, $sportsHeadlines, $technologyHeadlines);
 
@@ -34,7 +35,7 @@ class NewsService
         });
     }
 
-    private function getHealthHeadlines(): ?array
+    private function headlinesRequest($category, $categoryId): ?array
     {
         $response = Http::get($this->url, [
             'country' => 'gb',
@@ -47,109 +48,9 @@ class NewsService
             $slicedArray = array_slice($articles, 0, 5);
 
             foreach ($slicedArray as $key => &$article) {
-                $this->setCategoryAndRemoveKeys($article, 1);
+                $this->setCategoryAndRemoveKeys($article, $categoryId);
                 if ($article === null) {
-                    unset($slicedArray[$key]); // Remove the article from the array if it's set to null
-                }
-            }
-
-            return $slicedArray;
-        } else {
-            return null;
-        }
-    }
-
-    private function getBusinessHeadlines(): ?array
-    {
-        $response = Http::get($this->url, [
-            'country' => 'gb',
-            'category' => 'business',
-            'apiKey' => $this->apiKey,
-        ]);
-
-        if ($response->successful()) {
-            $articles = $response->json()['articles'];
-            $slicedArray = array_slice($articles, 0, 5);
-
-            foreach ($slicedArray as $key => &$article) {
-                $this->setCategoryAndRemoveKeys($article, 2);
-                if ($article === null) {
-                    unset($slicedArray[$key]); // Remove the article from the array if it's set to null
-                }
-            }
-
-            return $slicedArray;
-        } else {
-            return null;
-        }
-    }
-
-    private function getScienceHeadlines(): ?array
-    {
-        $response = Http::get($this->url, [
-            'country' => 'gb',
-            'category' => 'science',
-            'apiKey' => $this->apiKey,
-        ]);
-
-        if ($response->successful()) {
-            $articles = $response->json()['articles'];
-            $slicedArray = array_slice($articles, 0, 5);
-
-            foreach ($slicedArray as $key => &$article) {
-                $this->setCategoryAndRemoveKeys($article, 3);
-                if ($article === null) {
-                    unset($slicedArray[$key]); // Remove the article from the array if it's set to null
-                }
-            }
-
-            return $slicedArray;
-        } else {
-            return null;
-        }
-    }
-
-    private function getSportsHeadlines(): ?array
-    {
-        $response = Http::get($this->url, [
-            'country' => 'gb',
-            'category' => 'sports',
-            'apiKey' => $this->apiKey,
-        ]);
-
-        if ($response->successful()) {
-            $articles = $response->json()['articles'];
-            $slicedArray = array_slice($articles, 0, 5);
-
-            foreach ($slicedArray as $key => &$article) {
-                $this->setCategoryAndRemoveKeys($article, 4);
-                if ($article === null) {
-                    unset($slicedArray[$key]); // Remove the article from the array if it's set to null
-                }
-            }
-
-            return $slicedArray;
-        } else {
-            return null;
-        }
-    }
-
-    private function getTechnologyHeadlines(): ?array
-    {
-        $response = Http::get($this->url, [
-            'country' => 'gb',
-            'category' => 'technology',
-            'apiKey' => $this->apiKey,
-        ]);
-
-        if ($response->successful()) {
-            $articles = $response->json()['articles'];
-            $slicedArray = array_slice($articles, 0, 5);
-
-            foreach ($slicedArray as $key => &$article) {
-                $this->setCategoryAndRemoveKeys($article, 5);
-                if ($article === null) {
-                    unset($slicedArray[$key]); // Remove the article from the array if it's set to null
+                    unset($slicedArray[$key]); 
                 }
             }
 

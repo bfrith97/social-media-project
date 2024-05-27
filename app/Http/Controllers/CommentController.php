@@ -8,8 +8,10 @@ use App\Models\Post;
 use App\Notifications\NewComment;
 use App\Notifications\NewLike;
 use App\Services\ActivityService;
+use Carbon\Carbon;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
@@ -113,5 +115,41 @@ class CommentController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function loadAdditional($post, $offset)
+    {
+        $limit = 5;
+
+        $validatedData = Validator::make(['post' => $post, 'offset' => $offset], [
+            'post' => 'required|integer',
+            'offset' => 'required|integer',
+        ])->getData();
+
+        $comments = Comment::with('user', 'commentLikes')->where('item_id', $validatedData['post'])->orderByDesc('created_at')->skip($validatedData['offset'])->take($limit + 1)->get();
+        $moreCommentsAvailable = $comments->count() > $limit;
+
+        if ($moreCommentsAvailable) {
+            $comments->pop();
+        }
+
+        foreach($comments as &$comment) {
+            $comment->created_at_formatted = Carbon::parse($comment->created_at)->timezone('Europe/London')->diffForHumans();
+        }
+
+        if ($comments) {
+            return response()->json([
+                'message' => 'Comments retrieved successfully',
+                'comments' => $comments,
+                'moreCommentsAvailable' => $moreCommentsAvailable
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Comments not found',
+            ]);
+        }
     }
 }

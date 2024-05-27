@@ -95,9 +95,9 @@
         <!-- Feed react END -->
 
         <!-- Add comment -->
-        <x-comments.comment-input :user="$user" :item="$post" itemType="App\Models\Post" />
+        <x-comments.comment-input :user="$user" :item="$post" itemType="App\Models\Post"/>
 
-        <ul class="comment-wrap list-unstyled">
+        <ul class="comment-wrap list-unstyled mb-0">
             @foreach($post->comments as $comment)
                 <x-comments.comment :comment="$comment" :user="$user"/>
             @endforeach
@@ -105,16 +105,19 @@
     </div>
     <!-- Card body END -->
     <!-- Card footer START -->
-    <div class="card-footer border-0 pt-0">
-        <!-- Load more comments -->
-        <a href="#!" role="button" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center" data-bs-toggle="button" aria-pressed="true">
-            <div class="spinner-dots me-2">
-                <span class="spinner-dot"></span>
-                <span class="spinner-dot"></span>
-                <span class="spinner-dot"></span>
-            </div>
-            Load more comments
-        </a>
+    <div class="card-footer border-0 py-0">
+        @if($post->has_more_than_five_comments)
+            <!-- Load more comments -->
+            <button type="button" onclick="loadAdditionalComments(this)" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center pb-3">
+                <input class="postId" type="hidden" name="post" value="{{$post->id}}"/>
+                <div class="spinner-dots me-2">
+                    <span class="spinner-dot"></span>
+                    <span class="spinner-dot"></span>
+                    <span class="spinner-dot"></span>
+                </div>
+                Load more comments
+            </button>
+        @endif
     </div>
     <!-- Card footer END -->
 </div>

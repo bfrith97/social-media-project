@@ -27,6 +27,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/comments/load-additional/{post}/{offset}', [CommentController::class, 'loadAdditional'])->name('comments.load-additional');
 
     Route::post('/comment-likes', [CommentLikeController::class, 'store'])->name('comment_likes.store');
     Route::delete('/comment-likes', [CommentLikeController::class, 'destroy'])->name('comment_likes.destroy');
@@ -41,9 +42,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/groups/{id}', [GroupController::class, 'show'])->name('groups.show');
     Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
 
-    Route::get('/groups_users', [GroupUserController::class, 'index'])->name('group_users.index');
-    Route::post('/groups_users', [GroupUserController::class, 'store'])->name('group_users.store');
-    Route::delete('/groups_users', [GroupUserController::class, 'destroy'])->name('group_users.destroy');
+    Route::get('/group-users', [GroupUserController::class, 'index'])->name('group_users.index');
+    Route::post('/group-users', [GroupUserController::class, 'store'])->name('group_users.store');
+    Route::delete('/group-users', [GroupUserController::class, 'destroy'])->name('group_users.destroy');
 
     Route::post('/post-likes', [PostLikeController::class, 'store'])->name('post_likes.store');
     Route::delete('/post-likes', [PostLikeController::class, 'destroy'])->name('post_likes.destroy');
