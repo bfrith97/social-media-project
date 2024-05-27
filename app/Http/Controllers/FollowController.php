@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Follow;
 use App\Models\User;
 use App\Notifications\NewFollower;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FollowController extends Controller
 {
+    private ActivityService $activityService;
+
+    public function __construct(ActivityService $activityService)
+    {
+        $this->activityService = $activityService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -53,6 +61,8 @@ class FollowController extends Controller
         $followee = User::find($validatedData['followee_id']);
 
         $followee->notify(new NewFollower($follower));
+
+        $this->activityService->storeActivity($follow, 'profiles.show', $follow->followee_id, 'bi bi-person-add', 'followed ' . $followee->name);
 
         if ($follow) {
             return response()->json([

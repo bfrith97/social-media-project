@@ -6,11 +6,19 @@ use App\Models\Post;
 use App\Models\PostLike;
 use App\Models\User;
 use App\Notifications\NewLike;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PostLikeController extends Controller
 {
+    private ActivityService $activityService;
+
+    public function __construct(ActivityService $activityService)
+    {
+        $this->activityService = $activityService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -37,10 +45,14 @@ class PostLikeController extends Controller
             'post_id' => 'required|integer|exists:posts,id',
         ]);
 
-        $post = Post::with('user')->find($validatedData['post_id']);
-        $like = $post->postLikes()->create($validatedData);
+        $post = Post::with('user')
+            ->find($validatedData['post_id']);
+        $like = $post->postLikes()
+            ->create($validatedData);
 
         $post->user->notify(new NewLike($like->user, $post, 'post'));
+
+        $this->activityService->storeActivity($like, 'posts.show', $like->post_id, 'bi bi-hand-thumbs-up', 'liked a post');
 
         if ($like) {
             return response()->json([

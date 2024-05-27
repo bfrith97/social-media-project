@@ -16,7 +16,7 @@ class Comment extends Model
         'content',
         'user_id',
         'item_id',
-        'item_type_id',
+        'item_type',
     ];
 
     public function commentable()
@@ -27,11 +27,6 @@ class Comment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function post(): BelongsTo
-    {
-        return $this->belongsTo(Post::class);
     }
 
     public function commentLikes(): HasMany

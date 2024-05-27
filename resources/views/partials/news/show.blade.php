@@ -29,7 +29,7 @@
                             </figure>
                         </div>
                         <hr class="mb-3 mt-0">
-                        <x-comments.comment-input :user="$user" :item="$newsArticle" :itemTypeId="2" />
+                        <x-comments.comment-input :user="$user" :item="$newsArticle" itemType="App\Models\NewsArticle" />
 
                         <ul class="comment-wrap list-unstyled mb-0">
                             @foreach($newsArticle->comments as $comment)
@@ -46,7 +46,6 @@
         </div>
         <!-- Main content END -->
     </div> <!-- Row END -->
-    </div>
     <!-- Container END -->
 
 </main>

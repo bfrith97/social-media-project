@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Spatie\Activitylog\Models\Activity;
 
 class ProfileController extends Controller
 {
@@ -24,6 +25,7 @@ class ProfileController extends Controller
      */
     public function show(string $id)
     {
+
         $profile = User::with([
             'relationship',
             'partner',
@@ -49,9 +51,12 @@ class ProfileController extends Controller
         $combinedPosts = $profile->ownPosts->merge($profile->otherPosts);
         $combinedPosts = $combinedPosts->sortByDesc('created_at');
 
+        $activity = Activity::with('causer')->where('causer_id', $id)->get();
+
         return view('profiles.show')->with([
             'profile' => $profile,
-            'combinedPosts' => $combinedPosts
+            'combinedPosts' => $combinedPosts,
+            'activity' => $activity,
         ]);
     }
 

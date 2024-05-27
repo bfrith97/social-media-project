@@ -28,6 +28,6 @@ class NewsArticle extends Model
 
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, 'item_id')->where('item_type_id', CommentType::NEWS_ARTICLE)->orderByDesc('created_at');
+        return $this->hasMany(Comment::class, 'item_id')->where('item_type', NewsArticle::class)->orderByDesc('created_at');
     }
 }

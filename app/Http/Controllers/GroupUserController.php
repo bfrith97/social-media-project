@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class GroupUserController extends Controller
 {
+    private ActivityService $activityService;
+
+    public function __construct(ActivityService $activityService)
+    {
+        $this->activityService = $activityService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -35,7 +43,9 @@ class GroupUserController extends Controller
             'group_id' => 'required|integer|exists:users,id',
         ]);
 
-        GroupUser::createOrFirst($validatedData);
+        $groupUser = GroupUser::createOrFirst($validatedData);
+
+        $this->activityService->storeActivity($groupUser, 'groups.show', $groupUser->group_id, 'bi bi-people', 'joined a group');
 
         return response()->json([
             'message' => 'Group member added successfully',

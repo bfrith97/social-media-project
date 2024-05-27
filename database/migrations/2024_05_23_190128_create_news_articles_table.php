@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('author')->nullable();
             $table->foreignId('category_id')->constrained('news_article_categories')->onDelete('cascade');
             $table->string('title');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->text('url');
             $table->string('published_at');
 

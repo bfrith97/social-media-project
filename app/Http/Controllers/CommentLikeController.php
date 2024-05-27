@@ -6,10 +6,18 @@ use App\Models\Comment;
 use App\Models\CommentLike;
 use App\Models\Post;
 use App\Notifications\NewLike;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 
 class CommentLikeController extends Controller
 {
+    private ActivityService $activityService;
+
+    public function __construct(ActivityService $activityService)
+    {
+        $this->activityService = $activityService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -36,10 +44,14 @@ class CommentLikeController extends Controller
             'comment_id' => 'required|integer|exists:comments,id',
         ]);
 
-        $comment = Comment::with('user', 'post')->find($validatedData['comment_id']);
+        $comment = Comment::with('user')->find($validatedData['comment_id']);
         $like = $comment->commentLikes()->create($validatedData);
 
         $comment->user->notify(new NewLike($like->user, $comment,'comment'));
+
+        $type = $comment->item_type === Post::class ? 'posts' : 'news';
+
+        $this->activityService->storeActivity($like, "$type.show", $comment->item_id, 'bi bi-hand-thumbs-up', 'liked a comment');
 
         if ($like) {
             return response()->json([

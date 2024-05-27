@@ -317,7 +317,8 @@
                                                     <img class="avatar-img" src="assets/images/logo/04.svg" alt="">
                                                 </div>
                                                 <div class="ms-2">
-                                                    <h6 class="mb-0"><a class="stretched-link" href="{{ route('groups.show', $group->id) }}"> {{$group->name}} </a>
+                                                    <h6 class="mb-0">
+                                                        <a class="stretched-link" href="{{ route('groups.show', $group->id) }}"> {{$group->name}} </a>
                                                     </h6>
                                                     <p class="small mb-0">{{$group->members->count()}} members</p>
                                                 </div>
@@ -1491,124 +1492,9 @@
                             <div class="card-body">
                                 <div class="timeline">
 
-                                    <!-- Timeline item START -->
-                                    <div class="timeline-item">
-                                        <!-- Timeline icon -->
-                                        <div class="timeline-icon">
-                                            <div class="avatar text-center">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/07.jpg" alt="">
-                                            </div>
-                                        </div>
-                                        <!-- Timeline content -->
-                                        <div class="timeline-content">
-                                            <div class="d-sm-flex justify-content-between">
-                                                <div>
-                                                    <p class="small mb-0"><b>Sam Lanson</b> update a playlist on
-                                                        webestica.</p>
-                                                    <p class="small mb-0"><i class="bi bi-unlock-fill pe-1"></i>Public
-                                                    </p>
-                                                </div>
-                                                <p class="small ms-sm-3 mt-2 mt-sm-0 text-nowrap">Just now</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Timeline item END -->
-
-                                    <!-- Timeline item START -->
-                                    <div class="timeline-item">
-                                        <!-- Timeline icon -->
-                                        <div class="timeline-icon">
-                                            <div class="avatar text-center">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
-                                            </div>
-                                        </div>
-                                        <!-- Timeline content -->
-                                        <div class="timeline-content">
-                                            <div class="d-sm-flex justify-content-between">
-                                                <div>
-                                                    <p class="small mb-0"><b>Billy Vasquez</b> save a
-                                                        <a href="#!">link.</a></p>
-                                                    <p class="small mb-0"><i class="bi bi-lock-fill pe-1"></i>only me
-                                                    </p>
-                                                </div>
-                                                <p class="small ms-sm-3 mt-2 mt-sm-0">2min</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Timeline item END -->
-
-                                    <!-- Timeline item START -->
-                                    <div class="timeline-item align-items-center">
-                                        <!-- Timeline icon -->
-                                        <div class="timeline-icon">
-                                            <div class="avatar text-center">
-                                                <div class="avatar-img rounded-circle bg-success">
-                                                    <span class="text-white position-absolute top-50 start-50 translate-middle fw-bold">SM</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Timeline content -->
-                                        <div class="timeline-content">
-                                            <div class="d-sm-flex justify-content-between">
-                                                <div>
-                                                    <p class="small mb-0"><b>Sam Lanson</b> liked <b> Frances
-                                                            Guerrero's </b> add comment.</p>
-                                                    <p class="small mb-0">This is the best picture I have come across
-                                                        today.... </p>
-                                                </div>
-                                                <p class="small mb-0 ms-sm-3">1hr</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Timeline item END -->
-
-                                    <!-- Timeline item START -->
-                                    <div class="timeline-item align-items-center">
-                                        <!-- Timeline icon -->
-                                        <div class="timeline-icon">
-                                            <div class="avatar text-center">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/02.jpg" alt="">
-                                            </div>
-                                        </div>
-                                        <!-- Timeline content -->
-                                        <div class="timeline-content">
-                                            <div class="d-sm-flex justify-content-between">
-                                                <div>
-                                                    <p class="small mb-0"><b>Judy Nguyen</b> likes <b>Jacqueline
-                                                            Miller</b> Photos. </p>
-                                                    <p class="mb-0">✌️👌👍</p>
-                                                </div>
-                                                <p class="small ms-sm-3 mt-2 mt-sm-0">4hr</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Timeline item END -->
-
-                                    <!-- Timeline item START -->
-                                    <div class="timeline-item">
-                                        <!-- Timeline icon -->
-                                        <div class="timeline-icon">
-                                            <div class="avatar text-center">
-                                                <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="">
-                                            </div>
-                                        </div>
-                                        <!-- Timeline content -->
-                                        <div class="timeline-content">
-                                            <div class="d-sm-flex justify-content-between">
-                                                <div>
-                                                    <p class="small mb-0"><b>Larry Lawson</b></p>
-                                                    <p class="small mb-2">Replied to your comment on Blogzine blog
-                                                        theme</p>
-                                                    <small class="bg-light rounded p-2 d-block">
-                                                        Yes, I am so excited to see it live. 👍
-                                                    </small>
-                                                </div>
-                                                <p class="small ms-sm-3 mt-2 mt-sm-0">10hr</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Timeline item END -->
-
+                                    @foreach($activity as $activityItem)
+                                        <x-profile.activity-timelime-item :activityItem="$activityItem" :properties="json_decode($activityItem->properties)"/>
+                                    @endforeach
                                 </div>
                             </div>
                             <!-- Card body END -->

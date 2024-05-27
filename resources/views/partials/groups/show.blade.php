@@ -254,7 +254,7 @@
                                             <!-- Date -->
                                             <p class="my-1">
                                                 <i class="bi bi-activity fa-fw me-2"></i> Category:
-                                                <strong> {{ $group->groupCategory->name }} </strong>
+                                                <strong> {{ $group->groupCategory?->name }} </strong>
                                             </p>
                                         </div>
                                         <!-- Category on END -->

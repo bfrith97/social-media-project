@@ -5,17 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewProfilePost;
+use App\Services\ActivityService;
 use App\Services\NewsService;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 class PostController extends Controller
 {
     private NewsService $newsService;
+    private ActivityService $activityService;
 
-    public function __construct(NewsService $newsService) {
+    public function __construct(NewsService $newsService, ActivityService $activityService) {
         $this->newsService = $newsService;
+        $this->activityService = $activityService;
     }
 
     /**
@@ -95,6 +99,8 @@ class PostController extends Controller
             $user = User::find($validatedData['profile_id']);
             $user->notify(new NewProfilePost($post->user, $post));
         }
+
+        $this->activityService->storeActivity($post, 'posts.show', $post->post_id, 'bi bi-box-arrow-right', 'created a post');
 
         return response()->json([
             'message' => 'Post added successfully',

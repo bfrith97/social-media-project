@@ -95,7 +95,7 @@
         <!-- Feed react END -->
 
         <!-- Add comment -->
-        <x-comments.comment-input :user="$user" :item="$post" :itemTypeId="1" />
+        <x-comments.comment-input :user="$user" :item="$post" itemType="App\Models\Post" />
 
         <ul class="comment-wrap list-unstyled">
             @foreach($post->comments as $comment)
