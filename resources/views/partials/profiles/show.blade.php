@@ -28,11 +28,17 @@
                                 </div>
                                 <!-- Button -->
                                 <div class="d-flex mt-3 justify-content-center ms-sm-auto">
+
                                     @if($profile->id === $user->id)
                                         <a href="{{route('settings.edit')}}" class="btn btn-sm btn-danger-soft">
                                             <i class="bi bi-pencil-fill pe-1"></i> Edit profile
                                         </a>
+
                                     @else
+                                        <a href="{{route('messages.index')}}" class="btn btn-sm btn-primary-soft me-2">
+                                            Message
+                                        </a>
+
                                         <form action="{{ route('follows.store') }}" method="post" class="follow-form">
                                             @csrf
                                             <input type="hidden" name="followee_id" value="{{$profile->id}}">
@@ -51,7 +57,9 @@
                                                 </button>
                                             @endif
                                         </form>
+
                                     @endif
+
                                 </div>
                             </div>
                             <!-- List profiles-breeze -->

@@ -39,7 +39,7 @@ class NewsService
     {
         $response = Http::get($this->url, [
             'country' => 'gb',
-            'category' => 'health',
+            'category' => $category,
             'apiKey' => $this->apiKey,
         ]);
 
