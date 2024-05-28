@@ -41,6 +41,7 @@
 <script src="{{ asset('assets/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
 <script src="{{ asset('assets/vendor/zuck.js/dist/zuck.min.js') }}"></script>
 <script src="{{ asset('assets/js/zuck-stories.js') }}"></script>
+<script src="{{ asset('assets/js/functions.js') }}"></script>
 
 <!-- Stacked JS -->
 @stack('js')

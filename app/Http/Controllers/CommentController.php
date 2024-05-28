@@ -144,7 +144,8 @@ class CommentController extends Controller
             return response()->json([
                 'message' => 'Comments retrieved successfully',
                 'comments' => $comments,
-                'moreCommentsAvailable' => $moreCommentsAvailable
+                'moreCommentsAvailable' => $moreCommentsAvailable,
+                'newOffset' => $validatedData['offset'] + 5,
             ]);
         } else {
             return response()->json([

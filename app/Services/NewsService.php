@@ -50,7 +50,7 @@ class NewsService
             foreach ($slicedArray as $key => &$article) {
                 $this->setCategoryAndRemoveKeys($article, $categoryId);
                 if ($article === null) {
-                    unset($slicedArray[$key]); 
+                    unset($slicedArray[$key]);
                 }
             }
 

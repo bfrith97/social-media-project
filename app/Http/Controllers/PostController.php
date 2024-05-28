@@ -101,7 +101,7 @@ class PostController extends Controller
             $user->notify(new NewProfilePost($post->user, $post));
         }
 
-        $this->activityService->storeActivity($post, 'posts.show', $post->post_id, 'bi bi-box-arrow-right', 'created a post');
+        $this->activityService->storeActivity($post, 'posts.show', $post->id, 'bi bi-box-arrow-right', 'created a post');
 
         return response()->json([
             'message' => 'Post added successfully',

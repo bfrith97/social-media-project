@@ -1,6 +1,6 @@
 function loadAdditionalComments(button) {
     let post = button.querySelector('.postId').value;
-    let offset = 5;
+    let offset = button.dataset.offset;
 
     fetch(`/comments/load-additional/${post}/${offset}`, {
         method: 'GET',
@@ -12,7 +12,6 @@ function loadAdditionalComments(button) {
             return response.json();
         })
         .then(data => {
-            offset += 5;
             console.log(data)
             addCommentHtml(data, button)
         })
@@ -59,6 +58,10 @@ function addCommentHtml(data, button) {
             commentList.append(documentFragment);
         })
 
-        button.classList.add('d-none');
+        if (!data['moreCommentsAvailable']) {
+            button.classList.add('d-none');
+        } else {
+            button.dataset.offset = data['newOffset'];
+        }
     }
 }

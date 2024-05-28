@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +13,23 @@ class MessageController extends Controller
      */
     public function index()
     {
+        $user = User::with([
+            'conversations',
+            'conversations.conversationParticipants' => function ($q) {
+                $q->whereNot('user_id', Auth::id());
+            },
+            'conversations.messages',
+            'conversations.messages.user'
+        ])
+            ->withCount('conversations')
+            ->find(Auth::id());
+
+        $conversations = $user->conversations;
+        $conversationCount = $user->conversations_count;
+
         return view('messages.index')->with([
+            'conversations' => $conversations,
+            'conversations_count' => $conversationCount,
         ]);
     }
 
@@ -29,7 +46,7 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

@@ -25,7 +25,6 @@ class ProfileController extends Controller
      */
     public function show(string $id)
     {
-
         $profile = User::with([
             'relationship',
             'partner',

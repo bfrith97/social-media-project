@@ -108,7 +108,7 @@
     <div class="card-footer border-0 py-0">
         @if($post->has_more_than_five_comments)
             <!-- Load more comments -->
-            <button type="button" onclick="loadAdditionalComments(this)" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center pb-3">
+            <button type="button" onclick="loadAdditionalComments(this)" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center pb-3" data-offset="5">
                 <input class="postId" type="hidden" name="post" value="{{$post->id}}"/>
                 <div class="spinner-dots me-2">
                     <span class="spinner-dot"></span>

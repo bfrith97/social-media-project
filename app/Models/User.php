@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -59,6 +60,7 @@ class User extends Authenticatable
         ];
     }
 
+
     public function relationship(): BelongsTo
     {
         return $this->belongsTo(Relationship::class);
@@ -77,6 +79,12 @@ class User extends Authenticatable
     public function otherPosts(): HasMany
     {
         return $this->hasMany(Post::class, 'profile_id');
+    }
+
+    public function conversations(): BelongsToMany
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_participants', 'user_id', 'conversation_id')
+            ->withTimestamps();
     }
 
     // Users that this user follows
