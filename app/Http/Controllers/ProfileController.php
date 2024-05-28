@@ -50,7 +50,7 @@ class ProfileController extends Controller
         $combinedPosts = $profile->ownPosts->merge($profile->otherPosts);
         $combinedPosts = $combinedPosts->sortByDesc('created_at');
 
-        $activity = Activity::with('causer')->where('causer_id', $id)->get();
+        $activity = Activity::with('causer')->where('causer_id', $id)->orderByDesc('created_at')->get();
 
         return view('profiles.show')->with([
             'profile' => $profile,
