@@ -107,7 +107,6 @@
                         <x-posts.post-creation :user="$user" :profile="$profile" onProfile="true"/>
 
                         <div id="posts">
-
                             <!-- Card feed item START -->
                             @if(count($combinedPosts))
                                 @foreach($combinedPosts as $post)

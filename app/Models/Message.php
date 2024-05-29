@@ -11,7 +11,7 @@ class Message extends Model
     protected $fillable = [
         'conversation_id',
         'user_id',
-        'message_text',
+        'content',
     ];
 
     public function user(): BelongsTo

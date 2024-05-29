@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +47,25 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $validatedData = $request->validate([
+            'conversation_id' => 'required|integer|exists:conversations,id',
+            'user_id' => 'required|integer|exists:users,id',
+            'content' => 'required|string',
+        ]);
+
+        $message = Message::create($validatedData);
+
+        if ($message) {
+            return response()->json([
+                'message' => 'Message added successfully',
+                'conversationId' => $message->conversation_id,
+                'content' => $message,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Message not added',
+            ]);
+        }
     }
 
     /**

@@ -56,7 +56,7 @@
                                             @foreach($conversations as $key => $conversation)
                                                 <li data-bs-dismiss="offcanvas">
                                                     <!-- Chat user tab item -->
-                                                    <a href="#chat-{{$key}}" class="nav-link text-start" id="chat-{{$key}}-tab" data-bs-toggle="pill" role="tab">
+                                                    <a href="#chat-{{$key + 1}}" class="nav-link text-start chat-selector chat-{{$key + 1}}" id="chat-{{$key + 1}}-tab" data-bs-toggle="pill" role="tab">
                                                         <div class="d-flex">
                                                             <div class="flex-shrink-0 avatar avatar-story me-2 status-online">
                                                                 <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->picture)}}" alt="">
@@ -85,10 +85,13 @@
             <div class="col-lg-8 col-xxl-9">
                 <div class="card card-chat rounded-start-lg-0 border-start-lg-0">
                     <div class="card-body h-100">
+                        <div id="message-greeting" class="d-flex justify-content-center align-items-center h-100">
+                            <p>Please select a chat</p>
+                        </div>
                         <div class="tab-content py-0 mb-0 h-100" id="chatTabsContent">
                             @foreach($conversations as $key => $conversation)
                                 <!-- Conversation item START -->
-                                <div class="fade tab-pane h-100" id="chat-{{$key}}" role="tabpanel" aria-labelledby="chat-{{$key}}-tab">
+                                <div class="fade tab-pane h-100" id="chat-{{$key + 1}}" role="tabpanel" aria-labelledby="chat-{{$key + 1}}-tab">
                                     <!-- Top avatar and status START -->
                                     <div class="d-sm-flex justify-content-between align-items-center">
                                         <a href="{{ route('profiles.show', $conversation->conversationParticipants->first()->id) }}" class="d-flex mb-2 mb-sm-0">
@@ -106,7 +109,7 @@
                                     <!-- Top avatar and status END -->
                                     <hr>
                                     <!-- Chat conversation START -->
-                                    <div class="chat-conversation-content custom-scrollbar">
+                                    <div class="chat-conversation-content custom-scrollbar chat-messages-{{$key+1}}">
                                         <!-- Chat time -->
                                         <div class="text-center small my-2">{{\Carbon\Carbon::createFromDate($conversation->created_at)->format('D, d M Y - H:i')}}</div>
                                         @foreach($conversation->messages as $message)
@@ -123,13 +126,15 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <form action="{{ route('messages.store') }}" method="post">
+                        <form id="message-form" action="{{ route('messages.store') }}" method="post">
                             @csrf
+                            <input type="hidden" id="conversation_id" name="conversation_id" value="" />
+                            <input type="hidden" name="user_id" value="{{$user->id}}" />
                             <div class="d-sm-flex align-items-end">
-                                <textarea class="form-control mb-sm-0 mb-3" name="content" placeholder="Type a message" rows="1"></textarea>
-                                <button class="btn btn-sm btn-danger-soft ms-sm-2">
+                                <input id="content-input" type="text" class="form-control mb-sm-0 mb-3" name="content" placeholder="Type a message" disabled/>
+                                <button id="emoji-btn" class="btn btn-sm btn-danger-soft ms-sm-2" disabled>
                                     <i class="fa-solid fa-face-smile fs-6"></i></button>
-                                <button class="btn btn-sm btn-primary ms-2"><i class="fa-solid fa-paper-plane fs-6"></i>
+                                <button id="send-btn" class="btn btn-sm btn-primary ms-2" disabled><i class="fa-solid fa-paper-plane fs-6"></i>
                                 </button>
                             </div>
                         </form>
