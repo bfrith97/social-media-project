@@ -24,7 +24,7 @@
 
             <!-- Main content START -->
             <div class="col-md-8 col-lg-9 vstack gap-4">
-                <x-posts.post-card :post="$post" />
+                <x-posts.post-card :post="$post" :user="$user"/>
             </div>
         </div> <!-- Row END -->
     </div>
