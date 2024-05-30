@@ -4,16 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\EventDate;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
+    private UserService $userService;
+
+    private mixed $user;
+    private mixed $conversations;
+    private mixed $notificationsCount;
+
+    public function __construct(UserService $userService) {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $eventDates  = EventDate::with('event', 'event.eventType', 'event.eventLocation')->get();
 
         $eventDatesOnline = $eventDates->filter(function ($eventDate) {
@@ -23,6 +36,9 @@ class EventController extends Controller
         return view('events.index')->with([
             'eventDates' => $eventDates,
             'eventDatesOnline' => $eventDatesOnline,
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 
@@ -47,9 +63,14 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $event = Event::find($id);
         return view('events.show')->with([
-            'event' => $event
+            'event' => $event,
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 

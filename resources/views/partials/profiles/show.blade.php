@@ -379,7 +379,7 @@
                             <!-- Card body START -->
                             <div class="card-body">
                                 @foreach($profile->followers as $follower)
-                                    <x-profile.following-card-row :otherUser="$follower" :profile="$profile" :self="$user" section="Followed"/>
+                                    <x-profile.following-card-row :otherUser="$follower" :profile="$profile" :user="$user" section="Followed"/>
                                 @endforeach
 
                                 <div class="d-grid">
@@ -1707,7 +1707,7 @@
                             <div class="card-body position-relative pt-0">
                                 <div class="row g-3">
                                     @foreach($profile->followings->take(4) as $following)
-                                        <x-profile.following-card :following="$following" :profile="$profile" :self="$user"/>
+                                        <x-profile.following-card :following="$following" :profile="$profile" :user="$user"/>
                                     @endforeach
 
                                 </div>

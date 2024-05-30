@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Relationship;
 use App\Models\User;
+use App\Services\UserService;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService) {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -47,10 +54,15 @@ class SettingController extends Controller
      */
     public function edit()
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $relationshipOptions = Relationship::all();
 
         return view('settings.edit')->with([
             'relationshipOptions' => $relationshipOptions,
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 

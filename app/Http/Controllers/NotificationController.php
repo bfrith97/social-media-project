@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService) {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         return view('notifications.index')->with([
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 

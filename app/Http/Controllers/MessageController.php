@@ -4,33 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use App\Models\User;
+use App\Services\ActivityService;
+use App\Services\NewsService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService) {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $user = User::with([
-            'conversations',
-            'conversations.conversationParticipants' => function ($q) {
-                $q->whereNot('user_id', Auth::id());
-            },
-            'conversations.messages',
-            'conversations.messages.user'
-        ])
-            ->withCount('conversations')
-            ->find(Auth::id());
-
-        $conversations = $user->conversations;
-        $conversationCount = $user->conversations_count;
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
 
         return view('messages.index')->with([
+            'user' => $user,
+            'notificationsCount' => $notificationsCount,
             'conversations' => $conversations,
-            'conversations_count' => $conversationCount,
+            'conversations_count' => $user->conversations_count,
         ]);
     }
 

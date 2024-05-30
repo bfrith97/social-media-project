@@ -1,3 +1,7 @@
+@if(\Route::currentRouteName() != 'messages.index')
+    <x-messages.chat.chat :conversations="$conversations" :user="$user"/>
+@endif
+
 <footer class="bg-mode py-3">
     <div class="container">
         <div class="row">
@@ -21,7 +25,9 @@
             </div>
             <div class="col-md-6">
                 <!-- Copyright START -->
-                <p class="text-center text-md-end mb-0">©2023 <a class="text-body" target="_blank" href="https://www.webestica.com"> Webestica </a>All rights reserved.</p>
+                <p class="text-center text-md-end mb-0">©2023
+                    <a class="text-body" target="_blank" href="https://www.webestica.com"> Webestica </a>All rights
+                    reserved.</p>
                 <!-- Copyright END -->
             </div>
         </div>
@@ -47,6 +53,7 @@
 @stack('js')
 <script src="{{ asset('js/nav/search.js') }}"></script>
 <script src="{{ asset('js/nav/notifications.js') }}"></script>
+<script src="{{ asset('js/messages/chat.js') }}"></script>
 
 <!-- Theme Functions -->
 <script src="{{ asset('assets/js/functions.js') }}"></script>

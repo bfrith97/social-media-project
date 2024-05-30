@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\NewProfilePost;
 use App\Services\ActivityService;
 use App\Services\NewsService;
+use App\Services\UserService;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,12 +15,15 @@ use Spatie\Activitylog\Models\Activity;
 
 class PostController extends Controller
 {
+    private UserService $userService;
     private NewsService $newsService;
     private ActivityService $activityService;
 
-    public function __construct(NewsService $newsService, ActivityService $activityService) {
+    public function __construct(UserService $userService, NewsService $newsService, ActivityService $activityService) {
+        $this->userService = $userService;
         $this->newsService = $newsService;
         $this->activityService = $activityService;
+
     }
 
     /**
@@ -27,7 +31,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
 
         $posts = Post::with([
             'user',
@@ -38,8 +42,8 @@ class PostController extends Controller
             'comments.commentLikes',
             'postLikes',
         ])
-            ->whereHas('user', function ($query) use ($user) {
-                $query->whereHas('followers', function ($subQuery) use ($user) {
+            ->whereHas('user', function ($query) use($user) {
+                $query->whereHas('followers', function ($subQuery) use($user)  {
                     $subQuery->where('follower_id', $user->id);
                 });
                 $query->orWhere('user_id', $user->id);
@@ -52,7 +56,7 @@ class PostController extends Controller
             ->get();
 
         $usersToFollow = User::where('id', '!=', $user->id)
-            ->whereDoesntHave('followers', function ($query) use ($user) {
+            ->whereDoesntHave('followers', function ($query) use($user){
                 $query->where('follower_id', $user->id);
             })
             ->inRandomOrder()
@@ -65,6 +69,9 @@ class PostController extends Controller
             'usersToFollow' => $usersToFollow,
             'posts' => $posts,
             'news' => $news,
+            'user' => $user,
+            'notificationsCount' => $notificationsCount,
+            'conversations' => $conversations,
         ]);
     }
 
@@ -126,6 +133,8 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $post = Post::with('user')
             ->find($id);
         if (!$post) {
@@ -134,6 +143,9 @@ class PostController extends Controller
 
         return view('posts.show')->with([
             'post' => $post,
+            'user' => $user,
+            'notificationsCount' => $notificationsCount,
+            'conversations' => $conversations,
         ]);
     }
 

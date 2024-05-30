@@ -1,5 +1,5 @@
 @include('partials.head')
-@include('partials.nav')
+@include('partials.nav', ['notificationsCount' => $notificationsCount])
 
 @include('partials.profiles.show')
 

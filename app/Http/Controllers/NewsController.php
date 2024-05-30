@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsArticle;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class NewsController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService) {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $newsArticles = NewsArticle::with('newsArticleCategory')
             ->orderByDesc('published_at');
-
 
         $tag = request('tag');
         if ($tag) {
@@ -37,6 +45,9 @@ class NewsController extends Controller
         return view('news.index')->with([
             'newsArticles' => $newsArticles,
             'tag' => $sessionTag ?? null,
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 
@@ -61,11 +72,16 @@ class NewsController extends Controller
      */
     public function show(string $id)
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $newsArticle = NewsArticle::with('newsArticleCategory')
             ->find($id);
 
         return view('news.show')->with([
             'newsArticle' => $newsArticle,
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 

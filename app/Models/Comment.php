@@ -12,6 +12,8 @@ class Comment extends Model
 {
     protected $appends = ['liked_by_current_user'];
 
+    protected $likedByCurrentUserCache = null;
+
     protected $fillable = [
         'content',
         'user_id',
@@ -36,7 +38,11 @@ class Comment extends Model
 
     public function getLikedByCurrentUserAttribute(): bool
     {
-        $user = auth()->id();
-        return $this->commentLikes()->where('user_id', $user)->exists();
+        if ($this->likedByCurrentUserCache === null) {
+            $user = auth()->id();
+            $this->likedByCurrentUserCache = $this->commentLikes()->where('user_id', $user)->exists();
+        }
+
+        return $this->likedByCurrentUserCache;
     }
 }

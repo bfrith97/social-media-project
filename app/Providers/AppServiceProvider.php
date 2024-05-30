@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -23,13 +24,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(255);
-
-        View::composer('*', function ($view) {
-            if (Auth::check()) {
-                $user = Auth::user();
-                $view->with('notificationsCount', $user->unreadNotifications->count())
-                    ->with('user', $user);
-            }
-        });
     }
 }

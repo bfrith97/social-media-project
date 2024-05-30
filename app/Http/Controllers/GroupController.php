@@ -3,16 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService) {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $groups = Group::with(['members', 'posts', 'posts.user'])
             ->withCount('members', 'posts')
             ->get();
@@ -25,6 +34,9 @@ class GroupController extends Controller
             'allGroups' => $allGroups,
             'mostPopularGroups' => $mostPopularGroups,
             'suggestedGroups' => [],
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 
@@ -60,6 +72,8 @@ class GroupController extends Controller
      */
     public function show(string $id)
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $group = Group::with('members', 'posts', 'events', 'groupCategory')->withCount('members', 'posts', 'events')->find($id);
         if(!$group) {
             return redirect()->back();
@@ -69,7 +83,10 @@ class GroupController extends Controller
 
         return view('groups.show')->with([
             'group' => $group,
-            'memberNames' => $memberNames
+            'memberNames' => $memberNames,
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 

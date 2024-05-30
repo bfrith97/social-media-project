@@ -56,7 +56,7 @@
                                 @if(count($suggestedGroups))
                                     <div class="row g-4">
                                         @foreach($suggestedGroups as $group)
-                                            <x-groups.group-card :group="$group"/>
+                                            <x-groups.group-card :group="$group" :user="$user"/>
                                         @endforeach
                                     </div>
                                 @else
@@ -70,7 +70,7 @@
                                 @if(count($mostPopularGroups))
                                     <div class="row g-4">
                                         @foreach($mostPopularGroups as $group)
-                                            <x-groups.group-card :group="$group"/>
+                                            <x-groups.group-card :group="$group" :user="$user"/>
                                         @endforeach
                                     </div>
                                 @else
@@ -84,7 +84,7 @@
                                 @if(count($allGroups))
                                     <div class="row g-4">
                                         @foreach($allGroups as $group)
-                                            <x-groups.group-card :group="$group"/>
+                                            <x-groups.group-card :group="$group" :user="$user"/>
                                         @endforeach
                                     </div>
                                 @else

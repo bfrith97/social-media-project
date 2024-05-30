@@ -10,6 +10,9 @@ class Post extends Model
 {
     protected $appends = ['liked_by_current_user', 'has_more_than_five_comments'];
 
+    protected $likedByCurrentUserCache = null;
+    protected $hasMoreThanFiveCommentsCache = null;
+
     protected $fillable = [
         'content',
         'user_id',
@@ -39,12 +42,20 @@ class Post extends Model
 
     public function getLikedByCurrentUserAttribute(): bool
     {
-        $user = auth()->id();
-        return $this->postLikes()->where('user_id', $user)->exists();
+        if ($this->likedByCurrentUserCache === null) {
+            $user = auth()->id();
+            $this->likedByCurrentUserCache = $this->postLikes()->where('user_id', $user)->exists();
+        }
+
+        return $this->likedByCurrentUserCache;
     }
 
     public function getHasMoreThanFiveCommentsAttribute(): bool
     {
-        return $this->commentCount->count() > 5;
+        if ($this->hasMoreThanFiveCommentsCache === null) {
+            $this->hasMoreThanFiveCommentsCache = $this->commentCount->count() > 5;
+        }
+
+        return $this->hasMoreThanFiveCommentsCache;
     }
 }

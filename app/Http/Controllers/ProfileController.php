@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,12 @@ use Spatie\Activitylog\Models\Activity;
 
 class ProfileController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService) {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -25,6 +32,8 @@ class ProfileController extends Controller
      */
     public function show(string $id)
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+
         $profile = User::with([
             'relationship',
             'partner',
@@ -56,6 +65,9 @@ class ProfileController extends Controller
             'profile' => $profile,
             'combinedPosts' => $combinedPosts,
             'activity' => $activity,
+            'notificationsCount' => $notificationsCount,
+            'user' => $user,
+            'conversations' => $conversations
         ]);
     }
 
