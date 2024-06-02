@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewProfilePost;
 use App\Services\ActivityService;
 use App\Services\NewsService;
 use App\Services\UserService;
+use Carbon\Carbon;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Activitylog\Models\Activity;
 
 class PostController extends Controller
@@ -19,7 +22,8 @@ class PostController extends Controller
     private NewsService $newsService;
     private ActivityService $activityService;
 
-    public function __construct(UserService $userService, NewsService $newsService, ActivityService $activityService) {
+    public function __construct(UserService $userService, NewsService $newsService, ActivityService $activityService)
+    {
         $this->userService = $userService;
         $this->newsService = $newsService;
         $this->activityService = $activityService;
@@ -35,15 +39,15 @@ class PostController extends Controller
 
         $posts = Post::with([
             'user',
-            'comments' => function($q) {
+            'comments' => function ($q) {
                 return $q->limit(5);
             },
             'comments.user',
             'comments.commentLikes',
             'postLikes',
         ])
-            ->whereHas('user', function ($query) use($user) {
-                $query->whereHas('followers', function ($subQuery) use($user)  {
+            ->whereHas('user', function ($query) use ($user) {
+                $query->whereHas('followers', function ($subQuery) use ($user) {
                     $subQuery->where('follower_id', $user->id);
                 });
                 $query->orWhere('user_id', $user->id);
@@ -53,10 +57,11 @@ class PostController extends Controller
                 'profile_id',
             ])
             ->orderByDesc('created_at')
+            ->limit(5)
             ->get();
 
         $usersToFollow = User::where('id', '!=', $user->id)
-            ->whereDoesntHave('followers', function ($query) use($user){
+            ->whereDoesntHave('followers', function ($query) use ($user) {
                 $query->where('follower_id', $user->id);
             })
             ->inRandomOrder()
@@ -119,7 +124,7 @@ class PostController extends Controller
                     'name' => $post->user->name,
                     'role' => $post->user->role,
                     'company' => $post->user->company,
-                    'picture' => asset($post->user->picture),
+                    'picture' => asset($post->user->profile_picture),
                 ],
                 'content' => $post->content,
                 'comment_route' => route('comments.store'),
@@ -133,7 +138,11 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+        [
+            $user,
+            $conversations,
+            $notificationsCount,
+        ] = $this->userService->getUserInformation();
 
         $post = Post::with('user')
             ->find($id);
@@ -171,5 +180,74 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function loadAdditional($offset)
+    {
+        [$user] = $this->userService->getUserInformation();
+
+        $limit = 5;
+
+        $validatedData = Validator::make([
+            'offset' => $offset,
+        ], [
+            'offset' => 'required|integer',
+        ])
+            ->getData();
+
+        $posts = Post::with([
+            'user',
+            'comments' => function ($q) {
+                return $q->limit(5);
+            },
+            'comments.user',
+            'comments.commentLikes',
+            'postLikes',
+        ])
+            ->whereHas('user', function ($query) use ($user) {
+                $query->whereHas('followers', function ($subQuery) use ($user) {
+                    $subQuery->where('follower_id', $user->id);
+                });
+                $query->orWhere('user_id', $user->id);
+            })
+            ->whereNull([
+                'group_id',
+                'profile_id',
+            ])
+            ->orderByDesc('created_at')
+            ->skip($validatedData['offset'])
+            ->limit($limit + 1)
+            ->withCount('comments', 'postLikes')
+            ->get();
+
+        $morePostsAvailable = $posts->count() > $limit;
+
+        if ($morePostsAvailable) {
+            $posts->pop();
+        }
+
+        foreach ($posts as &$post) {
+            $post->created_at_formatted = Carbon::parse($post->created_at)
+                ->timezone('Europe/London')
+                ->diffForHumans();
+        }
+
+        if ($posts) {
+            return response()->json([
+                'message' => 'Posts retrieved successfully',
+                'posts' => $posts,
+                'morePostsAvailable' => $morePostsAvailable,
+                'newOffset' => $validatedData['offset'] + 5,
+                'user' => $user,
+                'commentPostRoute' => route('comments.store'),
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Posts not found',
+            ]);
+        }
     }
 }

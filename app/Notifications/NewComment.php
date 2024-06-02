@@ -36,7 +36,7 @@ class NewComment extends Notification implements ShouldQueue
         return [
             'message' => "{$this->commenter->name} commented on your post",
             'href' => route('posts.show', $this->post->id),
-            'picture' => $this->commenter->picture,
+            'picture' => $this->commenter->profile_picture,
         ];
     }
 

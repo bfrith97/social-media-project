@@ -45,7 +45,7 @@ class CommentLikeController extends Controller
         ]);
 
         $comment = Comment::with('user')->find($validatedData['comment_id']);
-        $like = $comment->commentLikes()->create($validatedData);
+        $like = $comment->commentLikes()->createOrFirst($validatedData);
 
         $comment->user->notify(new NewLike($like->user, $comment,'comment'));
 
@@ -61,7 +61,7 @@ class CommentLikeController extends Controller
                     'user' => [
                         'id' => $like->user->id,
                         'name' => $like->user->name,
-                        'picture' => asset($like->user->picture),
+                        'picture' => asset($like->user->profile_picture),
                     ],
                 ],
             ]);

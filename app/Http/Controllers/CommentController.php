@@ -61,7 +61,8 @@ class CommentController extends Controller
         }
 
         // Create the comment on the model
-        $comment = $model->comments()->create($validatedData);
+        $comment = $model->comments()
+            ->create($validatedData);
 
         if ($validatedData['item_type'] === 'App\Models\Post') {
             $model->user->notify(new NewComment($comment->user, $model));
@@ -78,8 +79,9 @@ class CommentController extends Controller
                 'user' => [
                     'id' => $comment->user->id,
                     'name' => $comment->user->name,
-                    'picture' => asset($comment->user->picture),
+                    'picture' => asset($comment->user->profile_picture),
                 ],
+                'likeCommentRoute' => route('comment_likes.store'),
                 'content' => $comment->content,
             ],
         ]);
@@ -124,20 +126,31 @@ class CommentController extends Controller
     {
         $limit = 5;
 
-        $validatedData = Validator::make(['post' => $post, 'offset' => $offset], [
+        $validatedData = Validator::make([
+            'post' => $post,
+            'offset' => $offset,
+        ], [
             'post' => 'required|integer',
             'offset' => 'required|integer',
-        ])->getData();
+        ])
+            ->getData();
 
-        $comments = Comment::with('user', 'commentLikes')->where('item_id', $validatedData['post'])->orderByDesc('created_at')->skip($validatedData['offset'])->take($limit + 1)->get();
+        $comments = Comment::with('user', 'commentLikes')
+            ->where('item_id', $validatedData['post'])
+            ->orderByDesc('created_at')
+            ->skip($validatedData['offset'])
+            ->limit($limit + 1)
+            ->get();
         $moreCommentsAvailable = $comments->count() > $limit;
 
         if ($moreCommentsAvailable) {
             $comments->pop();
         }
 
-        foreach($comments as &$comment) {
-            $comment->created_at_formatted = Carbon::parse($comment->created_at)->timezone('Europe/London')->diffForHumans();
+        foreach ($comments as &$comment) {
+            $comment->created_at_formatted = Carbon::parse($comment->created_at)
+                ->timezone('Europe/London')
+                ->diffForHumans();
         }
 
         if ($comments) {
@@ -146,6 +159,7 @@ class CommentController extends Controller
                 'comments' => $comments,
                 'moreCommentsAvailable' => $moreCommentsAvailable,
                 'newOffset' => $validatedData['offset'] + 5,
+                'likeCommentRoute' => route('comment_likes.store'),
             ]);
         } else {
             return response()->json([

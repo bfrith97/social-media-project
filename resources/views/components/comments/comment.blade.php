@@ -3,7 +3,7 @@
     <div class="d-flex position-relative">
         <!-- Avatar -->
         <div class="avatar avatar-xs">
-            <a href="{{ route('profiles.show', $comment->user->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($comment->user->picture) }}" alt=""></a>
+            <a href="{{ route('profiles.show', $comment->user->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($comment->user->profile_picture) }}" alt=""></a>
         </div>
         <div class="ms-2 mb-2">
             <!-- Comment by -->
@@ -17,7 +17,7 @@
             </div>
             <!-- Comment react -->
             <ul class="nav nav-divider pb-2 pt-1 small">
-                <form class="post-like-form" action="{{ $comment->liked_by_current_user ? route('comment_likes.destroy') : route('comment_likes.store')}}" method="post">
+                <form class="post-like-form" action="{{ $comment->liked_by_current_user ? route('comment_likes.destroy') : route('comment_likes.store')}}" method="post" onsubmit="submitLike(event)">
                     @csrf
                     @if($comment->liked_by_current_user)
                         <input class="delete_method" type="hidden" name="_method" value="DELETE">

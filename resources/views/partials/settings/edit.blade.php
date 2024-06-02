@@ -129,7 +129,7 @@
                                     </div>
                                 @endif
                                 <!-- Form settings START -->
-                                <form class="row g-3" method="post" action="{{ route('settings.account_update') }}">
+                                <form class="row g-3" method="post" action="{{ route('settings.account_update') }}" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
 
@@ -142,7 +142,7 @@
                                     <!-- Birthday -->
                                     <div class="col-lg-3">
                                         <label class="form-label">Birthday </label>
-                                        <input type="text" class="form-control flatpickr" value="{{ $user->date_of_birth }}" name="date_of_birth">
+                                        <input type="date" class="form-control" value="{{ $user->date_of_birth }}" name="date_of_birth">
                                     </div>
                                     <div class="col-lg-3">
                                         <label class="form-label">Relationship</label>
@@ -159,9 +159,8 @@
                                     <div class="col-sm-6">
                                         <label class="form-label">Phone number</label>
                                         <div class="input-group">
-
                                             <span class="input-group-text">+44</span>
-                                            <input type="number" class="form-control" placeholder="07123456789" value="{{ $user->number }}" name="number">
+                                            <input type="number" class="form-control pe-1" placeholder="7123456789" value="{{ $user->number }}" name="number">
                                         </div>
                                         <!-- Add new number -->
                                     </div>
@@ -169,6 +168,18 @@
                                     <div class="col-sm-6">
                                         <label class="form-label">Email</label>
                                         <input type="email" class="form-control" placeholder="" value="{{ $user->email }}" name="email" disabled>
+                                        <!-- Add new email -->
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <label for="profile_picture" class="form-label">Profile Picture</label>
+                                        <input class="form-control" type="file" id="profile_picture" name="profile_picture">
+                                        <img id="profilePicturePreview" src="#" alt="Image Preview" style="display: none;">
+                                        <!-- Add new email -->
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <label for="cover_picture" class="form-label">Cover Picture</label>
+                                        <input class="form-control" type="file" id="cover_picture" name="cover_picture">
+                                        <img id="coverPicturePreview" src="#" alt="Image Preview" style="display: none;">
                                         <!-- Add new email -->
                                     </div>
                                     <!-- Page information -->
@@ -179,11 +190,11 @@
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">Role</label>
-                                        <input type="text" class="form-control" placeholder="" value="{{ $user->role }}" name="role" >
+                                        <input type="text" class="form-control" placeholder="" value="{{ $user->role }}" name="role">
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">Company</label>
-                                        <input type="text" class="form-control" placeholder="" value="{{ $user->company }}" name="company" >
+                                        <input type="text" class="form-control" placeholder="" value="{{ $user->company }}" name="company">
                                     </div>
                                     <!-- Button  -->
                                     <div class="col-12 text-end">
@@ -893,3 +904,28 @@
         </div>
     </div>
 </div>
+<script>
+    function readURL(input, id) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var imgElement = document.getElementById(id);
+                imgElement.style.display = 'block';
+                imgElement.style.height = '200px';
+                imgElement.style.marginTop = '10px';
+                imgElement.src = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    document.getElementById('profile_picture').addEventListener('change', function() {
+        readURL(this, 'profilePicturePreview');
+    });
+
+    document.getElementById('cover_picture').addEventListener('change', function() {
+        readURL(this, 'coverPicturePreview');
+    });
+</script>

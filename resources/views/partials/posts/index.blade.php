@@ -37,14 +37,14 @@
                 </div>
 
                 <!-- Load more button START -->
-                <a href="#!" role="button" class="btn btn-loader btn-primary-soft" data-bs-toggle="button" aria-pressed="true">
+                <button type="button" onclick="loadAdditionalPosts(this)" class="btn btn-loader btn-primary-soft" data-offset="5">
                     <span class="load-text"> Load more </span>
                     <div class="load-icon">
                         <div class="spinner-grow spinner-grow-sm" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
-                </a>
+                </button>
                 <!-- Load more button END -->
 
             </div>

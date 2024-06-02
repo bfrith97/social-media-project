@@ -96,7 +96,7 @@
                             @if($group->members_count >= 1)
                                 @foreach($group->members->take(3) as $member)
                                     <li class="avatar avatar-xs">
-                                        <img class="avatar-img rounded-circle" src="{{ asset($member->picture) }}" alt="Image of {{$member->name}}">
+                                        <img class="avatar-img rounded-circle" src="{{ asset($member->profile_picture) }}" alt="Image of {{$member->name}}">
                                     </li>
                                 @endforeach
                             @endif

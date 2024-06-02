@@ -62,7 +62,7 @@
                     <li class="chat-selector mt-3 hstack gap-3 align-items-center position-relative toast-btn" data-target="chatToast{{!$loop->first ? $key+1 : ''}}" data-conversation-id="{{$conversation->id}}">
                         <!-- Avatar -->
                         <div class="avatar status-online">
-                            <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->picture)}}" alt="">
+                            <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->profile_picture)}}" alt="">
                         </div>
                         <!-- Info -->
                         <div class="overflow-hidden">
@@ -97,7 +97,7 @@
                         <div class="d-flex justify-content-between align-items-center w-100">
                             <div class="d-flex">
                                 <div class="flex-shrink-0 avatar me-2">
-                                    <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->picture)}}" alt="">
+                                    <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->profile_picture)}}" alt="">
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0 mt-1">{{$conversation->conversationParticipants->first()->name}}</h6>

@@ -1,21 +1,16 @@
-document.addEventListener('DOMContentLoaded', function () {
-    let commentForms = document.querySelectorAll('.comment-form');
-    commentForms.forEach((form, index) => {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+function submitComment(event) {
+    event.preventDefault();
 
-            let body = new FormData(form);
-            const csrfToken = body.get('_token');
+    let form = event.target;
+    let body = new FormData(form);
+    const csrfToken = body.get('_token'); // Ensuring CSRF token is fetched correctly
 
-            submitComment(form, body, csrfToken);
-        })
-    })
-});
-
-function submitComment(form, body, csrfToken) {
     fetch(form.action, {
-        method: 'POST', body: body, headers: {
-            'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json'
+        method: 'POST',
+        body: body,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,  // Make sure the CSRF token header is correct
+            'Accept': 'application/json'
         }
     })
         .then(response => {
@@ -25,16 +20,18 @@ function submitComment(form, body, csrfToken) {
             return response.json();
         })
         .then(data => {
-            addNewCommentHtml(form, data.comment);
+            addNewCommentHtml(form, data);
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
 
-function addNewCommentHtml(form, comment) {
+function addNewCommentHtml(form, data) {
     let formContainer = form.closest('.card-body'); // Use a class that wraps both the form and the comment list
     let commentList = formContainer ? formContainer.querySelector('.comment-wrap') : null;
+    let comment = data.comment;
+    console.log(comment.likeCommentRoute)
 
     // Create the new comment HTML
     const newCommentHtml = `
@@ -51,10 +48,18 @@ function addNewCommentHtml(form, comment) {
                         </div>
                         <p class="small mb-0">${comment.content}</p>
                     </div>
-                    <ul class="nav nav-divider pb-2 pt-1 small">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#!">Like (0)</a>
-                        </li>
+                      <ul class="nav nav-divider pb-2 pt-1 small">
+                            <form class="post-like-form" action="${comment.likeCommentRoute}" method="post" onsubmit="submitLike(event)">
+                                ${comment.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
+                                <input type="hidden" name="_token" value="9ReFPuM55VL7v9OBHvOPCSbNBtQ5erTsVOCIhEgK" autocomplete="off">
+                                <input type="hidden" id="comment_id" name="comment_id" value="${comment.id}">
+                                <input type="hidden" id="user_id" name="user_id" value="1">
+                                <li class="nav-item">
+                                    <button type="submit" class="nav-link like-button comment-like like-event-bound">
+                                       Like (0)
+                                    </button>
+                                </li>
+                            </form>
                     </ul>
                 </div>
             </div>

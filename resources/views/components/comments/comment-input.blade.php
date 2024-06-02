@@ -2,11 +2,11 @@
     <!-- Avatar -->
     <div class="avatar avatar-xs me-2">
         <a href="#!">
-            <img class="avatar-img rounded-circle" src="{{ asset($user->picture) }}" alt="">
+            <img class="avatar-img rounded-circle" src="{{ asset($user->profile_picture) }}" alt="">
         </a>
     </div>
     <!-- Comment box  -->
-    <form class="nav nav-item w-100 position-relative comment-form" action="{{ route('comments.store') }}" method="post">
+    <form class="nav nav-item w-100 position-relative comment-form" action="{{ route('comments.store') }}" method="post" onsubmit="submitComment(event)">
         @csrf
         <input type="hidden" id="item_id" name="item_id" value="{{$item->id}}"/>
         <input type="hidden" id="item_type" name="item_type" value="{{$itemType}}"/>

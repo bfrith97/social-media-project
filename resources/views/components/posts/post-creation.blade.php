@@ -4,7 +4,7 @@
         <!-- Avatar -->
         <div class="avatar avatar-xs me-2">
             <a href="#">
-                <img class="avatar-img rounded-circle" src="{{ asset($user->picture) }}" alt=""> </a>
+                <img class="avatar-img rounded-circle" src="{{ asset($user->profile_picture) }}" alt=""> </a>
         </div>
         <!-- Post input -->
         <form class="w-100" id="post-creation-form" method="post" action="{{route('posts.store')}}">

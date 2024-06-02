@@ -38,7 +38,7 @@ class NewLike extends Notification implements ShouldQueue
         return [
             'message' => "{$this->liker->name} liked your " . $this->item,
             'href' => route('posts.show', $this->model->post->id ?? $this->model->id),
-            'picture' => $this->liker->picture,
+            'picture' => $this->liker->profile_picture,
         ];
     }
 

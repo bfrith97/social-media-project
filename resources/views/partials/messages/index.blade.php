@@ -59,7 +59,7 @@
                                                     <a href="#chat-{{$key + 1}}" class="nav-link text-start chat-selector chat-{{$key + 1}}" id="chat-{{$key + 1}}-tab" data-bs-toggle="pill" role="tab">
                                                         <div class="d-flex">
                                                             <div class="flex-shrink-0 avatar avatar-story me-2 status-online">
-                                                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->picture)}}" alt="">
+                                                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->profile_picture)}}" alt="">
                                                             </div>
                                                             <div class="flex-grow-1 d-block">
                                                                 <h6 class="mb-0 mt-1">{{$conversation->conversationParticipants->first()->name}}</h6>
@@ -96,7 +96,7 @@
                                     <div class="d-sm-flex justify-content-between align-items-center">
                                         <a href="{{ route('profiles.show', $conversation->conversationParticipants->first()->id) }}" class="d-flex mb-2 mb-sm-0">
                                             <div class="flex-shrink-0 avatar me-2">
-                                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->picture)}}" alt="">
+                                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->profile_picture)}}" alt="">
                                             </div>
                                             <div class="d-block flex-grow-1">
                                                 <h6 class="mb-0 mt-1">{{$conversation->conversationParticipants->first()->name}}</h6>

@@ -7,7 +7,7 @@
                 <!-- Avatar -->
                 <div class="avatar avatar-story me-2">
                     <a href="#!">
-                        <img class="avatar-img rounded-circle" src="{{ asset($post->user->picture) }}" alt="">
+                        <img class="avatar-img rounded-circle" src="{{ asset($post->user->profile_picture) }}" alt="">
                     </a>
                 </div>
                 <!-- Info -->
@@ -53,7 +53,7 @@
         <p>{{$post->content}}</p>
         <!-- Feed react START -->
         <ul class="nav nav-stack pb-2 small">
-            <form class="post-like-form" action="{{ $post->liked_by_current_user ? route('post_likes.destroy') : route('post_likes.store')}}" method="post">
+            <form class="post-like-form" action="{{ $post->liked_by_current_user ? route('post_likes.destroy') : route('post_likes.store')}}" method="post" onsubmit="submitLike(event)">
                 @csrf
                 @if($post->liked_by_current_user)
                     <input class="delete_method" type="hidden" name="_method" value="DELETE">

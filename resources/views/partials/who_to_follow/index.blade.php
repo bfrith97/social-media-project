@@ -23,7 +23,7 @@
 
                                     <!-- Avatar -->
                                     <div class="avatar">
-                                        <a href="{{ route('profiles.show', $userToFollow->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($userToFollow->picture) }}" alt=""></a>
+                                        <a href="{{ route('profiles.show', $userToFollow->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($userToFollow->profile_picture) }}" alt=""></a>
                                     </div>
                                     <!-- Title -->
                                     <div class="overflow-hidden">

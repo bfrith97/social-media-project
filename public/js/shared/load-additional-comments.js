@@ -23,6 +23,7 @@ function loadAdditionalComments(button) {
 function addCommentHtml(data, button) {
     let card = button.closest('.card'); // Use a class that wraps both the form and the comment list
     let commentList = card ? card.querySelector('.comment-wrap') : null;
+    console.log(data)
 
     if (data['message'] === 'Comments retrieved successfully') {
         data['comments'].forEach(function (msg) {
@@ -30,7 +31,7 @@ function addCommentHtml(data, button) {
                 <li class="comment-item">
                     <div class="d-flex position-relative">
                         <div class="avatar avatar-xs">
-                            <a href="/profiles/${msg.user.id}"><img class="avatar-img rounded-circle" src="${msg.user.picture}" alt=""></a>
+                            <a href="/profiles/${msg.user.id}"><img class="avatar-img rounded-circle" src="${msg.user.profile_picture}" alt=""></a>
                         </div>
                         <div class="ms-2">
                             <div class="bg-light rounded-start-top-0 p-2 rounded">
@@ -40,10 +41,18 @@ function addCommentHtml(data, button) {
                                 </div>
                                 <p class="small mb-0">${msg.content}</p>
                             </div>
-                            <ul class="nav nav-divider pb-2 pt-1 small">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#!">Like (0)</a>
-                                </li>
+                             <ul class="nav nav-divider pb-2 pt-1 small">
+                                <form class="post-like-form" action="${data['likeCommentRoute']}" method="post" onsubmit="submitLike(event)">
+                                    ${msg.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
+                                    <input type="hidden" name="_token" value="9ReFPuM55VL7v9OBHvOPCSbNBtQ5erTsVOCIhEgK" autocomplete="off">
+                                    <input type="hidden" id="comment_id" name="comment_id" value="${msg.id}">
+                                    <input type="hidden" id="user_id" name="user_id" value="1">
+                                    <li class="nav-item">
+                                        <button type="submit" class="nav-link like-button comment-like like-event-bound ${msg.liked_by_current_user ? 'active' : ''}">
+                                           ${msg.liked_by_current_user ? 'Liked' : 'Like'} (${msg.comment_likes.length})
+                                        </button>
+                                    </li>
+                                </form>
                             </ul>
                         </div>
                     </div>

@@ -10,14 +10,14 @@
                     <!-- My profiles-breeze START -->
                     <div class="card mb-4">
                         <!-- Cover image -->
-                        <div class="h-200px rounded-top" style="background-image:url({{asset('assets/images/bg/05.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                        <div class="h-200px rounded-top" style="background-image:url({{asset($profile->cover_picture ?? 'assets/images/bg/05.jpg')}}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
                         <!-- Card body START -->
                         <div class="card-body py-0">
                             <div class="d-sm-flex align-items-start text-center text-sm-start">
                                 <div>
                                     <!-- Avatar -->
                                     <div class="avatar avatar-xxl mt-n5 mb-3">
-                                        <img class="avatar-img rounded-circle border border-white border-3" src="{{ asset($profile->picture) }}" alt="">
+                                        <img class="avatar-img rounded-circle border border-white border-3" src="{{ asset($profile->profile_picture) }}" alt="">
                                     </div>
                                 </div>
                                 <div class="ms-sm-4 mt-sm-3">

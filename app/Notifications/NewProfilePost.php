@@ -36,7 +36,7 @@ class NewProfilePost extends Notification implements ShouldQueue
         return [
             'message' => "{$this->poster->name} posted on your profile",
             'href' => route('profiles.show', $this->poster->id),
-            'picture' => $this->poster->picture,
+            'picture' => $this->poster->profile_picture,
         ];
     }
 

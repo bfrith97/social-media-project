@@ -21,7 +21,7 @@
                     <div class="hstack gap-2 mb-3">
                         <!-- Avatar -->
                         <div class="avatar">
-                            <a href="{{ route('profiles.show', $userToFollow->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($userToFollow->picture) }}" alt="Image of {{$userToFollow->name}}"></a>
+                            <a href="{{ route('profiles.show', $userToFollow->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($userToFollow->profile_picture) }}" alt="Image of {{$userToFollow->name}}"></a>
                         </div>
                         <!-- Title -->
                         <div class="overflow-hidden">

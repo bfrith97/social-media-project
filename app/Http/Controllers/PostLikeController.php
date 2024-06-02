@@ -48,7 +48,7 @@ class PostLikeController extends Controller
         $post = Post::with('user')
             ->find($validatedData['post_id']);
         $like = $post->postLikes()
-            ->create($validatedData);
+            ->createOrFirst($validatedData);
 
         $post->user->notify(new NewLike($like->user, $post, 'post'));
 
@@ -62,7 +62,7 @@ class PostLikeController extends Controller
                     'user' => [
                         'id' => $like->user->id,
                         'name' => $like->user->name,
-                        'picture' => asset($like->user->picture),
+                        'picture' => asset($like->user->profile_picture),
                     ],
                 ],
             ]);

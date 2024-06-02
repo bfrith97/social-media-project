@@ -1,25 +1,11 @@
-document.addEventListener('DOMContentLoaded', function () {
-    let likeButtons = document.querySelectorAll('.like-button');
+function submitLike(event) {
+    event.preventDefault();
+    console.log(event.submitter);
 
-    likeButtons.forEach((btn) => {
-        // Add a check to ensure the event is only bound once
-        if (!btn.classList.contains('like-event-bound')) {
-            btn.classList.add('like-event-bound');
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+    let form = event.target;
+    let body = new FormData(form);
+    const csrfToken = body.get('_token'); // Ensuring CSRF token is fetched correctly
 
-                let form = btn.closest('.post-like-form');
-                let body = new FormData(form);
-                const csrfToken = body.get('_token');
-
-                submitLike(form, body, csrfToken, btn);
-            });
-        }
-    });
-});
-
-function submitLike(form, body, csrfToken, likeBtn) {
     fetch(form.action, {
         method: 'POST', body: body, headers: {
             'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json'
@@ -32,7 +18,7 @@ function submitLike(form, body, csrfToken, likeBtn) {
             return response.json();
         })
         .then(data => {
-            changeLikeHtml(likeBtn, data, form);
+            changeLikeHtml(event.submitter, data, form);
         })
         .catch(error => {
             console.error('Error:', error);

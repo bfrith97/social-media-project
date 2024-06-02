@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('company', 255)->nullable();
             $table->string('info', 255)->nullable();
             $table->string('email', 255)->unique();
-            $table->text('picture')->nullable();
+            $table->text('profile_picture')->nullable();
+            $table->text('cover_picture')->nullable();
             $table->unsignedBigInteger('number')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->foreignId('relationship_id')->nullable()->constrained('relationships')->onDelete('set null');
