@@ -19,21 +19,21 @@ function loadAdditionalPosts(button) {
         });
 }
 
-function generateCommentsHtml(comments, user) {
+function generateCommentsHtml(comments, user, data) {
     return comments.map(comment => `
         <li class="comment-item">
             <div class="d-flex position-relative">
                 <!-- Avatar -->
                 <div class="avatar avatar-xs">
-                    <a href="http://127.0.0.1:8000/profiles/1"><img class="avatar-img rounded-circle" src="${comment.user.profile_picture}" alt=""></a>
+                    <a href="${comment.user.profile_route}"><img class="avatar-img rounded-circle" src="${comment.user.profile_picture}" alt=""></a>
                 </div>
                 <div class="ms-2 mb-2">
                     <!-- Comment by -->
                     <div class="bg-light rounded-start-top-0 p-2 rounded">
                         <div class="d-flex justify-content-between">
                             <h6 class="mb-1">
-                                <a href="http://127.0.0.1:8000/profiles/1"> ${comment.user.name} </a></h6>
-                            <small class="ms-2">4 days ago</small>
+                                <a href="${comment.user.profile_route}"> ${comment.user.name} </a></h6>
+                            <small class="ms-2">${comment.created_at_formatted}</small>
                         </div>
                         <p class="small mb-0 text-break"> ${comment.content} </p>
                     </div>
@@ -41,7 +41,7 @@ function generateCommentsHtml(comments, user) {
                     <ul class="nav nav-divider pb-2 pt-1 small">
                         <form class="post-like-form" action="http://127.0.0.1:8000/comment-likes" method="post" onsubmit="submitLike(event)">
                             ${comment.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
-                            <input type="hidden" name="_token" value="9ReFPuM55VL7v9OBHvOPCSbNBtQ5erTsVOCIhEgK" autocomplete="off">
+                            <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
                             <input type="hidden" id="comment_id" name="comment_id" value="${comment.id}">
                             <input type="hidden" id="user_id" name="user_id" value="1">
                             <li class="nav-item">
@@ -70,7 +70,7 @@ function addPostHtml(data, button) {
                         <div class="d-flex align-items-center">
                             <!-- Avatar -->
                             <div class="avatar avatar-story me-2">
-                                <a href="#!">
+                                <a href="123">
                                     <img class="avatar-img rounded-circle" src="${post.user.profile_picture}" alt="">
                                 </a>
                             </div>
@@ -78,7 +78,7 @@ function addPostHtml(data, button) {
                             <div>
                                 <div class="nav nav-divider">
                                     <h6 class="nav-item card-title mb-0">
-                                        <a href="http://127.0.0.1:8000/profiles/1"> ${post.user.name} </a></h6>
+                                        <a href="${post.user.profile_route}"> ${post.user.name} </a></h6>
                                     <span class="nav-item small"> ${post.created_at_formatted} </span>
                                 </div>
                                 <p class="mb-0 small">
@@ -114,11 +114,13 @@ function addPostHtml(data, button) {
                 <!-- Card header END -->
                 <!-- Card body START -->
                 <div class="card-body pb-0">
-                    <p> ${post.content}</p>
+                    ${post.is_feeling == 1 ? '' : `<p>${post.content}
+                    ${post.image_path ? `<img src="${post.image_path}" class="mt-2" alt="">` : ''}
+                        </p>`}
                     <!-- Feed react START -->
                     <ul class="nav nav-stack pb-2 small">
                         <form class="post-like-form" action="http://127.0.0.1:8000/post-likes" method="post" onsubmit="submitLike(event)">
-                            <input type="hidden" name="_token" value="9ReFPuM55VL7v9OBHvOPCSbNBtQ5erTsVOCIhEgK" autocomplete="off">
+                            <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
                             ${post.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
                             <input type="hidden" id="post_id" name="post_id" value="${post.id}">
                             <input type="hidden" id="user_id" name="user_id" value="${data['user'].id}">
@@ -160,17 +162,17 @@ function addPostHtml(data, button) {
                     <div class="d-flex mb-3">
                 <!-- Avatar -->
                 <div class="avatar avatar-xs me-2">
-                    <a href="#!">
-                        <img class="avatar-img rounded-circle" src="http://127.0.0.1:8000/assets/images/avatars/1717352912.jpg" alt="">
+                    <a href="123">
+                        <img class="avatar-img rounded-circle" src="${data['user'].profile_picture}" alt="">
                     </a>
                 </div>
                 <!-- Comment box  -->
                   <form class="nav nav-item w-100 position-relative comment-form" action="${data['commentPostRoute']}" method="post" onsubmit="submitComment(event)">
-                    <input type="hidden" name="_token" value="9ReFPuM55VL7v9OBHvOPCSbNBtQ5erTsVOCIhEgK" autocomplete="off">
+                    <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
                     <input type="hidden" id="item_id" name="item_id" value="${post.id}">
                     <input type="hidden" id="item_type" name="item_type" value="App\\Models\\Post">
                     <input type="hidden" id="user_id" name="user_id" value="${data['user'].id}">
-                    <input type="text" class="form-control pe-5 bg-light" placeholder="Add a comment..." id="content" name="content">
+                    <input type="text" class="form-control pe-5 bg-light" placeholder="Add a comment..." id="content" name="content" required>
                     <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0 comment-submit-btn" type="submit">
                         <i class="bi bi-send-fill"> </i>
                     </button>
@@ -178,7 +180,7 @@ function addPostHtml(data, button) {
             </div>
 
                 <ul class="comment-wrap list-unstyled mb-0">
-                    ${generateCommentsHtml(post.comments, data['user'])}
+                    ${generateCommentsHtml(post.comments, data['user'], data)}
                 </ul>
                 </div>
                 <!-- Card body END -->

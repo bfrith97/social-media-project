@@ -1,32 +1,11 @@
-document.addEventListener('DOMContentLoaded', function () {
+function submitPost(event) {
+    event.preventDefault();
+    console.log('form submitting')
 
-    let postForm = document.querySelector('#post-creation-form');
-    let postFormSubmitBtn = document.querySelector('#post-creation-form-submit');
+    let form = event.target;
+    let body = new FormData(form);
+    const csrfToken = body.get('_token'); // Ensuring CSRF token is fetched correctly
 
-    if (postFormSubmitBtn) {
-        postFormSubmitBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log('submitting');
-
-            let body = new FormData(postForm);
-            const csrfToken = body.get('_token');
-
-            submitPost(postForm, body, csrfToken);
-        })
-
-        postForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            console.log('submitting');
-
-            let body = new FormData(postForm);
-            const csrfToken = body.get('_token');
-
-            submitPost(postForm, body, csrfToken);
-        })
-    }
-});
-
-function submitPost(form, body, csrfToken) {
     fetch(form.action, {
         method: 'POST', body: body, headers: {
             'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json'
@@ -39,16 +18,44 @@ function submitPost(form, body, csrfToken) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
-            addNewPostHtml(form, data.post);
+            addNewPostHtml(form, data.post, data);
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
 
-function addNewPostHtml(form, post) {
-    let formContainer = form.closest('main').querySelector('#posts')
+function addContent(post) {
+    console.log(post)
+    if(post.is_feeling == 1) {
+        return `
+            <div>
+                <div class="nav nav-divider">
+                    <h6 class="nav-item card-title mb-0">
+                        <a href="{{ route('profiles.show', $post->user->id) }}"> ${post.user.name} </a>
+                        <span class="fw-normal ms-1">is feeling ${post.content}</span>
+                        <br>
+                    </h6>
+                    <span class="nav-item small"> Just now </span>
+                </div>
+            </div>
+        `
+    } else {
+        return `
+        <div>
+            <div class="nav nav-divider">
+                <h6 class="nav-item card-title mb-0">
+                    <a href="{{ route('profiles.show', $post->user->id) }}"> ${post.user.name} </a></h6>
+                <span class="nav-item small"> Just now </span>
+            </div>
+            <p class="mb-0 small">${post.user.role} at ${post.user.company}</p>
+        </div>
+        `
+    }
+}
+
+function addNewPostHtml(form, post, data) {
+    let formContainer = form.closest('body').querySelector('#posts')
 
     // Create the new comment HTML
     const newCommentHtml = `
@@ -61,18 +68,11 @@ function addNewPostHtml(form, post) {
                         <!-- Avatar -->
                         <div class="avatar avatar-story me-2">
                             <a href="#!">
-                                <img class="avatar-img rounded-circle" src="${post.user.picture}" alt="">
+                                <img class="avatar-img rounded-circle" src="${post.user.profile_picture}" alt="">
                             </a>
                         </div>
                         <!-- Info -->
-                        <div>
-                            <div class="nav nav-divider">
-                                <h6 class="nav-item card-title mb-0">
-                                    <a href="{{ route('profiles.show', $post->user->id) }}"> ${post.user.name} </a></h6>
-                                <span class="nav-item small"> Just now </span>
-                            </div>
-                            <p class="mb-0 small">${post.user.role} at ${post.user.company}</p>
-                        </div>
+                        ${addContent(post)}
                     </div>
                     <!-- Card feed action dropdown START -->
                     <div class="dropdown">
@@ -102,13 +102,22 @@ function addNewPostHtml(form, post) {
             <!-- Card header END -->
             <!-- Card body START -->
             <div class="card-body pb-0">
-                <p>${post.content}</p>
+                ${post.is_feeling == 1 ? '' : `<p>${post.content}
+                    ${post.image_path ? `<img src="${post.image_path}" class="mt-2" alt="">` : ''}
+                </p>`}
                 <!-- Feed react START -->
                 <ul class="nav nav-stack pb-2 small">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#!" data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title="">
-                            <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Like (0)</a>
-                    </li>
+                    <form class="post-like-form" action="http://127.0.0.1:8000/post-likes" method="post" onsubmit="submitLike(event)">
+                            <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
+                            ${post.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
+                            <input type="hidden" id="post_id" name="post_id" value="${post.id}">
+                            <input type="hidden" id="user_id" name="user_id" value="${post.user.id}">
+                            <li class="nav-item">
+                                <button class="nav-link like-button like-event-bound" type="submit" data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title="">
+                                    <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Like (0)
+                                </button>
+                            </li>
+                        </form>
                         <span class="comment-count"> <i class="bi bi-chat-fill pe-1"></i>Comments (0)</span>
                     <!-- Card share action START -->
                     <li class="nav-item dropdown ms-sm-auto">
@@ -141,15 +150,16 @@ function addNewPostHtml(form, post) {
                     <!-- Avatar -->
                     <div class="avatar avatar-xs me-2">
                         <a href="#!">
-                            <img class="avatar-img rounded-circle" src="${post.user.picture}" alt="">
+                            <img class="avatar-img rounded-circle" src="${post.user.profile_picture}" alt="">
                         </a>
                     </div>
                     <!-- Comment box  -->
-                    <form class="nav nav-item w-100 position-relative comment-form" action="${post.comment_route}" method="post">
-                        <input type="hidden" name="_token" value="${post.csrf}" autocomplete="off">
-                        <input type="hidden" id="post_id" name="post_id" value="${post.id}"/>
+                    <form class="nav nav-item w-100 position-relative comment-form" action="${post.comment_route}" method="post" onsubmit="submitComment(event)">
+                        <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
+                        <input type="hidden" id="item_id" name="item_id" value="${post.id}"/>
+                        <input type="hidden" id="item_type" name="item_type" value="App\\Models\\Post"/>
                         <input type="hidden" id="user_id" name="user_id" value="${post.user.id}"/>
-                        <input type="text" class="form-control pe-5 bg-light" placeholder="Add a comment..." id="content" name="content">
+                        <input type="text" class="form-control pe-5 bg-light" placeholder="Add a comment..." id="content" name="content" required>
                         <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0 comment-submit-btn" type="submit">
                             <i class="bi bi-send-fill"> </i>
                         </button>
@@ -160,19 +170,6 @@ function addNewPostHtml(form, post) {
                 </ul>
             </div>
             <!-- Card body END -->
-            <!-- Card footer START -->
-            <div class="card-footer border-0 pt-0">
-                <!-- Load more comments -->
-                <a href="#!" role="button" class="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center" data-bs-toggle="button" aria-pressed="true">
-                    <div class="spinner-dots me-2">
-                        <span class="spinner-dot"></span>
-                        <span class="spinner-dot"></span>
-                        <span class="spinner-dot"></span>
-                    </div>
-                    Load more comments
-                </a>
-            </div>
-            <!-- Card footer END -->
         </div>
         <!-- Card feed item END -->
 
@@ -187,7 +184,4 @@ function addNewPostHtml(form, post) {
     // Append the new comment to the comment list
     formContainer.prepend(documentFragment);
     form.reset();
-
-    form.closest('.card-body').querySelector('.comment-count').innerHTML = `<i class="bi bi-chat-fill pe-1"></i>Comments
-                    (${comment.comment_count})`;
 }

@@ -82,6 +82,7 @@ class CommentController extends Controller
                     'picture' => asset($comment->user->profile_picture),
                 ],
                 'likeCommentRoute' => route('comment_likes.store'),
+                'csrf' => csrf_token(),
                 'content' => $comment->content,
             ],
         ]);
@@ -151,6 +152,7 @@ class CommentController extends Controller
             $comment->created_at_formatted = Carbon::parse($comment->created_at)
                 ->timezone('Europe/London')
                 ->diffForHumans();
+            $comment->user->profile_picture = asset($comment->user->profile_picture);
         }
 
         if ($comments) {
@@ -160,6 +162,7 @@ class CommentController extends Controller
                 'moreCommentsAvailable' => $moreCommentsAvailable,
                 'newOffset' => $validatedData['offset'] + 5,
                 'likeCommentRoute' => route('comment_likes.store'),
+                'csrf' => csrf_token()
             ]);
         } else {
             return response()->json([

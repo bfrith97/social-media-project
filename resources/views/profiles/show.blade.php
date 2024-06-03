@@ -9,6 +9,8 @@
     <script src="{{ asset('js/posts/post.js') }}"></script>
     <script src="{{ asset('js/shared/comment.js') }}"></script>
     <script src="{{ asset('js/shared/like.js') }}"></script>
+    <script src="{{ asset('js/shared/load-additional-posts.js') }}"></script>
+    <script src="{{ asset('js/shared/load-additional-comments.js') }}"></script>
 @endpush
 
 @include('partials.footer')

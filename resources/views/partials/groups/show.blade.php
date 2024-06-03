@@ -145,7 +145,7 @@
                     <div class="tab-pane show active fade" id="group-tab-1">
                         <div class="row g-4">
                             <div class="col-lg-8 vstack gap-4">
-                                <x-posts.post-creation :user="$user" :group="$group"/>
+                                <x-posts.post-creation :user="$user" :group="$group" onProfile="false"/>
 
                                 <div id="posts">
                                     @foreach($group->posts as $post)
@@ -373,29 +373,19 @@
                 <div class="d-flex mb-3">
                     <!-- Avatar -->
                     <div class="avatar avatar-xs me-2">
-                        <img class="avatar-img rounded-circle" src="" alt="">
+                        <img class="avatar-img rounded-circle mt-2" src="{{ asset($user->profile_picture) }}" alt="">
                     </div>
                     <!-- Feed box  -->
-                    <form class="w-100">
-                        <textarea class="form-control pe-4 fs-3 lh-1 border-0" rows="4" placeholder="Share your thoughts..." autofocus></textarea>
+                    <form id="feeling-form" class="w-100 input-group" action="{{ route('posts.store') }}" method="post" onsubmit="submitPost(event)">
+                        @csrf
+                        <div class="input-group flex-nowrap">
+                            <span class="input-group-text bg-white border-0 fs-3">I'm Feeling:</span>
+                            <input type="hidden" name="user_id" value="{{$user->id}}"/>
+                            <input type="hidden" name="is_feeling" value="1"/>
+                            <input type="text" class="form-control border-0 fs-3" placeholder="Happy? Sad?" name="content" required maxlength="14">
+                        </div>
                     </form>
                 </div>
-                <!-- Feed rect START -->
-                <div class="hstack gap-2">
-                    <a class="icon-md bg-success bg-opacity-10 text-success rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Photo">
-                        <i class="bi bi-image-fill"></i> </a>
-                    <a class="icon-md bg-info bg-opacity-10 text-info rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Video">
-                        <i class="bi bi-camera-reels-fill"></i> </a>
-                    <a class="icon-md bg-danger bg-opacity-10 text-danger rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Events">
-                        <i class="bi bi-calendar2-event-fill"></i> </a>
-                    <a class="icon-md bg-warning bg-opacity-10 text-warning rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Feeling/Activity">
-                        <i class="bi bi-emoji-smile-fill"></i> </a>
-                    <a class="icon-md bg-light text-secondary rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Check in">
-                        <i class="bi bi-geo-alt-fill"></i> </a>
-                    <a class="icon-md bg-primary bg-opacity-10 text-primary rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Tag people on top">
-                        <i class="bi bi-tag-fill"></i> </a>
-                </div>
-                <!-- Feed rect END -->
             </div>
             <!-- Modal feed body END -->
 
@@ -403,19 +393,16 @@
             <div class="modal-footer row justify-content-between">
                 <!-- Select -->
                 <div class="col-lg-3">
-                    <select class="form-select js-choice" data-position="top" data-search-enabled="false">
+                    <select class="form-select js-choice choice-select-text-none" data-position="top" data-search-enabled="false">
                         <option value="PB">Public</option>
                         <option value="PV">Friends</option>
                         <option value="PV">Only me</option>
                         <option value="PV">Custom</option>
                     </select>
+                    <!-- Button -->
                 </div>
-                <!-- Button -->
                 <div class="col-lg-8 text-sm-end">
-                    <button type="button" class="btn btn-danger-soft me-2"><i class="bi bi-camera-video-fill pe-1"></i>
-                        Live video
-                    </button>
-                    <button type="button" class="btn btn-success-soft">Post</button>
+                    <button type="submit" class="btn btn-sm btn-success-soft" form="feeling-form">Post</button>
                 </div>
             </div>
             <!-- Modal feed footer -->
@@ -438,38 +425,38 @@
 
             <!-- Modal feed body START -->
             <div class="modal-body">
-                <!-- Add Feed -->
-                <div class="d-flex mb-3">
-                    <!-- Avatar -->
-                    <div class="avatar avatar-xs me-2">
-                        <img class="avatar-img rounded-circle" src="" alt="">
-                    </div>
-                    <!-- Feed box  -->
-                    <form class="w-100">
-                        <textarea class="form-control pe-4 fs-3 lh-1 border-0" rows="2" placeholder="Share your thoughts..."></textarea>
-                    </form>
-                </div>
+                <form id="post-image-form" class="w-100" action="{{ route('posts.store') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{$user->id}}">
+                    <input type="hidden" name="is_feeling" value="0">
 
-                <!-- Dropzone photo START -->
-                <div>
-                    <label class="form-label">Upload attachment</label>
-                    <div class="dropzone dropzone-default card shadow-none" data-dropzone='{"maxFiles":2}'>
-                        <div class="dz-message">
-                            <i class="bi bi-images display-3"></i>
-                            <p>Drag here or click to upload photo.</p>
+                    <!-- Add Feed -->
+                    <div class="d-flex mb-3">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xs me-2">
+                            <img class="avatar-img rounded-circle" src="{{asset($user->profile_picture)}}" alt="">
                         </div>
-                    </div>
-                </div>
-                <!-- Dropzone photo END -->
+                        <!-- Feed box  -->
+                        @csrf
+                        <textarea name="content" required class="form-control pe-4 fs-3 lh-1 border-0 pb-0" rows="2" placeholder="This image's caption..."></textarea>
 
+                    </div>
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="image" name="image_path" accept="image/*">
+                    </div>
+
+                    <div class="preview mt-3">
+                    </div>
+
+                </form>
             </div>
             <!-- Modal feed body END -->
 
             <!-- Modal feed footer -->
             <div class="modal-footer ">
                 <!-- Button -->
-                <button type="button" class="btn btn-danger-soft me-2" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-success-soft">Post</button>
+                <button type="button" class="btn btn-sm btn-danger-soft me-2" data-bs-dismiss="modal">Cancel</button>
+                <button id="post-image-form-submit" type="submit" class="btn btn-sm btn-success-soft" form="post-image-form">Post</button>
             </div>
             <!-- Modal feed footer -->
         </div>

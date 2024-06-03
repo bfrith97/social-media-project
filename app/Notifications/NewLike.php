@@ -35,9 +35,12 @@ class NewLike extends Notification implements ShouldQueue
 
     public function toArray($notifiable): array
     {
+        if(isset($this->model->post->id)) $route = 'posts.show';
+        if(isset($this->model->newsArticle->id)) $route = 'news.show';
+
         return [
             'message' => "{$this->liker->name} liked your " . $this->item,
-            'href' => route('posts.show', $this->model->post->id ?? $this->model->id),
+            'href' => route($route, $this->model->post->id ?? $this->model->newsArticle->id ?? $this->model->id),
             'picture' => $this->liker->profile_picture,
         ];
     }

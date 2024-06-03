@@ -15,6 +15,8 @@ class Post extends Model
 
     protected $fillable = [
         'content',
+        'is_feeling',
+        'image_path',
         'user_id',
         'profile_id',
         'group_id',

@@ -1,6 +1,5 @@
 function submitLike(event) {
     event.preventDefault();
-    console.log(event.submitter);
 
     let form = event.target;
     let body = new FormData(form);
@@ -18,6 +17,7 @@ function submitLike(event) {
             return response.json();
         })
         .then(data => {
+            console.log(data)
             changeLikeHtml(event.submitter, data, form);
         })
         .catch(error => {

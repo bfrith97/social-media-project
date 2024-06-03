@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
 
             $table->text('content');
+            $table->boolean('is_feeling');
+            $table->text('image_path');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('profile_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('group_id')->nullable()->constrained('users')->onDelete('cascade');

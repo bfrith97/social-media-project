@@ -136,7 +136,7 @@
                                 <input type="hidden" id="conversation_id" name="conversation_id" value="{{$conversation->id}}"/>
                                 <input type="hidden" name="user_id" value="{{$user->id}}"/>
                                 <!-- Chat textarea -->
-                                <input type="text" class="content-input form-control mb-sm-0 mb-3" name="content" placeholder="Type a message"/>
+                                <input type="text" class="content-input form-control mb-sm-0 mb-3" name="content" required placeholder="Type a message"/>
                                 <!-- Button -->
                                 <div class="d-sm-flex align-items-end mt-2">
                                     <button class="btn btn-sm btn-danger-soft me-2">

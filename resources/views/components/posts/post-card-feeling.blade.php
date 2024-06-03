@@ -14,15 +14,12 @@
                 <div>
                     <div class="nav nav-divider">
                         <h6 class="nav-item card-title mb-0">
-                            <a href="{{ route('profiles.show', $post->user->id) }}"> {{ $post->user->name }} </a></h6>
+                            <a href="{{ route('profiles.show', $post->user->id) }}"> {{ $post->user->name }} </a>
+                            <span class="fw-normal ms-1">is feeling {{$post->content}}</span>
+                            <br>
+                        </h6>
                         <span class="nav-item small"> {{ Carbon\Carbon::parse($post->created_at)->timezone('Europe/London')->diffForHumans() }} </span>
                     </div>
-                    <p class="mb-0 small">
-                        {{ $post->user->role ?? '' }}
-                        {{ ($post->user->role && $post->user->company) ? 'at' : '' }}
-                        {{ $post->user->company ?? '' }}
-                    </p>
-
                 </div>
             </div>
             <!-- Card feed action dropdown START -->
@@ -50,11 +47,6 @@
     <!-- Card header END -->
     <!-- Card body START -->
     <div class="card-body pb-0">
-        <p>{{$post->content}}
-        @if($post->image_path)
-            <img src="{{ asset($post->image_path) }}" class="mt-2" alt="">
-        @endif
-        </p>
         <!-- Feed react START -->
         <ul class="nav nav-stack pb-2 small">
             <form class="post-like-form" action="{{ $post->liked_by_current_user ? route('post_likes.destroy') : route('post_likes.store')}}" method="post" onsubmit="submitLike(event)">

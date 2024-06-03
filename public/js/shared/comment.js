@@ -31,7 +31,7 @@ function addNewCommentHtml(form, data) {
     let formContainer = form.closest('.card-body'); // Use a class that wraps both the form and the comment list
     let commentList = formContainer ? formContainer.querySelector('.comment-wrap') : null;
     let comment = data.comment;
-    console.log(comment.likeCommentRoute)
+    console.log(comment);
 
     // Create the new comment HTML
     const newCommentHtml = `
@@ -51,7 +51,7 @@ function addNewCommentHtml(form, data) {
                       <ul class="nav nav-divider pb-2 pt-1 small">
                             <form class="post-like-form" action="${comment.likeCommentRoute}" method="post" onsubmit="submitLike(event)">
                                 ${comment.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
-                                <input type="hidden" name="_token" value="9ReFPuM55VL7v9OBHvOPCSbNBtQ5erTsVOCIhEgK" autocomplete="off">
+                                <input type="hidden" name="_token" value="${comment.csrf}" autocomplete="off">
                                 <input type="hidden" id="comment_id" name="comment_id" value="${comment.id}">
                                 <input type="hidden" id="user_id" name="user_id" value="1">
                                 <li class="nav-item">

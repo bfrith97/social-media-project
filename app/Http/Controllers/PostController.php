@@ -35,7 +35,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+        [
+            $user,
+            $conversations,
+            $notificationsCount,
+        ] = $this->userService->getUserInformation();
 
         $posts = Post::with([
             'user',
@@ -98,12 +102,22 @@ class PostController extends Controller
             'user_id' => 'required|integer|exists:users,id',
             'group_id' => 'nullable|integer|exists:groups,id',
             'profile_id' => 'nullable|integer|exists:users,id',
+            'is_feeling' => 'nullable|boolean',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $validatedData['content'] = Profanity::blocker($validatedData['content'])
             ->strict(false)
             ->strictClean(true)
             ->filter();
+
+        if ($request->hasFile('image_path')) {
+            $imageName = time() . '.' . $request->image_path->extension();
+            $request->image_path->move(public_path('assets/images/posts'), $imageName);
+            $validatedData['image_path'] = 'assets/images/posts/' . $imageName;
+        } else {
+            unset($validatedData['profile_picture']);
+        }
 
         $post = Post::create($validatedData);
         $post->load('user');
@@ -124,12 +138,14 @@ class PostController extends Controller
                     'name' => $post->user->name,
                     'role' => $post->user->role,
                     'company' => $post->user->company,
-                    'picture' => asset($post->user->profile_picture),
+                    'profile_picture' => asset($post->user->profile_picture),
                 ],
                 'content' => $post->content,
+                'image_path' => $post->image_path,
                 'comment_route' => route('comments.store'),
-                'csrf' => csrf_token(),
+                'is_feeling' => $post->is_feeling,
             ],
+            'csrf' => csrf_token(),
         ]);
     }
 
@@ -233,7 +249,23 @@ class PostController extends Controller
             $post->created_at_formatted = Carbon::parse($post->created_at)
                 ->timezone('Europe/London')
                 ->diffForHumans();
+
+            $post->user->profile_picture = asset($post->user->profile_picture);
+            $post->user->profile_route = route('profiles.show', $post->user->id);
+            $post->image_path = asset($post->image_path);
+
+            foreach ($post->comments as &$comment) {
+                $comment->created_at_formatted = Carbon::parse($comment->created_at)
+                    ->timezone('Europe/London')
+                    ->diffForHumans();;
+                $comment->user->profile_picture = asset($comment->user->profile_picture);
+                $comment->user->profile_route = route('profiles.show', $comment->user->id);
+            }
         }
+
+        $user->profile_picture = asset($user->profile_picture);
+        $user->profile_route = route('profiles.show', $user->id);
+
 
         if ($posts) {
             return response()->json([
@@ -243,6 +275,7 @@ class PostController extends Controller
                 'newOffset' => $validatedData['offset'] + 5,
                 'user' => $user,
                 'commentPostRoute' => route('comments.store'),
+                'csrf' => csrf_token(),
             ]);
         } else {
             return response()->json([

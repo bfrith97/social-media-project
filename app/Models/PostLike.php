@@ -10,7 +10,6 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class PostLike extends Model
 {
-
     protected $fillable = [
         'user_id',
         'post_id',

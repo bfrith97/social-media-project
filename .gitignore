@@ -5,6 +5,7 @@
 /public/storage
 /public/assets/images/avatars
 /public/assets/images/covers
+/public/assets/images/posts
 /storage/*.key
 /vendor
 .env

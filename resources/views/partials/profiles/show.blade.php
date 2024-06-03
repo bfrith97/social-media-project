@@ -103,15 +103,20 @@
                     </div>
 
                     <!-- My profiles-breeze END -->
-                    <div class="profile-section" id="posts-tab" style="display: none">
+                    <div class="profile-section vstack" id="posts-tab" style="display: none">
                         <x-posts.post-creation :user="$user" :profile="$profile" onProfile="true"/>
 
-                        <div id="posts">
+                        <div id="posts" class="">
                             <!-- Card feed item START -->
                             @if(count($combinedPosts))
                                 @foreach($combinedPosts as $post)
-                                    <x-posts.post-card :post="$post" :user="$user" has-margin="true"/>
+                                    @if($post->is_feeling)
+                                        <x-posts.post-card-feeling :post="$post" :user="$user" has-margin="true"/>
+                                    @else
+                                        <x-posts.post-card :post="$post" :user="$user" has-margin="true"/>
+                                    @endif
                                 @endforeach
+
                             @else
                                 <div>
                                     <div class="card card-body my-4">
@@ -120,6 +125,16 @@
                                 </div>
                             @endif
                         </div>
+                        <!-- Load more button START -->
+                        <button type="button" onclick="loadAdditionalPosts(this)" class="btn btn-loader btn-primary-soft w-100" data-offset="5">
+                            <span class="load-text"> Load more </span>
+                            <div class="load-icon">
+                                <div class="spinner-grow spinner-grow-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </button>
+                        <!-- Load more button END -->
                     </div>
 
 
@@ -321,7 +336,7 @@
                                             <!-- Interests item START -->
                                             <div class="d-flex align-items-center position-relative">
                                                 <div class="avatar">
-                                                    <img class="avatar-img" src="assets/images/logo/04.svg" alt="">
+                                                    <img class="avatar-img" src="" alt="">
                                                 </div>
                                                 <div class="ms-2">
                                                     <h6 class="mb-0">
@@ -432,8 +447,8 @@
                                     <!-- Photo item START -->
                                     <div class="col-sm-6 col-md-4 col-lg-3">
                                         <!-- Photo -->
-                                        <a href="assets/images/albums/01.jpg" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
-                                            <img class="rounded img-fluid" src="assets/images/albums/01.jpg" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
+                                            <img class="rounded img-fluid" src="" alt="">
                                         </a>
                                         <!-- likes -->
                                         <ul class="nav nav-stack py-2 small">
@@ -452,7 +467,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <!-- Avatar -->
                                                     <div class="avatar me-2">
-                                                        <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                        <img class="avatar-img rounded-circle" src="" alt="">
                                                     </div>
                                                     <!-- Info -->
                                                     <div>
@@ -539,7 +554,7 @@
                                             <div class="d-flex mb-3">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs me-2">
-                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                    <img class="avatar-img rounded-circle" src="" alt="">
                                                 </div>
                                                 <!-- Comment box  -->
                                                 <form class="position-relative w-100">
@@ -557,7 +572,7 @@
                                                     <div class="d-flex">
                                                         <!-- Avatar -->
                                                         <div class="avatar avatar-xs">
-                                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
+                                                            <img class="avatar-img rounded-circle" src="" alt="">
                                                         </div>
                                                         <div class="ms-2">
                                                             <!-- Comment by -->
@@ -597,8 +612,8 @@
                                     <!-- Photo item START -->
                                     <div class="col-sm-6 col-md-4 col-lg-3 position-relative">
                                         <!-- Photo -->
-                                        <a href="assets/images/albums/02.jpg" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
-                                            <img class="rounded img-fluid" src="assets/images/albums/02.jpg" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
+                                            <img class="rounded img-fluid" src="" alt="">
                                         </a>
                                         <!-- likes -->
                                         <ul class="nav nav-stack py-2 small">
@@ -617,7 +632,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <!-- Avatar -->
                                                     <div class="avatar me-2">
-                                                        <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                        <img class="avatar-img rounded-circle" src="" alt="">
                                                     </div>
                                                     <!-- Info -->
                                                     <div>
@@ -704,7 +719,7 @@
                                             <div class="d-flex mb-3">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs me-2">
-                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                    <img class="avatar-img rounded-circle" src="" alt="">
                                                 </div>
                                                 <!-- Comment box  -->
                                                 <form class="position-relative w-100">
@@ -718,7 +733,7 @@
                                                     <div class="d-flex">
                                                         <!-- Avatar -->
                                                         <div class="avatar avatar-xs">
-                                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
+                                                            <img class="avatar-img rounded-circle" src="" alt="">
                                                         </div>
                                                         <div class="ms-2">
                                                             <!-- Comment by -->
@@ -758,8 +773,8 @@
                                     <!-- Photo item START -->
                                     <div class="col-sm-6 col-md-4 col-lg-3">
                                         <!-- PHoto -->
-                                        <a href="assets/images/albums/03.jpg" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
-                                            <img class="rounded img-fluid" src="assets/images/albums/03.jpg" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
+                                            <img class="rounded img-fluid" src="" alt="">
                                         </a>
                                         <!-- likes -->
                                         <ul class="nav nav-stack py-2 small">
@@ -778,7 +793,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <!-- Avatar -->
                                                     <div class="avatar me-2">
-                                                        <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                        <img class="avatar-img rounded-circle" src="" alt="">
                                                     </div>
                                                     <!-- Info -->
                                                     <div>
@@ -865,7 +880,7 @@
                                             <div class="d-flex mb-3">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs me-2">
-                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                    <img class="avatar-img rounded-circle" src="" alt="">
                                                 </div>
                                                 <!-- Comment box  -->
                                                 <form class="position-relative w-100">
@@ -879,7 +894,7 @@
                                                     <div class="d-flex">
                                                         <!-- Avatar -->
                                                         <div class="avatar avatar-xs">
-                                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
+                                                            <img class="avatar-img rounded-circle" src="" alt="">
                                                         </div>
                                                         <div class="ms-2">
                                                             <!-- Comment by -->
@@ -919,8 +934,8 @@
                                     <!-- Photo item START -->
                                     <div class="col-sm-6 col-md-4 col-lg-3">
                                         <!-- Photo -->
-                                        <a href="assets/images/albums/04.jpg" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
-                                            <img class="rounded img-fluid" src="assets/images/albums/04.jpg" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
+                                            <img class="rounded img-fluid" src="" alt="">
                                         </a>
                                         <!-- likes -->
                                         <ul class="nav nav-stack py-2 small">
@@ -939,7 +954,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <!-- Avatar -->
                                                     <div class="avatar me-2">
-                                                        <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                        <img class="avatar-img rounded-circle" src="" alt="">
                                                     </div>
                                                     <!-- Info -->
                                                     <div>
@@ -1027,7 +1042,7 @@
                                             <div class="d-flex mb-3">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs me-2">
-                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                    <img class="avatar-img rounded-circle" src="" alt="">
                                                 </div>
                                                 <!-- Comment box  -->
                                                 <form class="position-relative w-100">
@@ -1041,7 +1056,7 @@
                                                     <div class="d-flex">
                                                         <!-- Avatar -->
                                                         <div class="avatar avatar-xs">
-                                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
+                                                            <img class="avatar-img rounded-circle" src="" alt="">
                                                         </div>
                                                         <div class="ms-2">
                                                             <!-- Comment by -->
@@ -1081,8 +1096,8 @@
                                     <!-- Photo item START -->
                                     <div class="col-sm-6 col-md-4 col-lg-3">
                                         <!-- Photo -->
-                                        <a href="assets/images/albums/05.jpg" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
-                                            <img class="rounded img-fluid" src="assets/images/albums/05.jpg" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
+                                            <img class="rounded img-fluid" src="" alt="">
                                         </a>
                                         <!-- likes -->
                                         <ul class="nav nav-stack py-2 small">
@@ -1101,7 +1116,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <!-- Avatar -->
                                                     <div class="avatar me-2">
-                                                        <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                        <img class="avatar-img rounded-circle" src="" alt="">
                                                     </div>
                                                     <!-- Info -->
                                                     <div>
@@ -1188,7 +1203,7 @@
                                             <div class="d-flex mb-3">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs me-2">
-                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                    <img class="avatar-img rounded-circle" src="" alt="">
                                                 </div>
                                                 <!-- Comment box  -->
                                                 <form class="position-relative w-100">
@@ -1202,7 +1217,7 @@
                                                     <div class="d-flex">
                                                         <!-- Avatar -->
                                                         <div class="avatar avatar-xs">
-                                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
+                                                            <img class="avatar-img rounded-circle" src="" alt="">
                                                         </div>
                                                         <div class="ms-2">
                                                             <!-- Comment by -->
@@ -1242,8 +1257,8 @@
                                     <!-- Photo item START -->
                                     <div class="col-sm-6 col-md-4 col-lg-3">
                                         <!-- Photo -->
-                                        <a href="assets/images/albums/06.jpg" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
-                                            <img class="rounded img-fluid" src="assets/images/albums/06.jpg" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="description: .custom-desc2; descPosition: left;">
+                                            <img class="rounded img-fluid" src="" alt="">
                                         </a>
                                         <!-- likes -->
                                         <ul class="nav nav-stack py-2 small">
@@ -1262,7 +1277,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <!-- Avatar -->
                                                     <div class="avatar me-2">
-                                                        <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                        <img class="avatar-img rounded-circle" src="" alt="">
                                                     </div>
                                                     <!-- Info -->
                                                     <div>
@@ -1350,7 +1365,7 @@
                                             <div class="d-flex mb-3">
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xs me-2">
-                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="">
+                                                    <img class="avatar-img rounded-circle" src="" alt="">
                                                 </div>
                                                 <!-- Comment box  -->
                                                 <form class="position-relative w-100">
@@ -1364,7 +1379,7 @@
                                                     <div class="d-flex">
                                                         <!-- Avatar -->
                                                         <div class="avatar avatar-xs">
-                                                            <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="">
+                                                            <img class="avatar-img rounded-circle" src="" alt="">
                                                         </div>
                                                         <div class="ms-2">
                                                             <!-- Comment by -->
@@ -1433,7 +1448,7 @@
                                     <div class="d-sm-flex align-items-center">
                                         <!-- Avatar -->
                                         <div class="avatar avatar-xl">
-                                            <a href="#!"><img class="avatar-img rounded border border-white border-3" src="assets/images/events/01.jpg" alt=""></a>
+                                            <a href="#!"><img class="avatar-img rounded border border-white border-3" src="" alt=""></a>
                                         </div>
                                         <div class="ms-sm-4 mt-2 mt-sm-0">
                                             <!-- Info -->
@@ -1663,26 +1678,26 @@
                                     </div>
                                     <!-- Photos item -->
                                     <div class="col-6">
-                                        <a href="assets/images/albums/02.jpg" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('assets/images/albums/02.jpg')}}" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="">
+                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">
                                         </a>
                                     </div>
                                     <!-- Photos item -->
                                     <div class="col-4">
-                                        <a href="assets/images/albums/03.jpg" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('assets/images/albums/03.jpg')}}" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="">
+                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">
                                         </a>
                                     </div>
                                     <!-- Photos item -->
                                     <div class="col-4">
-                                        <a href="assets/images/albums/04.jpg" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('assets/images/albums/04.jpg')}}" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="">
+                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">
                                         </a>
                                     </div>
                                     <!-- Photos item -->
                                     <div class="col-4">
-                                        <a href="assets/images/albums/05.jpg" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('assets/images/albums/05.jpg')}}" alt="">
+                                        <a href="" data-gallery="image-popup" data-glightbox="">
+                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">
                                         </a>
                                         <!-- glightbox Albums left bar END  -->
                                     </div>

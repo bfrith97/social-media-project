@@ -46,10 +46,10 @@ class CommentLikeController extends Controller
 
         $comment = Comment::with('user')->find($validatedData['comment_id']);
         $like = $comment->commentLikes()->createOrFirst($validatedData);
+        $type = $comment->item_type === Post::class ? 'posts' : 'news';
+        $comment->load($type == 'posts' ? 'post' : 'newsArticle');
 
         $comment->user->notify(new NewLike($like->user, $comment,'comment'));
-
-        $type = $comment->item_type === Post::class ? 'posts' : 'news';
 
         $this->activityService->storeActivity($like, "$type.show", $comment->item_id, 'bi bi-hand-thumbs-up', 'liked a comment');
 

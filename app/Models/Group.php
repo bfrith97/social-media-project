@@ -10,7 +10,13 @@ use Illuminate\Notifications\Notifiable;
 
 class Group extends Model
 {
-    protected $appends = ['joined_by_current_user', 'current_user_is_admin'];
+    protected $appends = [
+        'joined_by_current_user',
+        'current_user_is_admin',
+    ];
+
+    protected $joinedByCurrentUserCache = null;
+    protected $currentUserIsAdminCache = null;
 
     protected $fillable = [
         'name',
@@ -21,17 +27,21 @@ class Group extends Model
 
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'group_users', 'group_id', 'user_id')->withTimestamps()->orderByDesc('group_users.created_at');
+        return $this->belongsToMany(User::class, 'group_users', 'group_id', 'user_id')
+            ->withTimestamps()
+            ->orderByDesc('group_users.created_at');
     }
 
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, 'group_id')->orderByDesc('created_at');
+        return $this->hasMany(Post::class, 'group_id')
+            ->orderByDesc('created_at');
     }
 
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class, 'group_id')->orderByDesc('created_at');
+        return $this->hasMany(Event::class, 'group_id')
+            ->orderByDesc('created_at');
     }
 
     public function groupCategory(): BelongsTo
@@ -41,18 +51,26 @@ class Group extends Model
 
     public function getJoinedByCurrentUserAttribute(): bool
     {
-        $user = auth()->id();
-        return $this->members()
-            ->where('user_id', $user)
-            ->exists();
+        if ($this->joinedByCurrentUserCache === null) {
+            $user = auth()->id();
+            $this->joinedByCurrentUserCache = $this->members()
+                ->where('user_id', $user)
+                ->exists();
+        }
+
+        return $this->joinedByCurrentUserCache;
     }
 
     public function getCurrentUserIsAdminAttribute(): bool
     {
-        $user = auth()->id();
-        return $this->members()
-            ->where('user_id', $user)
-            ->where('is_admin', 1)
-            ->exists();
+        if ($this->currentUserIsAdminCache === null) {
+            $user = auth()->id();
+            $this->currentUserIsAdminCache = $this->members()
+                ->where('user_id', $user)
+                ->where('is_admin', 1)
+                ->exists();
+        }
+
+        return $currentUserIsAdminCache;
     }
 }

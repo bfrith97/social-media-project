@@ -28,11 +28,15 @@
                 </div>
                 <!-- Story END -->
 
-                <x-posts.post-creation :user="$user"/>
+                <x-posts.post-creation :user="$user" :onProfile="false"/>
 
                 <div id="posts">
                     @foreach($posts as $post)
-                        <x-posts.post-card :post="$post" :user="$user" has-margin="true"/>
+                        @if($post->is_feeling)
+                            <x-posts.post-card-feeling :post="$post" :user="$user" has-margin="true"/>
+                        @else
+                            <x-posts.post-card :post="$post" :user="$user" has-margin="true"/>
+                        @endif
                     @endforeach
                 </div>
 
@@ -76,29 +80,19 @@
                 <div class="d-flex mb-3">
                     <!-- Avatar -->
                     <div class="avatar avatar-xs me-2">
-                        <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="">
+                        <img class="avatar-img rounded-circle mt-2" src="{{ asset($user->profile_picture) }}" alt="">
                     </div>
                     <!-- Feed box  -->
-                    <form class="w-100">
-                        <textarea class="form-control pe-4 fs-3 lh-1 border-0" rows="4" placeholder="Share your thoughts..." autofocus></textarea>
+                    <form id="feeling-form" class="w-100 input-group" action="{{ route('posts.store') }}" method="post" onsubmit="submitPost(event)">
+                        @csrf
+                        <div class="input-group flex-nowrap">
+                            <span class="input-group-text bg-white border-0 fs-3">I'm Feeling:</span>
+                            <input type="hidden" name="user_id" value="{{$user->id}}"/>
+                            <input type="hidden" name="is_feeling" value="1"/>
+                            <input type="text" class="form-control border-0 fs-3" placeholder="Happy? Sad?" name="content" required maxlength="14">
+                        </div>
                     </form>
                 </div>
-                <!-- Feed rect START -->
-                <div class="hstack gap-2">
-                    <a class="icon-md bg-success bg-opacity-10 text-success rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Photo">
-                        <i class="bi bi-image-fill"></i> </a>
-                    <a class="icon-md bg-info bg-opacity-10 text-info rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Video">
-                        <i class="bi bi-camera-reels-fill"></i> </a>
-                    <a class="icon-md bg-danger bg-opacity-10 text-danger rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Events">
-                        <i class="bi bi-calendar2-event-fill"></i> </a>
-                    <a class="icon-md bg-warning bg-opacity-10 text-warning rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Feeling/Activity">
-                        <i class="bi bi-emoji-smile-fill"></i> </a>
-                    <a class="icon-md bg-light text-secondary rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Check in">
-                        <i class="bi bi-geo-alt-fill"></i> </a>
-                    <a class="icon-md bg-primary bg-opacity-10 text-primary rounded-circle" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Tag people on top">
-                        <i class="bi bi-tag-fill"></i> </a>
-                </div>
-                <!-- Feed rect END -->
             </div>
             <!-- Modal feed body END -->
 
@@ -115,11 +109,7 @@
                     <!-- Button -->
                 </div>
                 <div class="col-lg-8 text-sm-end">
-                    <button type="button" class="btn btn-sm btn-danger-soft me-2">
-                        <i class="bi bi-camera-video-fill pe-1"></i>
-                        Live video
-                    </button>
-                    <button type="button" class="btn btn-sm btn-success-soft">Post</button>
+                    <button type="submit" class="btn btn-sm btn-success-soft" form="feeling-form">Post</button>
                 </div>
             </div>
             <!-- Modal feed footer -->
@@ -142,30 +132,30 @@
 
             <!-- Modal feed body START -->
             <div class="modal-body">
-                <!-- Add Feed -->
-                <div class="d-flex mb-3">
-                    <!-- Avatar -->
-                    <div class="avatar avatar-xs me-2">
-                        <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="">
-                    </div>
-                    <!-- Feed box  -->
-                    <form class="w-100">
-                        <textarea class="form-control pe-4 fs-3 lh-1 border-0" rows="2" placeholder="Share your thoughts..."></textarea>
-                    </form>
-                </div>
+                <form id="post-image-form" class="w-100" action="{{ route('posts.store') }}" method="post" enctype="multipart/form-data" onsubmit="submitPost(event)">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{$user->id}}">
+                    <input type="hidden" name="is_feeling" value="0">
 
-                <!-- Dropzone photo START -->
-                <div>
-                    <label class="form-label">Upload attachment</label>
-                    <div class="dropzone dropzone-default card shadow-none" data-dropzone='{"maxFiles":2}'>
-                        <div class="dz-message">
-                            <i class="bi bi-images display-3"></i>
-                            <p>Drag here or click to upload photo.</p>
+                    <!-- Add Feed -->
+                    <div class="d-flex mb-3">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xs me-2">
+                            <img class="avatar-img rounded-circle" src="{{asset($user->profile_picture)}}" alt="">
                         </div>
-                    </div>
-                </div>
-                <!-- Dropzone photo END -->
+                        <!-- Feed box  -->
+                        @csrf
+                        <textarea name="content" required class="form-control pe-4 fs-3 lh-1 border-0 pb-0" rows="2" placeholder="This image's caption..."></textarea>
 
+                    </div>
+                        <div class="input-group">
+                            <input type="file" class="form-control" id="image" name="image_path" accept="image/*">
+                        </div>
+
+                        <div class="preview mt-3">
+                        </div>
+
+                </form>
             </div>
             <!-- Modal feed body END -->
 
@@ -173,7 +163,7 @@
             <div class="modal-footer ">
                 <!-- Button -->
                 <button type="button" class="btn btn-sm btn-danger-soft me-2" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-sm btn-success-soft">Post</button>
+                <button id="post-image-form-submit" type="submit" class="btn btn-sm btn-success-soft" form="post-image-form">Post</button>
             </div>
             <!-- Modal feed footer -->
         </div>
@@ -339,3 +329,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('image').addEventListener('change', function(event) {
+        var output = document.querySelector('.preview');
+        output.innerHTML = ''; // Clear previous previews
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.style.maxWidth = '100%';
+                imgElement.style.height = 'auto';
+                output.appendChild(imgElement);
+            };
+            reader.readAsDataURL(this.files[0]);
+        } else {
+            output.innerHTML = '<p>Select an image to preview</p>';
+        }
+    });
+</script>

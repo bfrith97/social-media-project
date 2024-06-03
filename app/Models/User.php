@@ -18,6 +18,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $appends = ['followed_by_current_user'];
+    protected $followedByCurrentUserCache = null;
 
     /**
      * The attributes that are mass assignable.
@@ -112,9 +113,13 @@ class User extends Authenticatable
 
     public function getFollowedByCurrentUserAttribute(): bool
     {
-        $user = auth()->id();
-        return $this->followers()
-            ->where('follower_id', $user)
-            ->exists();
+        if ($this->followedByCurrentUserCache === null) {
+            $user = auth()->id();
+            $this->followedByCurrentUserCache = $this->followers()
+                ->where('follower_id', $user)
+                ->exists();
+        }
+
+        return $this->followedByCurrentUserCache;
     }
 }

@@ -9,7 +9,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Activitylog\Models\Activity;
+
 
 class ProfileController extends Controller
 {
@@ -39,22 +41,21 @@ class ProfileController extends Controller
             'partner',
             'followings',
             'followers',
-            'ownPosts' => function ($query) use($id) {
-                $query->whereNull('group_id');
-                $query->where(function($subQuery) use ($id) {
-                    $subQuery->whereNull('profile_id')
-                    ->orWhere('profile_id', $id);
-                });
-                $query->orderBy('created_at', 'desc');
+            'ownPosts' => function ($query) use ($id) {
+                $query->whereNull('group_id')
+                    ->where(function ($subQuery) use ($id) {
+                        $subQuery->whereNull('profile_id')
+                            ->orWhere('profile_id', $id);
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->limit(5); // Limiting posts here
             },
-            'otherPosts',
-            'groups.members'
+            'otherPosts' => function ($query) {
+                $query->limit(5);
+            }
         ])
-            ->find($id);
-
-        if(!$profile) {
-            return redirect()->back();
-        }
+            ->where('users.id', $id)
+            ->firstOrFail();
 
         $combinedPosts = $profile->ownPosts->merge($profile->otherPosts);
         $combinedPosts = $combinedPosts->sortByDesc('created_at');
@@ -116,4 +117,53 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function loadAdditionalPosts($id, $offset)
+    {
+        [$user] = $this->userService->getUserInformation();
+
+        $limit = 5;
+
+        $validatedData = Validator::make([
+            'offset' => $offset,
+        ], [
+            'offset' => 'required|integer',
+        ])
+            ->getData();
+
+        $profile = User::findOrFail($id);
+        $posts = $profile->ownPosts()->with([
+            'comments' => function ($q) {
+                return $q->limit(5);
+            },
+            'comments.user',
+            'comments.commentLikes',
+            'postLikes'
+        ])
+            ->whereNull('group_id')
+            ->orderByDesc('created_at')
+            ->skip($offset)
+            ->take($limit + 1)
+            ->get();
+
+        $morePostsAvailable = $posts->count() > $limit;
+        if ($morePostsAvailable) {
+            $posts->pop();
+        }
+
+        foreach($posts as &$post) {
+            $post->image_path = asset($post->image_path) . 123;
+        }
+
+        return response()->json([
+            'message' => 'Posts retrieved successfully',
+            'posts' => $posts,
+            'morePostsAvailable' => $morePostsAvailable,
+            'newOffset' => $validatedData['offset'] + 5,
+            'user' => $user,
+            'commentPostRoute' => route('comments.store'),
+            'csrf' => csrf_token(),
+        ]);
+    }
+
 }
