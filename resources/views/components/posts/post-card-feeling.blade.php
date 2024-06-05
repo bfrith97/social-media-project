@@ -23,24 +23,25 @@
                 </div>
             </div>
             <!-- Card feed action dropdown START -->
-            <div class="dropdown">
-                <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-three-dots"></i>
-                </a>
-                <!-- Card feed action dropdown menu -->
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>
-                    <li><a class="dropdown-item" href="#">
-                            <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow {{$post->user->name}} </a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide post</a></li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report post</a></li>
-                </ul>
-            </div>
+{{--            TODO--}}
+{{--            <div class="dropdown">--}}
+{{--                <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">--}}
+{{--                    <i class="bi bi-three-dots"></i>--}}
+{{--                </a>--}}
+{{--                <!-- Card feed action dropdown menu -->--}}
+{{--                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">--}}
+{{--                    <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>--}}
+{{--                    <li><a class="dropdown-item" href="#">--}}
+{{--                            <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow {{$post->user->name}} </a></li>--}}
+{{--                    <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide post</a></li>--}}
+{{--                    <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a>--}}
+{{--                    </li>--}}
+{{--                    <li>--}}
+{{--                        <hr class="dropdown-divider">--}}
+{{--                    </li>--}}
+{{--                    <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report post</a></li>--}}
+{{--                </ul>--}}
+{{--            </div>--}}
             <!-- Card feed action dropdown END -->
         </div>
     </div>

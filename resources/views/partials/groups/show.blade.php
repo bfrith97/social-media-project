@@ -45,7 +45,7 @@
                             </div>
                             <!-- Button -->
                             <div class="d-flex justify-content-center justify-content-md-start align-items-center mt-3 ms-lg-auto">
-                                <form action="{{ route('group_users.store') }}" method="post" class="follow-form">
+                                <form action="{{ route('group_users.store') }}" method="post" class="follow-form" onsubmit="submitJoin(event)">
                                     @csrf
                                     @if($group->joined_by_current_user)
                                         <input type="hidden" name="_method" value="DELETE" class="delete_method">
@@ -53,11 +53,11 @@
                                     <input type="hidden" name="group_id" value="{{$group->id}}"/>
                                     <input type="hidden" name="user_id" value="{{$user->id}}"/>
                                     @if($group->joined_by_current_user)
-                                        <button type="button" class="btn btn-danger-soft btn-sm join-button">
+                                        <button type="submit" class="btn btn-danger-soft btn-sm join-button">
                                             Leave group
                                         </button>
                                     @else
-                                        <button type="button" class="btn btn-success-soft btn-sm join-button">
+                                        <button type="submit" class="btn btn-success-soft btn-sm join-button">
                                             Join group
                                         </button>
                                     @endif
@@ -145,7 +145,7 @@
                     <div class="tab-pane show active fade" id="group-tab-1">
                         <div class="row g-4">
                             <div class="col-lg-8 vstack gap-4">
-                                <x-posts.post-creation :user="$user" :group="$group" onProfile="false"/>
+                                <x-posts.post-creation :user="$user" :group="$group" :onProfile="false"/>
 
                                 <div id="posts">
                                     @foreach($group->posts as $post)

@@ -31,4 +31,9 @@ return [
         ],
     ],
 
+    'news' => [
+        'api_key' => env('NEWS_API_KEY', '0eae552ae39f4f3a876ab916098aa3b5'),
+        'api_url' => env('NEWS_API_URL', 'https://newsapi.org/v2/top-headlines'),
+    ],
+
 ];

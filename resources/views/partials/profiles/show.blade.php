@@ -91,10 +91,11 @@
                                         <span class="badge bg-success bg-opacity-10 text-success small"> {{$profile->followings->count()}}</span>
                                     </a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link  profile-link" href="#media-tab">
-                                        Media</a></li>
-                                <li class="nav-item"><a class="nav-link  profile-link" href="#events-tab">
-                                        Events</a></li>
+{{--                                TODO--}}
+{{--                                <li class="nav-item"><a class="nav-link  profile-link" href="#media-tab">--}}
+{{--                                        Media</a></li>--}}
+{{--                                <li class="nav-item"><a class="nav-link  profile-link" href="#events-tab">--}}
+{{--                                        Events</a></li>--}}
                                 <li class="nav-item"><a class="nav-link  profile-link" href="#activity-tab">
                                         Activity</a>
                                 </li>
@@ -104,7 +105,7 @@
 
                     <!-- My profiles-breeze END -->
                     <div class="profile-section vstack" id="posts-tab" style="display: none">
-                        <x-posts.post-creation :user="$user" :profile="$profile" onProfile="true"/>
+                        <x-posts.post-creation :user="$user" :profile="$profile" :onProfile="true"/>
 
                         <div id="posts" class="">
                             <!-- Card feed item START -->
@@ -151,19 +152,6 @@
                                 <div class="rounded border px-3 py-2 mb-3">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <h6>Overview</h6>
-                                        <div class="dropdown ms-auto">
-                                            <!-- Card share action menu -->
-                                            <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="bi bi-three-dots"></i>
-                                            </a>
-                                            <!-- Card share action dropdown menu -->
-                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction">
-                                                <li><a class="dropdown-item" href="#">
-                                                        <i class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                                <li><a class="dropdown-item" href="#">
-                                                        <i class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                            </ul>
-                                        </div>
                                     </div>
                                     <p>{{ $profile->info }}</p>
                                 </div>
@@ -176,19 +164,6 @@
                                                 <i class="bi bi-calendar-date fa-fw me-2"></i> Born:
                                                 <strong> {{ \Carbon\Carbon::parse($profile->date_of_birth)->format('jS \\o\\f F, Y') }} </strong>
                                             </p>
-                                            <div class="dropdown ms-auto">
-                                                <!-- Card share action menu -->
-                                                <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction2" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-three-dots"></i>
-                                                </a>
-                                                <!-- Card share action dropdown menu -->
-                                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction2">
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                                </ul>
-                                            </div>
                                         </div>
                                         <!-- Birthday END -->
                                     </div>
@@ -203,19 +178,6 @@
                                                     <a class="nav-item" href="{{ route('profiles.show', $user->partner->id) }}">{{ $user->partner->name }} </a>
                                                 @endif
                                             </p>
-                                            <div class="dropdown ms-auto">
-                                                <!-- Card share action menu -->
-                                                <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction3" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-three-dots"></i>
-                                                </a>
-                                                <!-- Card share action dropdown menu -->
-                                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction3">
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                                </ul>
-                                            </div>
                                         </div>
                                         <!-- Status END -->
                                     </div>
@@ -227,19 +189,6 @@
                                                 <i class="bi bi-briefcase fa-fw me-2"></i>
                                                 <strong> {{ $profile->role . ' at ' . $profile->company }} </strong>
                                             </p>
-                                            <div class="dropdown ms-auto">
-                                                <!-- Card share action menu -->
-                                                <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction4" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-three-dots"></i>
-                                                </a>
-                                                <!-- Card share action dropdown menu -->
-                                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction4">
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                                </ul>
-                                            </div>
                                         </div>
                                         <!-- Designation END -->
                                     </div>
@@ -251,19 +200,6 @@
                                                 <i class="bi bi-telephone fa-fw me-2"></i> Phone Number:
                                                 <strong> {{ $profile->number }} </strong>
                                             </p>
-                                            <div class="dropdown ms-auto">
-                                                <!-- Card share action menu -->
-                                                <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction5" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-three-dots"></i>
-                                                </a>
-                                                <!-- Card share action dropdown menu -->
-                                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction5">
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                                </ul>
-                                            </div>
                                         </div>
                                         <!-- Lives END -->
                                     </div>
@@ -275,19 +211,6 @@
                                                 <i class="bi bi-geo-alt fa-fw me-2"></i> Joined on:
                                                 <strong> {{ $profile->created_at->format('jS \\o\\f F, Y') }} </strong>
                                             </p>
-                                            <div class="dropdown ms-auto">
-                                                <!-- Card share action menu -->
-                                                <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction6" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-three-dots"></i>
-                                                </a>
-                                                <!-- Card share action dropdown menu -->
-                                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction6">
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                                </ul>
-                                            </div>
                                         </div>
                                         <!-- Joined on END -->
                                     </div>
@@ -299,19 +222,6 @@
                                                 <i class="bi bi-envelope fa-fw me-2"></i> Email: <strong>
                                                     {{ $profile->email }} </strong>
                                             </p>
-                                            <div class="dropdown ms-auto">
-                                                <!-- Card share action menu -->
-                                                <a class="nav nav-link text-secondary mb-0" href="#" id="aboutAction7" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-three-dots"></i>
-                                                </a>
-                                                <!-- Card share action dropdown menu -->
-                                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aboutAction7">
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-pencil-square fa-fw pe-2"></i>Edit</a></li>
-                                                    <li><a class="dropdown-item" href="#">
-                                                            <i class="bi bi-trash fa-fw pe-2"></i>Delete</a></li>
-                                                </ul>
-                                            </div>
                                         </div>
                                         <!-- Joined on END -->
                                     </div>
@@ -1579,133 +1489,134 @@
                     <!-- Card END -->
 
                     <!-- Card START -->
-                    <div class="col-md-6 col-lg-12">
-                        <div class="card">
-                            <!-- Card header START -->
-                            <div class="card-header d-flex justify-content-between border-0">
-                                <h5 class="card-title">Experience</h5>
-                                @if($profile->id === $user->id)
-                                    <a class="btn btn-primary-soft btn-sm" href="#!"> <i class="fa-solid fa-plus"></i>
-                                    </a>
-                                @endif
-                            </div>
-                            <!-- Card header END -->
-                            <!-- Card body START -->
-                            <div class="card-body position-relative pt-0">
-                                <!-- Experience item START -->
-                                <div class="d-flex">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3">
-                                        <a href="#!">
-                                            <img class="avatar-img rounded-circle" src="{{asset('assets/images/logo/08.svg')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div>
-                                        <h6 class="card-title mb-0"><a href="#!"> Apple Computer, Inc. </a></h6>
-                                        <p class="small">May 2015 – Present Employment Duration 8 mos
-                                            @if($profile->id === $user->id)
-                                                <a class="btn btn-primary-soft btn-xs ms-2" href="#!">Edit </a>
-                                            @endif
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- Experience item END -->
+{{--                    TODO--}}
+{{--                    <div class="col-md-6 col-lg-12">--}}
+{{--                        <div class="card">--}}
+{{--                            <!-- Card header START -->--}}
+{{--                            <div class="card-header d-flex justify-content-between border-0">--}}
+{{--                                <h5 class="card-title">Experience</h5>--}}
+{{--                                @if($profile->id === $user->id)--}}
+{{--                                    <a class="btn btn-primary-soft btn-sm" href="#!"> <i class="fa-solid fa-plus"></i>--}}
+{{--                                    </a>--}}
+{{--                                @endif--}}
+{{--                            </div>--}}
+{{--                            <!-- Card header END -->--}}
+{{--                            <!-- Card body START -->--}}
+{{--                            <div class="card-body position-relative pt-0">--}}
+{{--                                <!-- Experience item START -->--}}
+{{--                                <div class="d-flex">--}}
+{{--                                    <!-- Avatar -->--}}
+{{--                                    <div class="avatar me-3">--}}
+{{--                                        <a href="#!">--}}
+{{--                                            <img class="avatar-img rounded-circle" src="{{asset('assets/images/logo/08.svg')}}" alt="">--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    <!-- Info -->--}}
+{{--                                    <div>--}}
+{{--                                        <h6 class="card-title mb-0"><a href="#!"> Apple Computer, Inc. </a></h6>--}}
+{{--                                        <p class="small">May 2015 – Present Employment Duration 8 mos--}}
+{{--                                            @if($profile->id === $user->id)--}}
+{{--                                                <a class="btn btn-primary-soft btn-xs ms-2" href="#!">Edit </a>--}}
+{{--                                            @endif--}}
+{{--                                        </p>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <!-- Experience item END -->--}}
 
-                                <!-- Experience item START -->
-                                <div class="d-flex">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3">
-                                        <a href="#!">
-                                            <img class="avatar-img rounded-circle" src="{{asset('assets/images/logo/09.svg')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div>
-                                        <h6 class="card-title mb-0"><a href="#!"> Microsoft Corporation </a></h6>
-                                        <p class="small">May 2017 – Present Employment Duration 1 yrs 5 mos
-                                            @if($profile->id === $user->id)
-                                                <a class="btn btn-primary-soft btn-xs ms-2" href="#!">Edit </a>
-                                            @endif
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- Experience item END -->
+{{--                                <!-- Experience item START -->--}}
+{{--                                <div class="d-flex">--}}
+{{--                                    <!-- Avatar -->--}}
+{{--                                    <div class="avatar me-3">--}}
+{{--                                        <a href="#!">--}}
+{{--                                            <img class="avatar-img rounded-circle" src="{{asset('assets/images/logo/09.svg')}}" alt="">--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    <!-- Info -->--}}
+{{--                                    <div>--}}
+{{--                                        <h6 class="card-title mb-0"><a href="#!"> Microsoft Corporation </a></h6>--}}
+{{--                                        <p class="small">May 2017 – Present Employment Duration 1 yrs 5 mos--}}
+{{--                                            @if($profile->id === $user->id)--}}
+{{--                                                <a class="btn btn-primary-soft btn-xs ms-2" href="#!">Edit </a>--}}
+{{--                                            @endif--}}
+{{--                                        </p>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <!-- Experience item END -->--}}
 
-                                <!-- Experience item START -->
-                                <div class="d-flex">
-                                    <!-- Avatar -->
-                                    <div class="avatar me-3">
-                                        <a href="#!">
-                                            <img class="avatar-img rounded-circle" src="{{asset('assets/images/logo/10.svg')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Info -->
-                                    <div>
-                                        <h6 class="card-title mb-0"><a href="#!"> Tata Consultancy Services. </a></h6>
-                                        <p class="small mb-0">May 2022 – Present Employment Duration 6 yrs 10 mos
-                                            @if($profile->id === $user->id)
-                                                <a class="btn btn-primary-soft btn-xs ms-2" href="#!">Edit </a>
-                                            @endif
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- Experience item END -->
+{{--                                <!-- Experience item START -->--}}
+{{--                                <div class="d-flex">--}}
+{{--                                    <!-- Avatar -->--}}
+{{--                                    <div class="avatar me-3">--}}
+{{--                                        <a href="#!">--}}
+{{--                                            <img class="avatar-img rounded-circle" src="{{asset('assets/images/logo/10.svg')}}" alt="">--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    <!-- Info -->--}}
+{{--                                    <div>--}}
+{{--                                        <h6 class="card-title mb-0"><a href="#!"> Tata Consultancy Services. </a></h6>--}}
+{{--                                        <p class="small mb-0">May 2022 – Present Employment Duration 6 yrs 10 mos--}}
+{{--                                            @if($profile->id === $user->id)--}}
+{{--                                                <a class="btn btn-primary-soft btn-xs ms-2" href="#!">Edit </a>--}}
+{{--                                            @endif--}}
+{{--                                        </p>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <!-- Experience item END -->--}}
 
-                            </div>
-                            <!-- Card body END -->
-                        </div>
-                    </div>
+{{--                            </div>--}}
+{{--                            <!-- Card body END -->--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                     <!-- Card END -->
 
                     <!-- Card START -->
-                    <div class="col-md-6 col-lg-12">
-                        <div class="card">
-                            <!-- Card header START -->
-                            <div class="card-header d-sm-flex justify-content-between border-0">
-                                <h5 class="card-title">Photos</h5>
-                                <a class="btn btn-primary-soft btn-sm" href="#!"> See all photo</a>
-                            </div>
-                            <!-- Card header END -->
-                            <!-- Card body START -->
-                            <div class="card-body position-relative pt-0">
-                                <div class="row g-2">
-                                    <!-- Photos item -->
-                                    <div class="col-6">
-                                        <a href="assets/images/albums/01.jpg" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('assets/images/albums/01.jpg')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Photos item -->
-                                    <div class="col-6">
-                                        <a href="" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Photos item -->
-                                    <div class="col-4">
-                                        <a href="" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Photos item -->
-                                    <div class="col-4">
-                                        <a href="" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <!-- Photos item -->
-                                    <div class="col-4">
-                                        <a href="" data-gallery="image-popup" data-glightbox="">
-                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">
-                                        </a>
-                                        <!-- glightbox Albums left bar END  -->
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Card body END -->
-                        </div>
-                    </div>
+{{--                    <div class="col-md-6 col-lg-12">--}}
+{{--                        <div class="card">--}}
+{{--                            <!-- Card header START -->--}}
+{{--                            <div class="card-header d-sm-flex justify-content-between border-0">--}}
+{{--                                <h5 class="card-title">Photos</h5>--}}
+{{--                                <a class="btn btn-primary-soft btn-sm" href="#!"> See all photo</a>--}}
+{{--                            </div>--}}
+{{--                            <!-- Card header END -->--}}
+{{--                            <!-- Card body START -->--}}
+{{--                            <div class="card-body position-relative pt-0">--}}
+{{--                                <div class="row g-2">--}}
+{{--                                    <!-- Photos item -->--}}
+{{--                                    <div class="col-6">--}}
+{{--                                        <a href="assets/images/albums/01.jpg" data-gallery="image-popup" data-glightbox="">--}}
+{{--                                            <img class="rounded img-fluid" src="{{asset('assets/images/albums/01.jpg')}}" alt="">--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    <!-- Photos item -->--}}
+{{--                                    <div class="col-6">--}}
+{{--                                        <a href="" data-gallery="image-popup" data-glightbox="">--}}
+{{--                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    <!-- Photos item -->--}}
+{{--                                    <div class="col-4">--}}
+{{--                                        <a href="" data-gallery="image-popup" data-glightbox="">--}}
+{{--                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    <!-- Photos item -->--}}
+{{--                                    <div class="col-4">--}}
+{{--                                        <a href="" data-gallery="image-popup" data-glightbox="">--}}
+{{--                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    <!-- Photos item -->--}}
+{{--                                    <div class="col-4">--}}
+{{--                                        <a href="" data-gallery="image-popup" data-glightbox="">--}}
+{{--                                            <img class="rounded img-fluid" src="{{asset('')}}" alt="">--}}
+{{--                                        </a>--}}
+{{--                                        <!-- glightbox Albums left bar END  -->--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <!-- Card body END -->--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                     <!-- Card END -->
                     <!-- Card START -->
                     <div class="col-md-6 col-lg-12">

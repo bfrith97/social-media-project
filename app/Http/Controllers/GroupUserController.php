@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Group;
 use App\Models\GroupUser;
 use App\Services\ActivityService;
+use App\Services\GroupUserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class GroupUserController extends Controller
 {
+    private GroupUserService $groupUserService;
     private ActivityService $activityService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct(GroupUserService $groupUserService, ActivityService $activityService)
     {
+        $this->groupUserService = $groupUserService;
         $this->activityService = $activityService;
     }
 
@@ -38,18 +39,19 @@ class GroupUserController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'group_id' => 'required|integer|exists:users,id',
-        ]);
-
-        $groupUser = GroupUser::createOrFirst($validatedData);
+        $groupUser = $this->groupUserService->storeGroupUser($request);
 
         $this->activityService->storeActivity($groupUser, 'groups.show', $groupUser->group_id, 'bi bi-people', 'joined a group');
 
-        return response()->json([
-            'message' => 'Group member added successfully',
-        ]);
+        if ($groupUser) {
+            return response()->json([
+                'message' => 'Group member added successfully',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Group member not added',
+            ]);
+        }
     }
 
     /**
@@ -81,15 +83,16 @@ class GroupUserController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'group_id' => 'required|integer|exists:users,id',
-        ]);
+        $deleted = $this->groupUserService->destroyGroupUser($request);
 
-        GroupUser::where($validatedData)->delete();
-
-        return response()->json([
-            'message' => 'Group member removed successfully',
-        ]);
+        if ($deleted) {
+            return response()->json([
+                'message' => 'Group User removed successfully',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Group User not removed',
+            ]);
+        }
     }
 }

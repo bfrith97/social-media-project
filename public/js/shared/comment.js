@@ -3,7 +3,7 @@ function submitComment(event) {
 
     let form = event.target;
     let body = new FormData(form);
-    const csrfToken = body.get('_token'); // Ensuring CSRF token is fetched correctly
+    const csrfToken = body.get('_token');
 
     fetch(form.action, {
         method: 'POST',

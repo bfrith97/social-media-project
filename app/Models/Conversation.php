@@ -16,6 +16,15 @@ class Conversation extends Model
         'name',
     ];
 
+    public static function findByParticipants($userId1, $userId2)
+    {
+        return Conversation::whereHas('conversationParticipants', function ($query) use ($userId1) {
+            $query->where('user_id', $userId1);
+        })->whereHas('conversationParticipants', function ($query) use ($userId2) {
+            $query->where('user_id', $userId2);
+        })->first();
+    }
+
     public function conversationParticipants(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'conversation_participants', 'conversation_id', 'user_id')

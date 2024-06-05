@@ -7,14 +7,17 @@ use App\Models\CommentLike;
 use App\Models\Post;
 use App\Notifications\NewLike;
 use App\Services\ActivityService;
+use App\Services\CommentLikeService;
 use Illuminate\Http\Request;
 
 class CommentLikeController extends Controller
 {
+    private CommentLikeService $commentLikeService;
     private ActivityService $activityService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct(CommentLikeService $commentLikeService, ActivityService $activityService)
     {
+        $this->commentLikeService = $commentLikeService;
         $this->activityService = $activityService;
     }
 
@@ -39,17 +42,7 @@ class CommentLikeController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'comment_id' => 'required|integer|exists:comments,id',
-        ]);
-
-        $comment = Comment::with('user')->find($validatedData['comment_id']);
-        $like = $comment->commentLikes()->createOrFirst($validatedData);
-        $type = $comment->item_type === Post::class ? 'posts' : 'news';
-        $comment->load($type == 'posts' ? 'post' : 'newsArticle');
-
-        $comment->user->notify(new NewLike($like->user, $comment,'comment'));
+        [$like, $type, $comment] = $this->commentLikeService->storeCommentLike($request);
 
         $this->activityService->storeActivity($like, "$type.show", $comment->item_id, 'bi bi-hand-thumbs-up', 'liked a comment');
 
@@ -101,13 +94,7 @@ class CommentLikeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'comment_id' => 'required|integer|exists:comments,id',
-        ]);
-
-        $deleted = CommentLike::where($validatedData)
-            ->delete();
+        $deleted = $this->commentLikeService->destroyCommentLike($request);
 
         if ($deleted) {
             return response()->json([

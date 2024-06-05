@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommentLikeController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\GroupUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostLikeController;
@@ -32,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/comment-likes', [CommentLikeController::class, 'store'])->name('comment_likes.store');
     Route::delete('/comment-likes', [CommentLikeController::class, 'destroy'])->name('comment_likes.destroy');
 
+    Route::post('/conversations', [ConversationController::class, 'store'])->name('conversations.store');
+
     Route::resource('/events', EventController::class);
 
     Route::get('/feed', [PostController::class, 'index'])->name('posts.index');
@@ -50,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/post-likes', [PostLikeController::class, 'store'])->name('post_likes.store');
     Route::delete('/post-likes', [PostLikeController::class, 'destroy'])->name('post_likes.destroy');
 
+    Route::get('/messages/get-users-for-new-chat', [MessageController::class, 'getUsersForNewChat'])->name('messages.messages.get_chat_new_for_users');
     Route::resource('/messages', MessageController::class);
 
     Route::resource('/news', NewsController::class);

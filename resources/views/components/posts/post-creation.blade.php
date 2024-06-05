@@ -1,5 +1,5 @@
 <!-- Share feed START -->
-<div class="card card-body @if(isset($onProfile)) my-4 @endif">
+<div class="card card-body @if($onProfile) my-4 @endif">
     <div class="d-flex mb-3">
         <!-- Avatar -->
         <div class="avatar avatar-xs me-2">

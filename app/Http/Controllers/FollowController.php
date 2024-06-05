@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Follow;
-use App\Models\User;
-use App\Notifications\NewFollower;
 use App\Services\ActivityService;
+use App\Services\FollowService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class FollowController extends Controller
 {
+    private FollowService $followService;
     private ActivityService $activityService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct(FollowService $followService, ActivityService $activityService)
     {
+        $this->followService = $followService;
         $this->activityService = $activityService;
     }
 
@@ -23,14 +22,7 @@ class FollowController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-
-        $usersToFollow = User::where('id', '!=', $user->id)
-            ->whereDoesntHave('followers', function ($query) use ($user) {
-                $query->where('follower_id', $user->id);
-            })
-            ->inRandomOrder()
-            ->get();
+        $usersToFollow = $this->followService->getUsersToFollow();
 
         return view('who_to_follow.index')->with([
             'usersToFollow' => $usersToFollow,
@@ -50,17 +42,7 @@ class FollowController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'follower_id' => 'required|integer|exists:users,id',
-            'followee_id' => 'required|integer|exists:users,id',
-        ]);
-
-        $follow = Follow::create($validatedData);
-
-        $follower = User::find($validatedData['follower_id']);
-        $followee = User::find($validatedData['followee_id']);
-
-        $followee->notify(new NewFollower($follower));
+        [$follow, $followee] = $this->followService->storeFollow($request);
 
         $this->activityService->storeActivity($follow, 'profiles.show', $follow->followee_id, 'bi bi-person-add', 'followed ' . $followee->name);
 
@@ -96,12 +78,7 @@ class FollowController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validatedData = $request->validate([
-            'follower_id' => 'required|integer|exists:users,id',
-            'followee_id' => 'required|integer|exists:users,id',
-        ]);
-
-        $deleted = Follow::where($validatedData)->delete();
+        $deleted = $this->followService->destroyFollow($request);
 
         if ($deleted) {
             return response()->json([

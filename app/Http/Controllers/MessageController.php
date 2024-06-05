@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use App\Models\User;
 use App\Services\ActivityService;
+use App\Services\MessageService;
 use App\Services\NewsService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -12,9 +13,11 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
+    private MessageService $messageService;
     private UserService $userService;
 
-    public function __construct(UserService $userService) {
+    public function __construct(MessageService $messageService, UserService $userService) {
+        $this->messageService = $messageService;
         $this->userService = $userService;
     }
 
@@ -46,13 +49,7 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'conversation_id' => 'required|integer|exists:conversations,id',
-            'user_id' => 'required|integer|exists:users,id',
-            'content' => 'required|string',
-        ]);
-
-        $message = Message::create($validatedData);
+        $message = $this->messageService->storeMessage($request);
 
         if ($message) {
             return response()->json([
@@ -97,5 +94,23 @@ class MessageController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getUsersForNewChat(Request $request)
+    {
+        $users = User::whereNot('id', Auth::id())
+            ->where('name', 'like', '%' . $request->search . '%')
+            ->get();
+
+        foreach ($users as &$user) {
+            $user['profile_picture'] = asset($user->profile_picture);
+            $user['subtitle'] = $user['followed_by_current_user'] ? 'Following' : $user['role'];
+        }
+
+        return response()->json([
+            'users' => $users,
+            'create_conversation_route' => route('conversations.store'),
+            'csrfToken' => csrf_token(),
+        ]);
     }
 }

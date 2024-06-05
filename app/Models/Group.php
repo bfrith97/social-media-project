@@ -71,6 +71,6 @@ class Group extends Model
                 ->exists();
         }
 
-        return $currentUserIsAdminCache;
+        return $this->currentUserIsAdminCache;
     }
 }

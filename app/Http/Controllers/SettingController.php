@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Relationship;
 use App\Models\User;
+use App\Services\SettingService;
 use App\Services\UserService;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
@@ -11,10 +12,12 @@ use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
+    private SettingService $settingService;
     private UserService $userService;
 
-    public function __construct(UserService $userService)
+    public function __construct(SettingService $settingService, UserService $userService)
     {
+        $this->settingService = $settingService;
         $this->userService = $userService;
     }
 
@@ -55,13 +58,9 @@ class SettingController extends Controller
      */
     public function edit()
     {
-        [
-            $user,
-            $conversations,
-            $notificationsCount,
-        ] = $this->userService->getUserInformation();
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
 
-        $relationshipOptions = Relationship::all();
+        $relationshipOptions = $this->settingService->getRelationships();
 
         return view('settings.edit')->with([
             'relationshipOptions' => $relationshipOptions,
@@ -74,45 +73,7 @@ class SettingController extends Controller
     public function accountUpdate(Request $request)
     {
         try {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:191',
-                'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'cover_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'role' => 'nullable|string|max:191',
-                'company' => 'nullable|string|max:191',
-                'info' => 'nullable|string|max:191',
-                'number' => 'nullable|integer|min:0',
-                'date_of_birth' => 'nullable|date',
-                'relationship_id' => 'nullable|integer|exists:relationships,id',
-            ]);
-
-            foreach ($validatedData as $key => &$value) {
-                if ($key !== 'profile_picture' && $key!== 'cover_picture' && is_string($value)) {
-                    $value = Profanity::blocker($value)
-                        ->strict(false)
-                        ->strictClean(true)
-                        ->filter();
-                }
-            }
-
-            if ($request->hasFile('profile_picture')) {
-                $imageName = time() . '.' . $request->profile_picture->extension();
-                $request->profile_picture->move(public_path('assets/images/avatars'), $imageName);
-                $validatedData['profile_picture'] = 'assets/images/avatars/' . $imageName;
-            } else {
-                unset($validatedData['profile_picture']);
-            }
-
-            if ($request->hasFile('cover_picture')) {
-                $imageName = time() . '.' . $request->cover_picture->extension();
-                $request->cover_picture->move(public_path('assets/images/covers'), $imageName);
-                $validatedData['cover_picture'] = 'assets/images/covers/' . $imageName;
-            } else {
-                unset($validatedData['cover_picture']);
-            }
-
-            $user = User::find($request->user_id)
-                ->update($validatedData);
+            $this->settingService->handleAccountUpdate($request);
 
             return redirect()
                 ->route('settings.edit')

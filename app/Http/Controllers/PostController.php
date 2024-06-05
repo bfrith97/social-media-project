@@ -2,32 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
 use App\Models\Post;
-use App\Models\User;
-use App\Notifications\NewProfilePost;
 use App\Services\ActivityService;
 use App\Services\NewsService;
+use App\Services\PostService;
 use App\Services\UserService;
 use Carbon\Carbon;
-use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Activitylog\Models\Activity;
 
 class PostController extends Controller
 {
+    private PostService $postService;
     private UserService $userService;
     private NewsService $newsService;
     private ActivityService $activityService;
 
-    public function __construct(UserService $userService, NewsService $newsService, ActivityService $activityService)
+    public function __construct(PostService $postService, UserService $userService, NewsService $newsService, ActivityService $activityService)
     {
+        $this->postService = $postService;
         $this->userService = $userService;
         $this->newsService = $newsService;
         $this->activityService = $activityService;
-
     }
 
     /**
@@ -35,43 +31,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        [
-            $user,
-            $conversations,
-            $notificationsCount,
-        ] = $this->userService->getUserInformation();
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
 
-        $posts = Post::with([
-            'user',
-            'comments' => function ($q) {
-                return $q->limit(5);
-            },
-            'comments.user',
-            'comments.commentLikes',
-            'postLikes',
-        ])
-            ->whereHas('user', function ($query) use ($user) {
-                $query->whereHas('followers', function ($subQuery) use ($user) {
-                    $subQuery->where('follower_id', $user->id);
-                });
-                $query->orWhere('user_id', $user->id);
-            })
-            ->whereNull([
-                'group_id',
-                'profile_id',
-            ])
-            ->orderByDesc('created_at')
-            ->limit(5)
-            ->get();
-
-        $usersToFollow = User::where('id', '!=', $user->id)
-            ->whereDoesntHave('followers', function ($query) use ($user) {
-                $query->where('follower_id', $user->id);
-            })
-            ->inRandomOrder()
-            ->take(5)
-            ->get();
-
+        $posts = $this->postService->getFeedPosts($user);
+        $usersToFollow = $this->userService->getSuggestedUsers($user);
         $news = $this->newsService->getNewsHeadlines();
 
         return view('posts.index')->with([
@@ -97,35 +60,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'content' => 'required|string',
-            'user_id' => 'required|integer|exists:users,id',
-            'group_id' => 'nullable|integer|exists:groups,id',
-            'profile_id' => 'nullable|integer|exists:users,id',
-            'is_feeling' => 'nullable|boolean',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        $validatedData['content'] = Profanity::blocker($validatedData['content'])
-            ->strict(false)
-            ->strictClean(true)
-            ->filter();
-
-        if ($request->hasFile('image_path')) {
-            $imageName = time() . '.' . $request->image_path->extension();
-            $request->image_path->move(public_path('assets/images/posts'), $imageName);
-            $validatedData['image_path'] = 'assets/images/posts/' . $imageName;
-        } else {
-            unset($validatedData['profile_picture']);
-        }
-
-        $post = Post::create($validatedData);
-        $post->load('user');
-
-        if (isset($validatedData['profile_id'])) {
-            $user = User::find($validatedData['profile_id']);
-            $user->notify(new NewProfilePost($post->user, $post));
-        }
+        $post = $this->postService->storePost($request);
 
         $this->activityService->storeActivity($post, 'posts.show', $post->id, 'bi bi-box-arrow-right', 'created a post');
 
@@ -139,10 +74,12 @@ class PostController extends Controller
                     'role' => $post->user->role,
                     'company' => $post->user->company,
                     'profile_picture' => asset($post->user->profile_picture),
+                    'profile_route' => route('profiles.show', $post->user->id),
                 ],
                 'content' => $post->content,
                 'image_path' => $post->image_path,
                 'comment_route' => route('comments.store'),
+                'post_like_route' => route('post_likes.store'),
                 'is_feeling' => $post->is_feeling,
             ],
             'csrf' => csrf_token(),
@@ -154,17 +91,9 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        [
-            $user,
-            $conversations,
-            $notificationsCount,
-        ] = $this->userService->getUserInformation();
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
 
-        $post = Post::with('user')
-            ->find($id);
-        if (!$post) {
-            return redirect()->back();
-        }
+        $post = $this->postService->getPost($id);
 
         return view('posts.show')->with([
             'post' => $post,
@@ -266,7 +195,6 @@ class PostController extends Controller
         $user->profile_picture = asset($user->profile_picture);
         $user->profile_route = route('profiles.show', $user->id);
 
-
         if ($posts) {
             return response()->json([
                 'message' => 'Posts retrieved successfully',
@@ -274,7 +202,9 @@ class PostController extends Controller
                 'morePostsAvailable' => $morePostsAvailable,
                 'newOffset' => $validatedData['offset'] + 5,
                 'user' => $user,
-                'commentPostRoute' => route('comments.store'),
+                'comment_post_route' => route('comments.store'),
+                'like_post_route' => route('post_likes.store'),
+                'like_comment_route' => route('comment_likes.store'),
                 'csrf' => csrf_token(),
             ]);
         } else {

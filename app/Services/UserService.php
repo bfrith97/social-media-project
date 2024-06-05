@@ -3,11 +3,12 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
-    public function getUserInformation(): ?array
+    public function getUserInformation(): array|RedirectResponse
     {
         if (Auth::check()) {
             $user = User::with([
@@ -26,7 +27,18 @@ class UserService
 
             return [$user, $conversations, $notificationsCount];
         } else {
-            return null;
+            return redirect()->route('login');
         }
+    }
+
+    public function getSuggestedUsers(User $user)
+    {
+        return User::where('id', '!=', $user->id)
+            ->whereDoesntHave('followers', function ($query) use ($user) {
+                $query->where('follower_id', $user->id);
+            })
+            ->inRandomOrder()
+            ->take(5)
+            ->get();
     }
 }

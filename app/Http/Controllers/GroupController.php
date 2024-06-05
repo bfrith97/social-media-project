@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Group;
+use App\Services\GroupService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
+    private GroupService $groupService;
     private UserService $userService;
 
-    public function __construct(UserService $userService) {
+    public function __construct(GroupService $groupService, UserService $userService) {
+        $this->groupService = $groupService;
         $this->userService = $userService;
     }
 
@@ -21,15 +22,8 @@ class GroupController extends Controller
     public function index()
     {
         [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+        [$allGroups, $mostPopularGroups] = $this->groupService->getGroups();
 
-        $groups = Group::with(['members', 'posts', 'posts.user'])
-            ->withCount('members', 'posts')
-            ->get();
-
-        $allGroups = $groups->sortBy('name');
-        $mostPopularGroups = $groups->sortByDesc('members_count');
-
-        // Pass the sorted collections to the view
         return view('groups.index')->with([
             'allGroups' => $allGroups,
             'mostPopularGroups' => $mostPopularGroups,
@@ -53,18 +47,17 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'website' => 'required|string|max:255',
-            'private' => 'required|boolean',
-        ]);
+        $group = $this->groupService->storeGroup($request);
 
-        Group::create($validatedData);
-
-        return response()->json([
-            'message' => 'Post added successfully',
-        ]);
+        if ($group) {
+            return response()->json([
+                'message' => 'Group added successfully',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Group not added',
+            ]);
+        }
     }
 
     /**
@@ -73,13 +66,7 @@ class GroupController extends Controller
     public function show(string $id)
     {
         [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
-
-        $group = Group::with('members', 'posts', 'events', 'groupCategory')->withCount('members', 'posts', 'events')->find($id);
-        if(!$group) {
-            return redirect()->back();
-        }
-
-        $memberNames = $group->members->pluck('name');
+        [$group, $memberNames] = $this->groupService->getGroup($id);
 
         return view('groups.show')->with([
             'group' => $group,

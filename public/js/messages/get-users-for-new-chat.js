@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const main = document.querySelector('main');
-    let searchInput = document.querySelector('#search-input');
-    let searchForm = document.querySelector('#search-form');
-    let resultsContainer = document.querySelector('#search-results');
+    let main = document.querySelector('main');
+    let searchInput = document.querySelector('#search-users-input');
+    let searchForm = document.querySelector('#new-chat-form');
+    let resultsContainer = document.querySelector('#user-results');
 
     // Debounced search function
     const debouncedSearch = debounce(() => {
@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
             search(url);
         } else {
             resultsContainer.innerHTML = ''; // Clear previous results
-            hideDropdown(); // Hide the dropdown if not enough characters
         }
     }, 300);
 
@@ -20,19 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
     searchInput.addEventListener('keyup', (e) => {
         e.preventDefault();
         debouncedSearch();
-    });
-
-    main.addEventListener('click', (e) => {
-        hideDropdown();
-    });
-
-    searchInput.addEventListener('click', (e) => {
-        showDropdown();
-    });
-
-    // Initialize dropdown manually
-    let dropdown = new bootstrap.Dropdown(searchInput, {
-        autoClose: true
     });
 
     function search(url) {
@@ -48,47 +34,39 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 console.log(data);
-                displayResults(data);
+                displayResults(data['users'], data['csrfToken'], data);
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     }
 
-    function displayResults(data) {
+    function displayResults(users, csrfToken,data) {
         resultsContainer.innerHTML = ''; // Clear previous results
-        if (data.length === 0) {
+        if (users.length === 0) {
             resultsContainer.innerHTML = '<li class="dropdown-item">No results found</li>';
-            showDropdown(); // Show the dropdown only if there are results
         } else {
-            data.forEach(item => {
+            users.forEach(item => {
                 let html = `
-                <li class="d-flex nav-link dropdown-item">
-                    <a class="btn icon-md p-0" href="/${item.group === true ? 'groups' : 'profiles'}/${item.id}" >
-                        <img class="avatar-img rounded-2" src="${item.profile_picture}" alt="">
-                    </a>
-                        <a class="dropdown-item pt-0" href="/${item.group === true ? 'groups' : 'profiles'}/${item.id}">
+                <form action="${data['create_conversation_route']}" method="post" onsubmit="submitConversation(event)">
+                    <input type="hidden" name="_token" value="${csrfToken}" autocomplete="off">
+                    <input type="hidden" name="user_id" value="${item.id}" autocomplete="off">
+                    <li class="d-flex nav-link dropdown-item py-2">
+                        <button type="submit" class="btn icon-md p-0" href="#">
+                            <img class="avatar-img rounded-2" src="${item.profile_picture}" alt="">
+                        </button>
+                        <button type="submit" class="dropdown-item pt-0 ps-2" href="/profiles/${item.id}">
                             ${item.name}
                             <br><small><i>${item.subtitle}</i></small>
-                        </a>
-                </li>
+                        </button>
+                    </li>
+                </form>
                 `;
                 const range = document.createRange();
                 const documentFragment = range.createContextualFragment(html);
                 resultsContainer.appendChild(documentFragment);
             });
-            showDropdown(); // Show the dropdown only if there are results
         }
-    }
-
-    function showDropdown() {
-        if (searchInput.value.trim().length > 1) {
-            dropdown.show();
-        }
-    }
-
-    function hideDropdown() {
-        dropdown.hide();
     }
 
     function debounce(func, delay) {

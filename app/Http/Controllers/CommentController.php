@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Notifications\NewComment;
 use App\Notifications\NewLike;
 use App\Services\ActivityService;
+use App\Services\CommentService;
 use Carbon\Carbon;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
@@ -15,10 +16,12 @@ use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
+    private CommentService $commentService;
     private ActivityService $activityService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct(CommentService $commentService, ActivityService $activityService)
     {
+        $this->commentService = $commentService;
         $this->activityService = $activityService;
     }
 
@@ -43,34 +46,9 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'content' => 'required|string',
-            'user_id' => 'required|integer|exists:users,id',
-            'item_id' => 'required|integer',
-            'item_type' => 'required|string|in:App\Models\Post,App\Models\NewsArticle',
-        ]);
+        [$comment, $model, $itemType] = $this->commentService->storeComment($request);
 
-        $validatedData['content'] = Profanity::blocker($validatedData['content'])
-            ->strict(false)
-            ->strictClean(true)
-            ->filter();
-
-        $model = $validatedData['item_type']::find($validatedData['item_id']);
-        if (!$model) {
-            return response()->json(['error' => 'Invalid item type or ID.'], 404);
-        }
-
-        // Create the comment on the model
-        $comment = $model->comments()
-            ->create($validatedData);
-
-        if ($validatedData['item_type'] === 'App\Models\Post') {
-            $model->user->notify(new NewComment($comment->user, $model));
-        }
-
-        $type = $validatedData['item_type'] === Post::class ? 'posts' : 'news';
-
-        $this->activityService->storeActivity($model, "$type.show", $comment->item_id, 'bi bi-chat-left-dots', 'commented on a post');
+        $this->activityService->storeActivity($model, "$itemType.show", $comment->item_id, 'bi bi-chat-left-dots', 'commented on a post');
 
         return response()->json([
             'message' => 'Comment added successfully',

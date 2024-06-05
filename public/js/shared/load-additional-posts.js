@@ -39,7 +39,7 @@ function generateCommentsHtml(comments, user, data) {
                     </div>
                     <!-- Comment react -->
                     <ul class="nav nav-divider pb-2 pt-1 small">
-                        <form class="post-like-form" action="http://127.0.0.1:8000/comment-likes" method="post" onsubmit="submitLike(event)">
+                        <form class="post-like-form" action="${data['like_comment_route']}" method="post" onsubmit="submitLike(event)">
                             ${comment.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
                             <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
                             <input type="hidden" id="comment_id" name="comment_id" value="${comment.id}">
@@ -119,7 +119,7 @@ function addPostHtml(data, button) {
                         </p>`}
                     <!-- Feed react START -->
                     <ul class="nav nav-stack pb-2 small">
-                        <form class="post-like-form" action="http://127.0.0.1:8000/post-likes" method="post" onsubmit="submitLike(event)">
+                        <form class="post-like-form" action="${data['like_post_route']}" method="post" onsubmit="submitLike(event)">
                             <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
                             ${post.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
                             <input type="hidden" id="post_id" name="post_id" value="${post.id}">
@@ -167,7 +167,7 @@ function addPostHtml(data, button) {
                     </a>
                 </div>
                 <!-- Comment box  -->
-                  <form class="nav nav-item w-100 position-relative comment-form" action="${data['commentPostRoute']}" method="post" onsubmit="submitComment(event)">
+                  <form class="nav nav-item w-100 position-relative comment-form" action="${data['comment_post_route']}" method="post" onsubmit="submitComment(event)">
                     <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
                     <input type="hidden" id="item_id" name="item_id" value="${post.id}">
                     <input type="hidden" id="item_type" name="item_type" value="App\\Models\\Post">

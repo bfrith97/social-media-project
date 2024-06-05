@@ -1,4 +1,4 @@
-@if(\Route::currentRouteName() != 'messages.index' || \Route::currentRouteName() != 'login')
+@if(\Route::currentRouteName() != 'messages.index' && \Route::currentRouteName() != 'login')
     <x-messages.chat.chat :conversations="$conversations" :user="$user"/>
 @endif
 
@@ -53,7 +53,9 @@
 @stack('js')
 <script src="{{ asset('js/nav/search.js') }}"></script>
 <script src="{{ asset('js/nav/notifications.js') }}"></script>
+@if(\Route::currentRouteName() != 'messages.index' && \Route::currentRouteName() != 'login')
 <script src="{{ asset('js/messages/chat.js') }}"></script>
+@endif
 
 <!-- Theme Functions -->
 <script src="{{ asset('assets/js/functions.js') }}"></script>

@@ -59,10 +59,10 @@
                                                     <a href="#chat-{{$key + 1}}" class="nav-link text-start chat-selector chat-{{$key + 1}}" id="chat-{{$key + 1}}-tab" data-bs-toggle="pill" role="tab">
                                                         <div class="d-flex">
                                                             <div class="flex-shrink-0 avatar avatar-story me-2 status-online">
-                                                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->profile_picture)}}" alt="">
+                                                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()?->profile_picture)}}" alt="">
                                                             </div>
                                                             <div class="flex-grow-1 d-block">
-                                                                <h6 class="mb-0 mt-1">{{$conversation->conversationParticipants->first()->name}}</h6>
+                                                                <h6 class="mb-0 mt-1">{{$conversation->conversationParticipants->first()?->name}}</h6>
                                                                 <div class="small text-secondary">{{$conversation->messages->last()?->content}}
                                                                 </div>
                                                             </div>
@@ -94,12 +94,12 @@
                                 <div class="fade tab-pane h-100" id="chat-{{$key + 1}}" role="tabpanel" aria-labelledby="chat-{{$key + 1}}-tab">
                                     <!-- Top avatar and status START -->
                                     <div class="d-sm-flex justify-content-between align-items-center">
-                                        <a href="{{ route('profiles.show', $conversation->conversationParticipants->first()->id) }}" class="d-flex mb-2 mb-sm-0">
+                                        <a href="{{ $conversation->conversationParticipants->first() != null ? route('profiles.show', $conversation->conversationParticipants->first()?->id) : '' }}" class="d-flex mb-2 mb-sm-0">
                                             <div class="flex-shrink-0 avatar me-2">
-                                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->profile_picture)}}" alt="">
+                                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()?->profile_picture)}}" alt="">
                                             </div>
                                             <div class="d-block flex-grow-1">
-                                                <h6 class="mb-0 mt-1">{{$conversation->conversationParticipants->first()->name}}</h6>
+                                                <h6 class="mb-0 mt-1">{{$conversation->conversationParticipants->first()?->name}}</h6>
                                                 <div class="small text-secondary">
                                                     <i class="fa-solid fa-circle text-success me-1"></i>Online
                                                 </div>
@@ -159,30 +159,23 @@
     <div id="chatToast" class="toast bg-mode" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
         <div class="toast-header bg-mode d-flex justify-content-between">
             <!-- Title -->
-            <h6 class="mb-0">New message</h6>
+            <h6 class="mb-0">Start a new chat</h6>
             <button class="btn btn-secondary-soft-hover py-1 px-2" data-bs-dismiss="toast" aria-label="Close">
                 <i class="fa-solid fa-xmark"></i></button>
         </div>
         <!-- Top avatar and status END -->
-        <div class="toast-body collapse show" id="collapseChat">
+        <div class="toast-body collapse show pb-0 pt-2" id="collapseChat">
             <!-- Chat conversation START -->
             <!-- Form -->
-            <form>
-                <div class="input-group mb-3">
+            <form id="new-chat-form" method="post" action="{{ route('messages.messages.get_chat_new_for_users') }}">
+                <div class="input-group mb-2">
                     <span class="input-group-text border-0">To</span>
-                    <input class="form-control" type="text" placeholder="Type a name or multiple names">
+                    <input id="search-users-input" class="form-control" name="search" type="text" placeholder="Type a name">
                 </div>
+                <ul class="ps-0 mb-0" id="user-results" style="overflow-y: auto; " data-bs-popper="static">
+                </ul>
             </form>
             <!-- Chat conversation END -->
-            <!-- Extra space -->
-            <div class="h-200px"></div>
-            <!-- Button  -->
-            <div class="d-sm-flex align-items-end">
-                <textarea class="form-control mb-sm-0 mb-3" placeholder="Type a message" rows="1" spellcheck="false"></textarea>
-                <button class="btn btn-sm btn-danger-soft ms-sm-2"><i class="fa-solid fa-face-smile fs-6"></i></button>
-                <button class="btn btn-sm btn-secondary-soft ms-2"><i class="fa-solid fa-paperclip fs-6"></i></button>
-                <button class="btn btn-sm btn-primary ms-2"><i class="fa-solid fa-paper-plane fs-6"></i></button>
-            </div>
         </div>
     </div>
     <!-- Chat toast END -->

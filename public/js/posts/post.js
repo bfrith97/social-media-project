@@ -1,10 +1,9 @@
 function submitPost(event) {
     event.preventDefault();
-    console.log('form submitting')
 
     let form = event.target;
     let body = new FormData(form);
-    const csrfToken = body.get('_token'); // Ensuring CSRF token is fetched correctly
+    const csrfToken = body.get('_token');
 
     fetch(form.action, {
         method: 'POST', body: body, headers: {
@@ -26,13 +25,12 @@ function submitPost(event) {
 }
 
 function addContent(post) {
-    console.log(post)
-    if(post.is_feeling == 1) {
+    if (post.is_feeling == 1) {
         return `
             <div>
                 <div class="nav nav-divider">
                     <h6 class="nav-item card-title mb-0">
-                        <a href="{{ route('profiles.show', $post->user->id) }}"> ${post.user.name} </a>
+                        <a href="${post.user.profile_route}"> ${post.user.name} </a>
                         <span class="fw-normal ms-1">is feeling ${post.content}</span>
                         <br>
                     </h6>
@@ -45,7 +43,7 @@ function addContent(post) {
         <div>
             <div class="nav nav-divider">
                 <h6 class="nav-item card-title mb-0">
-                    <a href="{{ route('profiles.show', $post->user->id) }}"> ${post.user.name} </a></h6>
+                    <a href="${post.user.profile_route}"> ${post.user.name} </a></h6>
                 <span class="nav-item small"> Just now </span>
             </div>
             <p class="mb-0 small">${post.user.role} at ${post.user.company}</p>
@@ -75,27 +73,28 @@ function addNewPostHtml(form, post, data) {
                         ${addContent(post)}
                     </div>
                     <!-- Card feed action dropdown START -->
-                    <div class="dropdown">
-                        <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-three-dots"></i>
-                        </a>
-                        <!-- Card feed action dropdown menu -->
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-                            <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save
-                                    post</a></li>
-                            <li><a class="dropdown-item" href="#"> <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow
-                                    lori ferguson </a></li>
-                            <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide
-                                    post</a></li>
-                            <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report
-                                    post</a></li>
-                        </ul>
-                    </div>
+<!--                    TODO-->
+<!--                    <div class="dropdown">-->
+<!--                        <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                            <i class="bi bi-three-dots"></i>-->
+<!--                        </a>-->
+<!--                        &lt;!&ndash; Card feed action dropdown menu &ndash;&gt;-->
+<!--                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">-->
+<!--                            <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save-->
+<!--                                    post</a></li>-->
+<!--                            <li><a class="dropdown-item" href="#"> <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow-->
+<!--                                    lori ferguson </a></li>-->
+<!--                            <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide-->
+<!--                                    post</a></li>-->
+<!--                            <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <hr class="dropdown-divider">-->
+<!--                            </li>-->
+<!--                            <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report-->
+<!--                                    post</a></li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
                     <!-- Card feed action dropdown END -->
                 </div>
             </div>
@@ -107,7 +106,7 @@ function addNewPostHtml(form, post, data) {
                 </p>`}
                 <!-- Feed react START -->
                 <ul class="nav nav-stack pb-2 small">
-                    <form class="post-like-form" action="http://127.0.0.1:8000/post-likes" method="post" onsubmit="submitLike(event)">
+                    <form class="post-like-form" action="${post.post_like_route}" method="post" onsubmit="submitLike(event)">
                             <input type="hidden" name="_token" value="${data['csrf']}" autocomplete="off">
                             ${post.liked_by_current_user ? '<input class="delete_method" type="hidden" name="_method" value="DELETE">' : ''}
                             <input type="hidden" id="post_id" name="post_id" value="${post.id}">

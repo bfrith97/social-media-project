@@ -1,5 +1,6 @@
-function submitJoin(event) {
+function submitConversation(event) {
     event.preventDefault();
+    console.log('hello');
     let form = event.target;
     let body = new FormData(form);
     const csrfToken = body.get('_token');
@@ -16,6 +17,7 @@ function submitJoin(event) {
             return response.json();
         })
         .then(data => {
+            console.log(data);
             changeJoinHtml(event.submitter, data, form);
         })
         .catch(error => {

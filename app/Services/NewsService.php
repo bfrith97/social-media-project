@@ -14,8 +14,8 @@ class NewsService
 
     public function __construct()
     {
-        $this->apiKey = '0eae552ae39f4f3a876ab916098aa3b5';
-        $this->url = 'https://newsapi.org/v2/top-headlines';
+        $this->apiKey = config('services.news.api_key');
+        $this->url = config('services.news.api_url');
     }
 
     public function getNewsHeadlines()

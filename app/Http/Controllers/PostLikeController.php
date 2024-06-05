@@ -7,15 +7,18 @@ use App\Models\PostLike;
 use App\Models\User;
 use App\Notifications\NewLike;
 use App\Services\ActivityService;
+use App\Services\PostLikeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PostLikeController extends Controller
 {
+    private PostLikeService $postLikeService;
     private ActivityService $activityService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct(PostLikeService $postLikeService, ActivityService $activityService)
     {
+        $this->postLikeService = $postLikeService;
         $this->activityService = $activityService;
     }
 
@@ -40,17 +43,7 @@ class PostLikeController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'post_id' => 'required|integer|exists:posts,id',
-        ]);
-
-        $post = Post::with('user')
-            ->find($validatedData['post_id']);
-        $like = $post->postLikes()
-            ->createOrFirst($validatedData);
-
-        $post->user->notify(new NewLike($like->user, $post, 'post'));
+        $like = $this->postLikeService->storePostLike($request);
 
         $this->activityService->storeActivity($like, 'posts.show', $like->post_id, 'bi bi-hand-thumbs-up', 'liked a post');
 
@@ -102,13 +95,7 @@ class PostLikeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'post_id' => 'required|integer|exists:posts,id',
-        ]);
-
-        $deleted = PostLike::where($validatedData)
-            ->delete();
+        $deleted = $this->postLikeService->destroyPostLike($request);
 
         if ($deleted) {
             return response()->json([

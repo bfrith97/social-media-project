@@ -50,7 +50,7 @@
         <!-- Card body END -->
         <!-- Card Footer START -->
         <div class="card-footer text-center">
-            <form action="{{ route('group_users.store') }}" method="post" class="follow-form">
+            <form action="{{ route('group_users.store') }}" method="post" class="follow-form" onsubmit="submitJoin(event)">
                 @csrf
                 @if($group->joined_by_current_user)
                     <input type="hidden" name="_method" value="DELETE" class="delete_method">
@@ -58,11 +58,11 @@
                 <input type="hidden" name="group_id" value="{{$group->id}}"/>
                 <input type="hidden" name="user_id" value="{{$user->id}}"/>
                 @if($group->joined_by_current_user)
-                    <button type="button" class="btn btn-danger-soft btn-sm join-button">
+                    <button type="submit" class="btn btn-danger-soft btn-sm join-button">
                         Leave group
                     </button>
                 @else
-                    <button type="button" class="btn btn-success-soft btn-sm join-button">
+                    <button type="submit" class="btn btn-success-soft btn-sm join-button">
                         Join group
                     </button>
                 @endif
