@@ -6,7 +6,6 @@
     <script src="{{ asset('js/shared/like.js') }}"></script>
 @endpush
 
-
 @include('partials.news.show')
 
 @include('partials.footer')

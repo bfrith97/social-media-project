@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Services\ActivityService;
 use App\Services\FollowService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class FollowController extends Controller
 {
     private FollowService $followService;
     private ActivityService $activityService;
+    private UserService $userService;
 
-    public function __construct(FollowService $followService, ActivityService $activityService)
+    public function __construct(FollowService $followService, ActivityService $activityService, UserService $userService)
     {
         $this->followService = $followService;
         $this->activityService = $activityService;
+        $this->userService = $userService;
     }
 
     /**
@@ -22,9 +25,13 @@ class FollowController extends Controller
      */
     public function index()
     {
+        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
         $usersToFollow = $this->followService->getUsersToFollow();
 
         return view('who_to_follow.index')->with([
+            'user' => $user,
+            'conversations' => $conversations,
+            'notificationsCount' => $notificationsCount,
             'usersToFollow' => $usersToFollow,
         ]);
     }
