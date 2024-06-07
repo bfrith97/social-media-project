@@ -19,7 +19,7 @@ class PostService
 
     public function getFeedPosts($user)
     {
-        return Post::with([
+        $posts = Post::with([
             'user',
             'comments' => function ($q) {
                 return $q->limit(5);
@@ -39,8 +39,15 @@ class PostService
                 'profile_id',
             ])
             ->orderByDesc('created_at')
-            ->limit(5)
+            ->limit(6)
             ->get();
+
+        $moreLoadable = $posts->count() > 5;
+        if ($moreLoadable) {
+            $posts->pop();
+        }
+
+        return [$posts, $moreLoadable];
     }
 
     public function storePost(Request $request)

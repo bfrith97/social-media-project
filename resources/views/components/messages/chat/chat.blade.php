@@ -60,17 +60,17 @@
                 @foreach($conversations as $key => $conversation)
                     <!-- Contact item -->
                     <li class="chat-selector mt-3 hstack gap-3 align-items-center position-relative toast-btn" data-target="chatToast{{!$loop->first ? $key+1 : ''}}" data-conversation-id="{{$conversation->id}}">
-                        <!-- Avatar -->
-                        <div class="avatar status-online">
-                            <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()->profile_picture)}}" alt="">
-                        </div>
-                        <!-- Info -->
-                        <div class="overflow-hidden">
-                            <a class="h6 mb-0 stretched-link" href="#!">{{$conversation->conversationParticipants->first()->name}}</a>
-                            <div class="small text-secondary text-truncate">{{$conversation->messages->last()->content}}</div>
-                        </div>
-                        <!-- Chat time -->
-                        <div class="small ms-auto text-nowrap">{{Carbon\Carbon::parse($conversation->messages->last()->created_at)->timezone('Europe/London')->diffForHumans()}}</div>
+                            <!-- Avatar -->
+                            <div class="avatar status-online">
+                                <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()?->profile_picture)}}" alt="">
+                            </div>
+                            <!-- Info -->
+                            <div class="overflow-hidden">
+                                <a class="h6 mb-0 stretched-link" href="#!">{{$conversation->conversationParticipants->first()?->name}}</a>
+                                <div class="small text-secondary text-truncate">{{$conversation->messages->last()?->content}}</div>
+                            </div>
+                            <!-- Chat time -->
+                            <div class="small ms-auto text-nowrap">{{Carbon\Carbon::parse($conversation->messages->last()?->created_at)->timezone('Europe/London')->diffForHumans()}}</div>
                     </li>
                 @endforeach
                 <!-- Button -->

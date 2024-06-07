@@ -2,32 +2,29 @@
     <x-messages.chat.chat :conversations="$conversations" :user="$user"/>
 @endif
 
-<footer class="bg-mode py-3">
+<footer class="bg-mode py-3 mt-auto">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
                 <!-- Footer nav START -->
                 <ul class="nav justify-content-center justify-content-md-start lh-1">
                     <li class="nav-item">
-                        <a class="nav-link" href="my-profile-about.html">About</a>
+{{--                        TODO--}}
+                        <a class="nav-link" href="my-profile-about.html">About (TODO)</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" target="_blank" href="https://support.webestica.com/login">Support </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" target="_blank" href="docs/index.html">Docs </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="privacy-and-terms.html">Privacy & terms</a>
+{{--                        TODO--}}
+                        <a class="nav-link" target="_blank" href="docs/index.html">Docs (TODO)</a>
                     </li>
                 </ul>
                 <!-- Footer nav START -->
             </div>
             <div class="col-md-6">
                 <!-- Copyright START -->
-                <p class="text-center text-md-end mb-0">©2023
-                    <a class="text-body" target="_blank" href="https://www.webestica.com"> Webestica </a>All rights
-                    reserved.</p>
+                <p class="text-center text-md-end mb-0">2024 - Made by Brandon Frith
+                    <a target="_blank" href="https://www.linkedin.com/in/brandon-f-5ba635130/"> (LinkedIn) </a>
+                    <a target="_blank" href="https://github.com/bfrith97"> (GitHub) </a>
+                </p>
                 <!-- Copyright END -->
             </div>
         </div>

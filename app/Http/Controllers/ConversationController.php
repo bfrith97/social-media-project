@@ -10,6 +10,7 @@ use App\Services\ActivityService;
 use App\Services\MessageService;
 use App\Services\NewsService;
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,15 +55,24 @@ class ConversationController extends Controller
                 'user_id' => $userID,
             ]);
 
-            ConversationParticipant::firstOrCreate([
+            $participant = ConversationParticipant::firstOrCreate([
                 'conversation_id' => $conversation->id,
                 'user_id' => $otherUserID,
             ]);
+
+            $participant->load('participant');
+
+            $participant->participant->profile_picture = asset($participant->participant->profile_picture);
+            $participant->participant->profile_route = route('profiles.show', $participant->participant->id);
         }
+
+        $conversation->created_at_formatted = Carbon::parse($conversation->created_at)->format('D, d M Y - H:i');
 
         return response()->json([
             'conversation' => $conversation,
-            'isNewConversation' => $newConversation]);
+            'participant' => $participant ?? null,
+            'isNewConversation' => $newConversation,
+        ]);
     }
 
     /**

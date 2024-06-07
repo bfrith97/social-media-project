@@ -14,13 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('.chat-selector').forEach(function (chat, index) {
         chat.addEventListener('click', function (e) {
-            conversationInput.value = index + 1;
-            let instance = OverlayScrollbars(document.querySelector(`.chat-messages-${conversationInput.value}`), {});
-
-            document.querySelector('#content-input').disabled = false
-            document.querySelector('#emoji-btn').disabled = false
-            document.querySelector('#send-btn').disabled = false
-            document.querySelector('#message-greeting').classList.add('d-none')
+            let conversationInputVal = chat.id.split('-')[1];
+            let instance = OverlayScrollbars(document.querySelector(`.chat-messages-${conversationInputVal}`), {});
 
             scrollToBottom(instance);
             setTimeout(function () {
@@ -30,6 +25,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     })
 });
+
+function changeConversationId(button)
+{
+    let conversationInput = document.querySelector('#conversation_id');
+    conversationInput.value = button.id.split('-')[1];
+
+    document.querySelector('#content-input').disabled = false
+    document.querySelector('#emoji-btn').disabled = false
+    document.querySelector('#send-btn').disabled = false
+    document.querySelector('#message-greeting').classList.add('d-none')
+}
 
 function scrollToBottom(instance) {
     instance.scroll({y: "100%"});

@@ -1,5 +1,5 @@
 <!-- **************** MAIN CONTENT START **************** -->
-<main>
+<main class="flex-grow-1">
     <!-- Container START -->
     <div class="container">
         <div class="row g-4">
@@ -12,20 +12,21 @@
 
             <!-- Main content START -->
             <div class="col-md-8 col-lg-6 vstack gap-4" id="main-content">
-                <!-- Story START -->
-                <div class="d-flex gap-2 mb-n3">
-                    <div class="position-relative">
-                        <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">
-                            <div>
-                                <a class="stretched-link btn btn-light rounded-circle icon-md" href="#!"><i class="fa-solid fa-plus"></i></a>
-                                <h6 class="mt-2 mb-0 small">Post a Story</h6>
-                            </div>
-                        </div>
-                    </div>
+                {{--                TODO--}}
+                {{--                <!-- Story START -->--}}
+                {{--                <div class="d-flex gap-2 mb-n3">--}}
+                {{--                    <div class="position-relative">--}}
+                {{--                        <div class="card border border-2 border-dashed h-150px px-4 px-sm-5 shadow-none d-flex align-items-center justify-content-center text-center">--}}
+                {{--                            <div>--}}
+                {{--                                <a class="stretched-link btn btn-light rounded-circle icon-md" href="#!"><i class="fa-solid fa-plus"></i></a>--}}
+                {{--                                <h6 class="mt-2 mb-0 small">Post a Story</h6>--}}
+                {{--                            </div>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
 
-                    <!-- Stories -->
-                    <div id="stories" class="storiesWrapper stories-square stories user-icon carousel scroll-enable"></div>
-                </div>
+                {{--                    <!-- Stories -->--}}
+                {{--                    <div id="stories" class="storiesWrapper stories-square stories user-icon carousel scroll-enable"></div>--}}
+                {{--                </div>--}}
                 <!-- Story END -->
 
                 <x-posts.post-creation :user="$user" :onProfile="false"/>
@@ -40,16 +41,18 @@
                     @endforeach
                 </div>
 
-                <!-- Load more button START -->
-                <button type="button" onclick="loadAdditionalPosts(this)" class="btn btn-loader btn-primary-soft" data-offset="5">
-                    <span class="load-text"> Load more </span>
-                    <div class="load-icon">
-                        <div class="spinner-grow spinner-grow-sm" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                @if($moreLoadable)
+                    <!-- Load more button START -->
+                    <button type="button" onclick="loadAdditionalPosts(this)" class="btn btn-loader btn-primary-soft" data-offset="5">
+                        <span class="load-text"> Load more </span>
+                        <div class="load-icon">
+                            <div class="spinner-grow spinner-grow-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
-                    </div>
-                </button>
-                <!-- Load more button END -->
+                    </button>
+                    <!-- Load more button END -->
+                @endif
 
             </div>
             <!-- Main content END -->
@@ -148,12 +151,12 @@
                         <textarea name="content" required class="form-control pe-4 fs-3 lh-1 border-0 pb-0" rows="2" placeholder="This image's caption..."></textarea>
 
                     </div>
-                        <div class="input-group">
-                            <input type="file" class="form-control" id="image" name="image_path" accept="image/*">
-                        </div>
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="image" name="image_path" accept="image/*">
+                    </div>
 
-                        <div class="preview mt-3">
-                        </div>
+                    <div class="preview mt-3">
+                    </div>
 
                 </form>
             </div>
@@ -163,7 +166,9 @@
             <div class="modal-footer ">
                 <!-- Button -->
                 <button type="button" class="btn btn-sm btn-danger-soft me-2" data-bs-dismiss="modal">Cancel</button>
-                <button id="post-image-form-submit" type="submit" class="btn btn-sm btn-success-soft" form="post-image-form">Post</button>
+                <button id="post-image-form-submit" type="submit" class="btn btn-sm btn-success-soft" form="post-image-form">
+                    Post
+                </button>
             </div>
             <!-- Modal feed footer -->
         </div>
@@ -331,12 +336,12 @@
 </div>
 
 <script>
-    document.getElementById('image').addEventListener('change', function(event) {
+    document.getElementById('image').addEventListener('change', function (event) {
         var output = document.querySelector('.preview');
         output.innerHTML = ''; // Clear previous previews
         if (this.files && this.files[0]) {
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 var imgElement = document.createElement('img');
                 imgElement.src = e.target.result;
                 imgElement.style.maxWidth = '100%';

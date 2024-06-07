@@ -1,4 +1,4 @@
-<main>
+<main class="flex-grow-1">
     <!-- Container START -->
     <div class="container">
         <div class="row">

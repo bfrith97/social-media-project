@@ -33,13 +33,14 @@ class PostController extends Controller
     {
         [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
 
-        $posts = $this->postService->getFeedPosts($user);
+        [$posts, $moreLoadable] = $this->postService->getFeedPosts($user);
         $usersToFollow = $this->userService->getSuggestedUsers($user);
         $news = $this->newsService->getNewsHeadlines();
 
         return view('posts.index')->with([
             'usersToFollow' => $usersToFollow,
             'posts' => $posts,
+            'moreLoadable' => $moreLoadable,
             'news' => $news,
             'user' => $user,
             'notificationsCount' => $notificationsCount,

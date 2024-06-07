@@ -31,12 +31,9 @@ class ProfileService
                         $subQuery->whereNull('profile_id')
                             ->orWhere('profile_id', $id);
                     })
-                    ->orderBy('created_at', 'desc')
-                    ->limit(5); // Limiting posts here
+                    ->orderBy('created_at', 'desc');
             },
-            'otherPosts' => function ($query) {
-                $query->limit(5);
-            }
+            'otherPosts'
         ])
             ->where('users.id', $id)
             ->firstOrFail();

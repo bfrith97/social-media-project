@@ -1,4 +1,4 @@
-<main>
+<main class="flex-grow-1">
 
     <!-- Container START -->
     <div class="container">
@@ -52,11 +52,11 @@
                                 <!-- Chat list tab START -->
                                 <div class="mt-4 h-100">
                                     <div class="chat-tab-list custom-scrollbar">
-                                        <ul class="nav flex-column nav-pills nav-pills-soft">
+                                        <ul id="conversation-list" class="nav flex-column nav-pills nav-pills-soft">
                                             @foreach($conversations as $key => $conversation)
                                                 <li data-bs-dismiss="offcanvas">
                                                     <!-- Chat user tab item -->
-                                                    <a href="#chat-{{$key + 1}}" class="nav-link text-start chat-selector chat-{{$key + 1}}" id="chat-{{$key + 1}}-tab" data-bs-toggle="pill" role="tab">
+                                                    <a href="#chat-{{$conversation->id}}" class="nav-link text-start chat-selector chat-{{$conversation->id}}" id="chat-{{$conversation->id}}-tab" data-bs-toggle="pill" role="tab"  onclick="changeConversationId(this)">
                                                         <div class="d-flex">
                                                             <div class="flex-shrink-0 avatar avatar-story me-2 status-online">
                                                                 <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()?->profile_picture)}}" alt="">
@@ -88,10 +88,10 @@
                         <div id="message-greeting" class="d-flex justify-content-center align-items-center h-100">
                             <p>Please select a chat</p>
                         </div>
-                        <div class="tab-content py-0 mb-0 h-100" id="chatTabsContent">
+                        <div class="tab-content py-0 mb-0 h-100" id="chat_tabs_content">
                             @foreach($conversations as $key => $conversation)
                                 <!-- Conversation item START -->
-                                <div class="fade tab-pane h-100" id="chat-{{$key + 1}}" role="tabpanel" aria-labelledby="chat-{{$key + 1}}-tab">
+                                <div class="fade tab-pane h-100" id="chat-{{$conversation->id}}" role="tabpanel" aria-labelledby="chat-{{$conversation->id}}-tab">
                                     <!-- Top avatar and status START -->
                                     <div class="d-sm-flex justify-content-between align-items-center">
                                         <a href="{{ $conversation->conversationParticipants->first() != null ? route('profiles.show', $conversation->conversationParticipants->first()?->id) : '' }}" class="d-flex mb-2 mb-sm-0">
@@ -109,7 +109,7 @@
                                     <!-- Top avatar and status END -->
                                     <hr>
                                     <!-- Chat conversation START -->
-                                    <div class="chat-conversation-content custom-scrollbar chat-messages-{{$key+1}}">
+                                    <div class="chat-conversation-content custom-scrollbar chat-messages-{{$conversation->id}}">
                                         <!-- Chat time -->
                                         <div class="text-center small my-2">{{\Carbon\Carbon::createFromDate($conversation->created_at)->format('D, d M Y - H:i')}}</div>
                                         @foreach($conversation->messages as $message)

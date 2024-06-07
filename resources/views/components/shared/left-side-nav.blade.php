@@ -82,11 +82,11 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('events.index')}}">
-                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/calendar-outline-filled.svg')}}" alt=""><span>Events </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/calendar-outline-filled.svg')}}" alt=""><span>Events (IN PROGRESS)</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('groups.index')}}">
-                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/chat-outline-filled.svg')}}" alt=""><span>Groups </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/chat-outline-filled.svg')}}" alt=""><span>Groups (IN PROGRESS)</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('notifications.index') }}">
@@ -94,7 +94,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('settings.edit')}}">
-                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/cog-outline-filled.svg')}}" alt=""><span>Settings </span></a>
+                                <img class="me-2 h-20px fa-fw" src="{{asset('assets/images/icon/cog-outline-filled.svg')}}" alt=""><span>Settings (IN PROGRESS)</span></a>
                         </li>
                     </ul>
                     <!-- Side Nav END -->
