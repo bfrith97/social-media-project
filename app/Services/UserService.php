@@ -24,7 +24,7 @@ class UserService
                     ])
                         ->withCount('messages')
                         ->orderByDesc(
-                            Message::select('created_at') 
+                            Message::select('created_at')
                             ->whereColumn('conversation_id', 'conversations.id')
                                 ->latest()
                                 ->take(1)

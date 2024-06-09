@@ -134,9 +134,10 @@ function addPostHtml(data, button) {
                         <span class="comment-count"> <i class="bi bi-chat-fill pe-1"></i>Comments (${post.comments_count})</span>
                         <!-- Card share action START -->
                         <li class="nav-item dropdown ms-sm-auto">
-                            <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-reply-fill flip-horizontal ps-1"></i>Share (0)
-                            </a>
+<!--                        TODO-->
+<!--                            <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                                <i class="bi bi-reply-fill flip-horizontal ps-1"></i>Share (0)-->
+<!--                            </a>-->
                             <!-- Card share action dropdown menu -->
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
                                 <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct
