@@ -11,7 +11,8 @@
             <!-- Sidenav END -->
 
             <!-- Main content START -->
-            <div class="col-md-8 col-lg-6 vstack gap-4" id="main-content">
+            <div class="col-md-8 col-lg-6" id="main-content">
+                <div class="vstack gap-4">
                 {{--                TODO--}}
                 {{--                <!-- Story START -->--}}
                 {{--                <div class="d-flex gap-2 mb-n3">--}}
@@ -53,7 +54,7 @@
                     </button>
                     <!-- Load more button END -->
                 @endif
-
+                </div>
             </div>
             <!-- Main content END -->
 

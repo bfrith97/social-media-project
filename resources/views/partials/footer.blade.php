@@ -1,4 +1,4 @@
-@if(\Route::currentRouteName() != 'messages.index' && \Route::currentRouteName() != 'login')
+@if(\Route::currentRouteName() != 'messages.index' && \Route::currentRouteName() != 'login' && \Route::currentRouteName() != 'register')
     <x-messages.chat.chat :conversations="$conversations" :user="$user"/>
 @endif
 
