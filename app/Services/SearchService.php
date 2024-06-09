@@ -33,7 +33,7 @@ class SearchService
             });
 
         foreach ($users as &$user) {
-            $user['profile_picture'] = asset($user->profile_picture);
+            $user['profile_picture'] = $user->profile_picture ? asset($user->profile_picture) : '';
         }
 
         $groups = Group::select('id', 'name')

@@ -58,7 +58,7 @@
                                                     <!-- Chat user tab item -->
                                                     <a href="#chat-{{$conversation->id}}" class="nav-link text-start chat-selector chat-{{$conversation->id}}" id="chat-{{$conversation->id}}-tab" data-bs-toggle="pill" role="tab"  onclick="changeConversationId(this)">
                                                         <div class="d-flex">
-                                                            <div class="flex-shrink-0 avatar avatar-story me-2 status-online">
+                                                            <div class="flex-shrink-0 avatar me-2 status-online">
                                                                 <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()?->profile_picture)}}" alt="">
                                                             </div>
                                                             <div class="flex-grow-1 d-block">

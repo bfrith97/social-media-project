@@ -1,6 +1,6 @@
 <div class="d-flex mb-1">
     <div class="flex-shrink-0 avatar avatar-xs me-2">
-        <img class="avatar-img rounded-circle" src="{{asset($message->user->profile_picture)}}" alt="">
+        <img class="avatar-img rounded-circle" src="{{ $message->user->profile_picture ? asset($message->user->profile_picture) : '' }}" alt="">
     </div>
     <div class="flex-grow-1">
         <div class="w-100">

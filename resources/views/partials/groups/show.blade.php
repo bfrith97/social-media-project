@@ -373,7 +373,7 @@
                 <div class="d-flex mb-3">
                     <!-- Avatar -->
                     <div class="avatar avatar-xs me-2">
-                        <img class="avatar-img rounded-circle mt-2" src="{{ asset($user->profile_picture) }}" alt="">
+                        <img class="avatar-img rounded-circle mt-2" src="{{ $user->profile_picture ? asset($user->profile_picture) : ''}}" alt="">
                     </div>
                     <!-- Feed box  -->
                     <form id="feeling-form" class="w-100 input-group" action="{{ route('posts.store') }}" method="post" onsubmit="submitPost(event)">
@@ -434,7 +434,7 @@
                     <div class="d-flex mb-3">
                         <!-- Avatar -->
                         <div class="avatar avatar-xs me-2">
-                            <img class="avatar-img rounded-circle" src="{{asset($user->profile_picture)}}" alt="">
+                            <img class="avatar-img rounded-circle" src="{{ $user->profile_picture ? asset($user->profile_picture) : ''}}" alt="">
                         </div>
                         <!-- Feed box  -->
                         @csrf

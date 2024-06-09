@@ -103,7 +103,7 @@ class MessageController extends Controller
             ->get();
 
         foreach ($users as &$user) {
-            $user['profile_picture'] = asset($user->profile_picture);
+            $user['profile_picture'] = $user->profile_picture ? asset($user->profile_picture) : '';
             $user['subtitle'] = $user['followed_by_current_user'] ? 'Following' : $user['role'];
         }
 

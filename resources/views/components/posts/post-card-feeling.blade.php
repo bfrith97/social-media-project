@@ -5,9 +5,9 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
                 <!-- Avatar -->
-                <div class="avatar avatar-story me-2">
+                <div class="avatar me-2">
                     <a href="#!">
-                        <img class="avatar-img rounded-circle" src="{{ asset($post->user->profile_picture) }}" alt="">
+                        <img class="avatar-img rounded-circle" src="{{ $post->user->profile_picture ? asset($post->user->profile_picture) : '' }}" alt="">
                     </a>
                 </div>
                 <!-- Info -->

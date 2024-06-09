@@ -57,7 +57,7 @@ class CommentController extends Controller
                 'user' => [
                     'id' => $comment->user->id,
                     'name' => $comment->user->name,
-                    'picture' => asset($comment->user->profile_picture),
+                    'picture' => $comment->user->profile_picture ? asset($comment->user->profile_picture) : '',
                 ],
                 'likeCommentRoute' => route('comment_likes.store'),
                 'csrf' => csrf_token(),
@@ -130,7 +130,7 @@ class CommentController extends Controller
             $comment->created_at_formatted = Carbon::parse($comment->created_at)
                 ->timezone('Europe/London')
                 ->diffForHumans();
-            $comment->user->profile_picture = asset($comment->user->profile_picture);
+            $comment->user->profile_picture = $comment->user->profile_picture ? asset($comment->user->profile_picture) : '';
         }
 
         if ($comments) {

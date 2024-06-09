@@ -74,7 +74,7 @@ class PostController extends Controller
                     'name' => $post->user->name,
                     'role' => $post->user->role,
                     'company' => $post->user->company,
-                    'profile_picture' => asset($post->user->profile_picture),
+                    'profile_picture' => $post->user->profile_picture ? asset($post->user->profile_picture) : '',
                     'profile_route' => route('profiles.show', $post->user->id),
                 ],
                 'content' => $post->content,
@@ -180,7 +180,7 @@ class PostController extends Controller
                 ->timezone('Europe/London')
                 ->diffForHumans();
 
-            $post->user->profile_picture = asset($post->user->profile_picture);
+            $post->user->profile_picture = $post->user->profile_picture ? asset($post->user->profile_picture) : '';
             $post->user->profile_route = route('profiles.show', $post->user->id);
             $post->image_path = asset($post->image_path);
 
@@ -188,12 +188,12 @@ class PostController extends Controller
                 $comment->created_at_formatted = Carbon::parse($comment->created_at)
                     ->timezone('Europe/London')
                     ->diffForHumans();;
-                $comment->user->profile_picture = asset($comment->user->profile_picture);
+                $comment->user->profile_picture = $comment->user->profile_picture ? asset($comment->user->profile_picture) : '';
                 $comment->user->profile_route = route('profiles.show', $comment->user->id);
             }
         }
 
-        $user->profile_picture = asset($user->profile_picture);
+        $user->profile_picture = $user->profile_picture ? asset($user->profile_picture) : '';
         $user->profile_route = route('profiles.show', $user->id);
 
         if ($posts) {

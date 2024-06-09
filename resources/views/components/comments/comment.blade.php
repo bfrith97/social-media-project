@@ -3,7 +3,7 @@
     <div class="d-flex position-relative">
         <!-- Avatar -->
         <div class="avatar avatar-xs">
-            <a href="{{ route('profiles.show', $comment->user->id) }}"><img class="avatar-img rounded-circle" src="{{ asset($comment->user->profile_picture) }}" alt=""></a>
+            <a href="{{ route('profiles.show', $comment->user->id) }}"><img class="avatar-img rounded-circle" src="{{ $comment->user->profile_picture ? asset($comment->user->profile_picture) : '' }}" alt=""></a>
         </div>
         <div class="ms-2 mb-2">
             <!-- Comment by -->

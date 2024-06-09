@@ -2,7 +2,7 @@
     <!-- Avatar -->
     <div class="avatar avatar-xs me-2">
         <a href="#!">
-            <img class="avatar-img rounded-circle" src="{{ asset($user->profile_picture) }}" alt="">
+            <img class="avatar-img rounded-circle" src="{{ $user->profile_picture ? asset($user->profile_picture) : ''}}" alt="">
         </a>
     </div>
     <!-- Comment box  -->

@@ -34,7 +34,7 @@ function addChatHtml(data) {
             <!-- Chat user tab item -->
             <a href="#chat-${data.conversation.id}" class="nav-link text-start chat-selector chat-${data.conversation.id}" id="chat-${data.conversation.id}-tab" data-bs-toggle="pill" role="tab" aria-selected="false" tabindex="-1" onclick="changeConversationId(this)">
                 <div class="d-flex">
-                    <div class="flex-shrink-0 avatar avatar-story me-2 status-online">
+                    <div class="flex-shrink-0 avatar me-2 status-online">
                         <img class="avatar-img rounded-circle" src="${data.participant.participant.profile_picture}" alt="">
                     </div>
                     <div class="flex-grow-1 d-block">

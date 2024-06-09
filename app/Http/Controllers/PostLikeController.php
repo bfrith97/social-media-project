@@ -55,7 +55,7 @@ class PostLikeController extends Controller
                     'user' => [
                         'id' => $like->user->id,
                         'name' => $like->user->name,
-                        'picture' => asset($like->user->profile_picture),
+                        'picture' => $like->user->profile_picture ? asset($like->user->profile_picture) : '',
                     ],
                 ],
             ]);
