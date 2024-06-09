@@ -53,6 +53,7 @@
     <div class="card-body pb-0">
         <p>{{$post->content}}
         @if($post->image_path)
+            <br>
             <img src="{{ asset($post->image_path) }}" class="mt-2" alt="">
         @endif
         </p>

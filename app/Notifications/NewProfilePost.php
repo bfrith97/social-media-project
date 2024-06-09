@@ -15,11 +15,13 @@ class NewProfilePost extends Notification implements ShouldQueue
 
     protected User $poster;
     protected Post $post;
+    protected User $self;
 
-    public function __construct(User $poster, Post $post)
+    public function __construct(User $poster, Post $post, User $self)
     {
         $this->poster = $poster;
         $this->post = $post;
+        $this->self = $self;
     }
 
 
@@ -35,7 +37,7 @@ class NewProfilePost extends Notification implements ShouldQueue
     {
         return [
             'message' => "{$this->poster->name} posted on your profile",
-            'href' => route('profiles.show', $this->poster->id),
+            'href' => route('profiles.show', $this->self->id),
             'picture' => $this->poster->profile_picture,
         ];
     }
