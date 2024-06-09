@@ -38,4 +38,4 @@ Experience the full range of social media functionalities by visiting [Connex](h
 
 ## Contact
 
-For further information, feedback, or queries, please feel free to contact me at [myemail@example.com](mailto:myemail@example.com).
+For further information, feedback, or queries, please feel free to contact me at [brandonfrith@hotmail.co.uk](mailto:brandonfrith@hotmail.co.uk).
