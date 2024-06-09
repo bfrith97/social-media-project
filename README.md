@@ -1,6 +1,6 @@
 # Connex Social Media Platform
 
-This is a Laravel 11 application designed as a showcase of my abilities. I hope to emuliate some classic functionalities of platforms like Facebook. This site serves as a comprehensive demonstration of my capabilities in full-stack development.
+This is a Laravel 11 application designed as a showcase of my abilities. I hope to emuliate some classic functionalities of platforms like Facebook. This site serves as a comprehensive demonstration of my capabilities in full-stack development. Visit [Connex](http://connex.brandonfrith.com)
 
 ## Table of Contents
 
