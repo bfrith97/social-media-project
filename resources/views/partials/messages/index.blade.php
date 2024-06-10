@@ -39,7 +39,7 @@
 
                         <!-- Offcanvas body -->
                         <div class="offcanvas-body p-0">
-                            <div class="card card-chat-list rounded-end-lg-0 card-body border-end-lg-0 rounded-top-0">
+                            <div class="card card-chat-list rounded-end-lg-0 card-body border-end-lg-0 rounded-top-0 px-1">
 
                                 <!-- Search chat START -->
                                 <form class="position-relative">
@@ -55,7 +55,7 @@
                                             @foreach($conversations as $key => $conversation)
                                                 <li data-bs-dismiss="offcanvas">
                                                     <!-- Chat user tab item -->
-                                                    <a href="#chat-{{$conversation->id}}" class="nav-link text-start chat-selector chat-{{$conversation->id}} mb-1 px-0 person-id-{{$conversation->conversationParticipants->first()?->id}}" id="chat-{{$conversation->id}}-tab" data-bs-toggle="pill" role="tab"  onclick="changeConversationId(this)">
+                                                    <a href="#chat-{{$conversation->id}}" class="nav-link text-start chat-selector chat-{{$conversation->id}} mb-1 pe-0 person-id-{{$conversation->conversationParticipants->first()?->id}}" id="chat-{{$conversation->id}}-tab" data-bs-toggle="pill" role="tab"  onclick="changeConversationId(this)">
                                                         <div class="d-flex">
                                                             <div class="flex-shrink-0 avatar me-2 status-online">
                                                                 <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()?->profile_picture)}}" alt="">

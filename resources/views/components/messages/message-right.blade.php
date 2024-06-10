@@ -5,7 +5,7 @@
                  data-bs-toggle="tooltip"
                  data-bs-placement="bottom"
                  data-bs-custom-class="custom-tooltip"
-                 data-bs-title="{{\Carbon\Carbon::createFromDate($message->created_at)->format('d/m/y')}}">{{$message->content}}
+                 data-bs-title="{{\Carbon\Carbon::createFromDate($message->created_at)->format('d/m/y H:i:s')}}">{{$message->content}}
             </div>
             <div class="small my-1"></div>
         </div>
