@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
+use App\Events\MyEvent;
 use App\Models\Message;
 use App\Models\User;
 use App\Services\ActivityService;
@@ -27,6 +29,7 @@ class MessageController extends Controller
     public function index()
     {
         [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+        $event = event(new MyEvent('this is a test'));
 
         return view('messages.index')->with([
             'user' => $user,
@@ -52,6 +55,7 @@ class MessageController extends Controller
         $message = $this->messageService->storeMessage($request);
 
         if ($message) {
+
             return response()->json([
                 'message' => 'Message added successfully',
                 'conversationId' => $message->conversation_id,

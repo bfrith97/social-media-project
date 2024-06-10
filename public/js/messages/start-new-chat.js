@@ -1,3 +1,16 @@
+function searchUserSearch(inputElement) {
+    const event = new Event('input', {
+        bubbles: true,
+        cancelable: true,
+    });
+
+    // Wait for a moment before dispatching the event to ensure all handlers are ready
+    setTimeout(function () {
+        inputElement.dispatchEvent(event); // Dispatch the event
+    }, 100); // Adjust the delay as needed based on your application's responsiveness
+}
+
+
 function submitConversation(event) {
     event.preventDefault();
     console.log('hello');
@@ -32,7 +45,7 @@ function addChatHtml(data) {
     let chatBtn = `
         <li data-bs-dismiss="offcanvas">
             <!-- Chat user tab item -->
-            <a href="#chat-${data.conversation.id}" class="nav-link text-start chat-selector chat-${data.conversation.id}" id="chat-${data.conversation.id}-tab" data-bs-toggle="pill" role="tab" aria-selected="false" tabindex="-1" onclick="changeConversationId(this)">
+            <a href="#chat-${data.conversation.id}" class="nav-link text-start chat-selector chat-${data.conversation.id} mb-1 px-0" id="chat-${data.conversation.id}-tab" data-bs-toggle="pill" role="tab" aria-selected="false" tabindex="-1" onclick="changeConversationId(this)">
                 <div class="d-flex">
                     <div class="flex-shrink-0 avatar me-2 status-online">
                         <img class="avatar-img rounded-circle" src="${data.participant.participant.profile_picture}" alt="">
@@ -49,7 +62,7 @@ function addChatHtml(data) {
 
     const range = document.createRange();
     const documentFragment = range.createContextualFragment(chatBtn);
-    conversationList.appendChild(documentFragment);
+    conversationList.prepend(documentFragment);
 
     let chat = `
        <div class="fade tab-pane h-100" id="chat-${data.conversation.id}" role="tabpanel" aria-labelledby="chat-${data.conversation.id}-tab">

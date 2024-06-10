@@ -43,9 +43,8 @@
 
                                 <!-- Search chat START -->
                                 <form class="position-relative">
-                                    <input class="form-control py-2" type="search" placeholder="Search for chats" aria-label="Search">
+                                    <input id="chat-search-input" class="form-control py-2" type="search" placeholder="Search for chats" aria-label="Search">
                                     <button class="btn bg-transparent text-secondary px-2 py-0 position-absolute top-50 end-0 translate-middle-y" type="submit">
-                                        <i class="bi bi-search fs-5"></i>
                                     </button>
                                 </form>
                                 <!-- Search chat END -->
@@ -56,13 +55,13 @@
                                             @foreach($conversations as $key => $conversation)
                                                 <li data-bs-dismiss="offcanvas">
                                                     <!-- Chat user tab item -->
-                                                    <a href="#chat-{{$conversation->id}}" class="nav-link text-start chat-selector chat-{{$conversation->id}}" id="chat-{{$conversation->id}}-tab" data-bs-toggle="pill" role="tab"  onclick="changeConversationId(this)">
+                                                    <a href="#chat-{{$conversation->id}}" class="nav-link text-start chat-selector chat-{{$conversation->id}} mb-1 px-0 person-id-{{$conversation->conversationParticipants->first()?->id}}" id="chat-{{$conversation->id}}-tab" data-bs-toggle="pill" role="tab"  onclick="changeConversationId(this)">
                                                         <div class="d-flex">
                                                             <div class="flex-shrink-0 avatar me-2 status-online">
                                                                 <img class="avatar-img rounded-circle" src="{{asset($conversation->conversationParticipants->first()?->profile_picture)}}" alt="">
                                                             </div>
                                                             <div class="flex-grow-1 d-block">
-                                                                <h6 class="mb-0 mt-1">{{$conversation->conversationParticipants->first()?->name}}</h6>
+                                                                <h6 class="mb-0 mt-1 text-nowrap">{{$conversation->conversationParticipants->first()?->name}}</h6>
                                                                 <div class="small text-secondary">{{$conversation->messages->last()?->content}}
                                                                 </div>
                                                             </div>
@@ -182,3 +181,8 @@
 
 </div>
 <!-- Chat END -->
+
+<script>
+
+
+</script>

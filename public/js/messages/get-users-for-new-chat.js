@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    let main = document.querySelector('main');
     let searchInput = document.querySelector('#search-users-input');
     let searchForm = document.querySelector('#new-chat-form');
     let resultsContainer = document.querySelector('#user-results');
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 300);
 
     // Event listener for keyup
-    searchInput.addEventListener('keyup', (e) => {
+    searchInput.addEventListener('input', (e) => {
         e.preventDefault();
         debouncedSearch();
     });
@@ -33,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 displayResults(data['users'], data['csrfToken'], data);
             })
             .catch(error => {
@@ -78,4 +76,29 @@ document.addEventListener('DOMContentLoaded', function () {
             debounceTimer = setTimeout(() => func.apply(context, args), delay);
         };
     }
+
+    const userFromUrl = getQueryParam('user');
+    if (userFromUrl) {
+        const searchUserInput = document.getElementById('search-users-input');
+        const toastElement = document.getElementById('chatToast');
+        const toast = new bootstrap.Toast(toastElement); // Bootstrap Toast instance to control the toast
+
+        searchUserInput.value = decodeURIComponent(userFromUrl).replace(/#/g, ''); // Set the input value
+        toast.show(); // Show the toast
+        searchUserSearch(searchUserInput); // Simulate input event
+    }
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function searchUserSearch(inputElement) {
+        const event = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+        });
+        inputElement.dispatchEvent(event); // Dispatch the event
+    }
+
 });

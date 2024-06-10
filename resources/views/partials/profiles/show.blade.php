@@ -35,7 +35,7 @@
                                         </a>
 
                                     @else
-                                        <a href="{{route('messages.index')}}" class="btn btn-sm btn-primary-soft me-2">
+                                        <a href="{{route('messages.index')}}?user={{$profile->name}}" class="btn btn-sm btn-primary-soft me-2">
                                             Message
                                         </a>
 

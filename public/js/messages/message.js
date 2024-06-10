@@ -22,12 +22,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 scrollToBottom(instance)
             }, 100);
         })
-
     })
+
+    const searchBox = document.querySelector('#chat-search-input');
+    const chatList = document.querySelectorAll('#conversation-list .nav-link');
+
+    searchBox.addEventListener('input', function () {
+        const searchText = searchBox.value.toLowerCase();
+        chatList.forEach(chat => {
+            const chatName = chat.querySelector('h6').textContent.toLowerCase();
+            if (chatName.includes(searchText)) {
+                chat.parentElement.style.display = "";
+            } else {
+                chat.parentElement.style.display = "none";
+            }
+        });
+    });
 });
 
-function changeConversationId(button)
-{
+function changeConversationId(button) {
     let conversationInput = document.querySelector('#conversation_id');
     conversationInput.value = button.id.split('-')[1];
 

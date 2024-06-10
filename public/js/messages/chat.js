@@ -23,8 +23,24 @@ document.addEventListener('DOMContentLoaded', function () {
             focusTextInput(chatToastContainer);
             scrollToBottom(instance);
         })
-
     })
+
+    const searchContactBox = document.querySelector('#search-contact-box');
+    const contactListItems = document.querySelectorAll('.offcanvas-body .list-unstyled li.chat-selector');
+
+    searchContactBox.addEventListener('input', function () {
+        const searchText = searchContactBox.value.toLowerCase();
+
+        contactListItems.forEach(item => {
+            // Assumes that the contact name is within an <a> tag with class 'h6'
+            const contactName = item.querySelector('a.h6').textContent.toLowerCase();
+            if (contactName.includes(searchText)) {
+                item.style.display = ''; // Show contact if it matches
+            } else {
+                item.style.display = 'none'; // Hide contact if it doesn't match
+            }
+        });
+    });
 });
 
 function scrollToBottom(instance) {

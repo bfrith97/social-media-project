@@ -10,36 +10,6 @@
         <div class="offcanvas-header d-flex justify-content-between">
             <h5 class="offcanvas-title">Messaging</h5>
             <div class="d-flex">
-                <!-- New chat box open button -->
-                <a href="#" class="btn btn-secondary-soft-hover py-1 px-2">
-                    <i class="bi bi-pencil-square"></i>
-                </a>
-                <!-- Chat action START -->
-                <div class="dropdown">
-                    <a href="#" class="btn btn-secondary-soft-hover py-1 px-2" id="chatAction" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-three-dots"></i>
-                    </a>
-                    <!-- Chat action menu -->
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatAction">
-                        <li><a class="dropdown-item" href="#"> <i class="bi bi-check-square fa-fw pe-2"></i>Mark all as
-                                read</a></li>
-                        <li><a class="dropdown-item" href="#"> <i class="bi bi-gear fa-fw pe-2"></i>Chat setting </a>
-                        </li>
-                        <li><a class="dropdown-item" href="#"> <i class="bi bi-bell fa-fw pe-2"></i>Disable
-                                notifications</a></li>
-                        <li><a class="dropdown-item" href="#"> <i class="bi bi-volume-up-fill fa-fw pe-2"></i>Message
-                                sounds</a></li>
-                        <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block
-                                setting</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#"> <i class="bi bi-people fa-fw pe-2"></i>Create a group
-                                chat</a></li>
-                    </ul>
-                </div>
-                <!-- Chat action END -->
-
                 <!-- Close  -->
                 <a href="#" class="btn btn-secondary-soft-hover py-1 px-2" data-bs-dismiss="offcanvas" aria-label="Close">
                     <i class="fa-solid fa-xmark"></i>
@@ -51,7 +21,7 @@
         <div class="offcanvas-body pt-0 custom-scrollbar">
             <!-- Search contact START -->
             <form class="rounded position-relative">
-                <input class="form-control ps-5 bg-light" type="search" placeholder="Search..." aria-label="Search">
+                <input id="search-contact-box" class="form-control ps-5 bg-light" type="search" placeholder="Search..." aria-label="Search">
                 <button class="btn bg-transparent px-3 py-0 position-absolute top-50 start-0 translate-middle-y" type="submit">
                     <i class="bi bi-search fs-5"> </i></button>
             </form>
@@ -70,7 +40,7 @@
                                 <div class="small text-secondary text-truncate">{{$conversation->messages->last()?->content}}</div>
                             </div>
                             <!-- Chat time -->
-                            <div class="small ms-auto text-nowrap">{{Carbon\Carbon::parse($conversation->messages->last()?->created_at)->timezone('Europe/London')->diffForHumans()}}</div>
+                            <div class="small ms-auto text-nowrap">{{ $conversation->messages->last()?->created_at ? Carbon\Carbon::parse($conversation->messages->last()?->created_at)->timezone('Europe/London')->diffForHumans() : ''}}</div>
                     </li>
                 @endforeach
                 <!-- Button -->
@@ -159,4 +129,3 @@
     <!-- Chat END -->
 </div>
 <!-- Main Chat END -->
-
