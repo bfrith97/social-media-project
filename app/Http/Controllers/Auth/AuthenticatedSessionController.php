@@ -8,6 +8,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -30,12 +31,17 @@ class AuthenticatedSessionController extends Controller
         try {
             $request->authenticate();
 
-            $request->session()
-                ->regenerate();
+            $request->session()->regenerate();
 
             return redirect()->intended(route('posts.index', absolute: false));
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->getMessages();
+
+            return redirect()->back()->withInput($request->only('email', 'remember'))
+                ->withErrors($errors);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => 'Your login details were incorrect']);
+            // General error handling for other exceptions
+            return redirect()->back()->with('error', 'Your login details were incorrect. Please try again.');
         }
     }
 

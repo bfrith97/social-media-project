@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
-class UserService
+class UserService extends ParentService
 {
     public function getUserInformation(): array|RedirectResponse
     {
@@ -52,5 +52,11 @@ class UserService
             ->inRandomOrder()
             ->take(5)
             ->get();
+    }
+
+    public function applyAssetAndRouteToProfileItems($user)
+    {
+        $user->profile_picture = $user->profile_picture ? asset($user->profile_picture) : '';
+        $user->profile_route = route('profiles.show', $user->id);
     }
 }

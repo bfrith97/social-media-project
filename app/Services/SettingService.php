@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 
-class SettingService
+class SettingService extends ParentService
 {
     public function getRelationships()
     {

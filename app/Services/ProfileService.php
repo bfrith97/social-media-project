@@ -14,9 +14,10 @@ use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Activitylog\Models\Activity;
 
-class ProfileService
+class ProfileService extends ParentService
 {
     public function getProfile($id)
     {
@@ -82,5 +83,43 @@ class ProfileService
             ->invalidate();
         $request->session()
             ->regenerateToken();
+    }
+
+    public function loadAdditionalPosts($id, $offset)
+    {
+        $limit = 5;
+
+        $validatedData = Validator::make([
+            'offset' => $offset,
+        ], [
+            'offset' => 'required|integer',
+        ])
+            ->getData();
+
+        $profile = User::findOrFail($id);
+        $posts = $profile->ownPosts()->with([
+            'comments' => function ($q) {
+                return $q->limit(5);
+            },
+            'comments.user',
+            'comments.commentLikes',
+            'postLikes'
+        ])
+            ->whereNull('group_id')
+            ->orderByDesc('created_at')
+            ->skip($offset)
+            ->take($limit + 1)
+            ->get();
+
+        $morePostsAvailable = $posts->count() > $limit;
+        if ($morePostsAvailable) {
+            $posts->pop();
+        }
+
+        foreach($posts as &$post) {
+            $post->image_path = asset($post->image_path) . 123;
+        }
+
+        return [$posts, $morePostsAvailable, $validatedData];
     }
 }

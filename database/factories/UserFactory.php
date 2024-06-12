@@ -27,20 +27,28 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        [$name, $picture] = UserFactoryService::handleImageAndName();
+        [
+            $name,
+            $picture,
+        ] = UserFactoryService::handleImageAndName();
 
         return [
-            'name'            => $name,
-            'role'            => fake()->jobTitle(),
-            'company'         => fake()->company(),
-            'info'            => fake()->text(100),
-            'email'           => fake()->unique()->safeEmail(),
-            'picture'         => $picture,
-            'number'          => fake()->numerify('##########'),
-            'date_of_birth'   => fake()->dateTimeThisCentury()->format('Y-m-d'),
-            'relationship_id' => Relationship::inRandomOrder()->first()->id,
-            'password'        => static::$password ??= Hash::make('password'),
-            'remember_token'  => Str::random(10),
+            'name' => $name,
+            'role' => fake()->jobTitle(),
+            'company' => fake()->company(),
+            'info' => fake()->text(100),
+            'email' => fake()
+                ->unique()
+                ->safeEmail(),
+            'profile_picture' => $picture,
+            'number' => fake()->numerify('##########'),
+            'date_of_birth' => fake()
+                ->dateTimeThisCentury()
+                ->format('Y-m-d'),
+            'relationship_id' => Relationship::inRandomOrder()
+                ->first()->id,
+            'password' => static::$password ??= Hash::make('password'),
+            'remember_token' => Str::random(10),
         ];
     }
 }

@@ -10,7 +10,7 @@ use App\Notifications\NewProfilePost;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 
-class GroupUserService
+class GroupUserService extends ParentService
 {
     public function storeGroupUser(Request $request): GroupUser
     {

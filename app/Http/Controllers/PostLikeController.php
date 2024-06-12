@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Notifications\NewLike;
 use App\Services\ActivityService;
 use App\Services\PostLikeService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -41,7 +42,7 @@ class PostLikeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
         $like = $this->postLikeService->storePostLike($request);
 
@@ -93,7 +94,7 @@ class PostLikeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): ?JsonResponse
     {
         $deleted = $this->postLikeService->destroyPostLike($request);
 

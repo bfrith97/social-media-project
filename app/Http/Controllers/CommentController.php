@@ -2,17 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
-use App\Models\NewsArticle;
-use App\Models\Post;
-use App\Notifications\NewComment;
-use App\Notifications\NewLike;
 use App\Services\ActivityService;
 use App\Services\CommentService;
-use Carbon\Carbon;
-use ConsoleTVs\Profanity\Facades\Profanity;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
@@ -44,10 +37,14 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
-        [$comment, $model, $itemType] = $this->commentService->storeComment($request);
+        $response = $this->commentService->storeComment($request);
+        if (!$response['success']) {
+            return $this->commentService->returnErrorResponse($response, __METHOD__);
+        }
 
+        [$comment, $model, $itemType] = $response['data'];
         $this->activityService->storeActivity($model, "$itemType.show", $comment->item_id, 'bi bi-chat-left-dots', 'commented on a post');
 
         return response()->json([
@@ -101,37 +98,9 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function loadAdditional($post, $offset)
+    public function loadAdditional($post, $offset): ?JsonResponse
     {
-        $limit = 5;
-
-        $validatedData = Validator::make([
-            'post' => $post,
-            'offset' => $offset,
-        ], [
-            'post' => 'required|integer',
-            'offset' => 'required|integer',
-        ])
-            ->getData();
-
-        $comments = Comment::with('user', 'commentLikes')
-            ->where('item_id', $validatedData['post'])
-            ->orderByDesc('created_at')
-            ->skip($validatedData['offset'])
-            ->limit($limit + 1)
-            ->get();
-        $moreCommentsAvailable = $comments->count() > $limit;
-
-        if ($moreCommentsAvailable) {
-            $comments->pop();
-        }
-
-        foreach ($comments as &$comment) {
-            $comment->created_at_formatted = Carbon::parse($comment->created_at)
-                ->timezone('Europe/London')
-                ->diffForHumans();
-            $comment->user->profile_picture = $comment->user->profile_picture ? asset($comment->user->profile_picture) : '';
-        }
+        [$comments, $moreCommentsAvailable, $validatedData] = $this->commentService->loadAdditionalComments($post, $offset);
 
         if ($comments) {
             return response()->json([

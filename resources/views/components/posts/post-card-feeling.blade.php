@@ -6,7 +6,7 @@
             <div class="d-flex align-items-center">
                 <!-- Avatar -->
                 <div class="avatar me-2">
-                    <a href="#!">
+                    <a href="{{ route('profiles.show', $post->user->id) }}">
                         <img class="avatar-img rounded-circle" src="{{ $post->user->profile_picture ? asset($post->user->profile_picture) : '' }}" alt="">
                     </a>
                 </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ActivityService;
 use App\Services\FollowService;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class FollowController extends Controller
@@ -47,19 +48,19 @@ class FollowController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
-        [$follow, $followee] = $this->followService->storeFollow($request);
+        $response = $this->followService->storeFollow($request);
+        if (!$response['success']) {
+            return $this->followService->returnErrorResponse($response, __METHOD__);
+        }
 
+        [$follow, $followee] = $response['data'];
         $this->activityService->storeActivity($follow, 'profiles.show', $follow->followee_id, 'bi bi-person-add', 'followed ' . $followee->name);
 
         if ($follow) {
             return response()->json([
                 'message' => 'Follow added successfully',
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Follow not added',
             ]);
         }
     }
@@ -83,18 +84,15 @@ class FollowController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): ?JsonResponse
     {
-        $deleted = $this->followService->destroyFollow($request);
-
-        if ($deleted) {
-            return response()->json([
-                'message' => 'Follow removed successfully',
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Follow not removed',
-            ]);
+        $response = $this->followService->destroyFollow($request);
+        if (!$response['success']) {
+            return $this->followService->returnErrorResponse($response, __METHOD__);
         }
+
+        return response()->json([
+            'message' => 'Follow removed successfully',
+        ]);
     }
 }

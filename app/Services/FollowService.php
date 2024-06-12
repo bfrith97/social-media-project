@@ -13,7 +13,7 @@ use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FollowService
+class FollowService extends ParentService
 {
     private NotificationService $notificationService;
 
@@ -26,12 +26,14 @@ class FollowService
     {
         $user = Auth::user();
 
-        return User::where('id', '!=', $user->id)
-            ->whereDoesntHave('followers', function ($query) use ($user) {
-                $query->where('follower_id', $user->id);
-            })
-            ->inRandomOrder()
-            ->get();
+        if ($user) {
+            return User::where('id', '!=', $user->id)
+                ->whereDoesntHave('followers', function ($query) use ($user) {
+                    $query->where('follower_id', $user->id);
+                })
+                ->inRandomOrder()
+                ->get();
+        }
     }
 
     public function storeFollow(Request $request): array
@@ -41,6 +43,14 @@ class FollowService
             'followee_id' => 'required|integer|exists:users,id',
         ]);
 
+        if ($validatedData['follower_id'] != Auth::id()) {
+            return [
+                'success' => false,
+                'error' => 'User ID mismatch',
+                'code' => 401,
+            ];
+        }
+
         $follow = Follow::create($validatedData);
 
         $follower = User::find($validatedData['follower_id']);
@@ -48,16 +58,28 @@ class FollowService
 
         $this->notificationService->notifyUserOfFollow($followee, $follower);
 
-        return [$follow, $followee];
+        return [
+            'success' => true,
+            'data' => [$follow, $followee],
+        ];
     }
 
-    public function destroyFollow(Request $request): ?bool
+    public function destroyFollow(Request $request): array|bool
     {
         $validatedData = $request->validate([
             'follower_id' => 'required|integer|exists:users,id',
             'followee_id' => 'required|integer|exists:users,id',
         ]);
 
-        return Follow::where($validatedData)->delete();
+        if ($validatedData['follower_id'] != Auth::id()) {
+            return [
+                'success' => false,
+                'error' => 'User ID mismatch',
+                'code' => 401,
+            ];
+        }
+
+        return Follow::where($validatedData)
+            ->delete();
     }
 }

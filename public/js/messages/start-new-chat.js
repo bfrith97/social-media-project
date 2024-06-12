@@ -45,7 +45,7 @@ function addChatHtml(data) {
     let chatBtn = `
         <li data-bs-dismiss="offcanvas">
             <!-- Chat user tab item -->
-            <a href="#chat-${data.conversation.id}" class="nav-link text-start chat-selector chat-${data.conversation.id} mb-1 px-0" id="chat-${data.conversation.id}-tab" data-bs-toggle="pill" role="tab" aria-selected="false" tabindex="-1" onclick="changeConversationId(this)">
+            <a href="#chat-${data.conversation.id}" class="nav-link text-start chat-selector chat-${data.conversation.id} mb-1 pe-0" id="chat-${data.conversation.id}-tab" data-bs-toggle="pill" role="tab" aria-selected="false" tabindex="-1" onclick="changeConversationId(this)">
                 <div class="d-flex">
                     <div class="flex-shrink-0 avatar me-2 status-online">
                         <img class="avatar-img rounded-circle" src="${data.participant.participant.profile_picture}" alt="">

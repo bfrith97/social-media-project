@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Constants\NewsCategory;
 use App\Models\NewsArticle;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
-class NewsService
+class NewsService extends ParentService
 {
     private string $apiKey;
     private string $url;
@@ -18,13 +20,43 @@ class NewsService
         $this->url = config('services.news.api_url');
     }
 
+    public function getNewsArticles(Request $request)
+    {
+        $newsArticles = NewsArticle::with('newsArticleCategory')
+            ->orderByDesc('published_at');
+
+        $tag = $request->tag;
+        if ($tag) {
+            if ($tag === 'all') {
+                Session::remove('tag');
+            } else {
+                Session::put('tag', $tag);
+            }
+        }
+
+        $sessionTag = null;
+        if (Session::get('tag')) {
+            $sessionTag = Session::get('tag');
+            $newsArticles->where('category_id', $sessionTag);
+        }
+
+
+        return [$newsArticles->paginate(5), $sessionTag];
+    }
+
+    public function getNewsArticle(int $id)
+    {
+        return NewsArticle::with('newsArticleCategory')
+            ->find($id);
+    }
+
     public function getNewsHeadlines()
     {
         return Cache::remember('news_headlines', now()->addHours(1), function () {
             $healthHeadlines = $this->headlinesRequest('health', NewsCategory::HEALTH);
             $businessHeadlines = $this->headlinesRequest('business', NewsCategory::BUSINESS);
             $scienceHeadlines = $this->headlinesRequest('science', NewsCategory::SCIENCE);
-            $sportsHeadlines = $this->headlinesRequest('sports', NewsCategory::HEALTH);
+            $sportsHeadlines = $this->headlinesRequest('sports', NewsCategory::SPORTS);
             $technologyHeadlines = $this->headlinesRequest('technology', NewsCategory::TECHNOLOGY);
 
             $mergedHeadlines = array_merge($healthHeadlines, $businessHeadlines, $scienceHeadlines, $sportsHeadlines, $technologyHeadlines);
@@ -35,7 +67,7 @@ class NewsService
         });
     }
 
-    private function headlinesRequest($category, $categoryId): ?array
+    private function headlinesRequest(string $category, string $categoryId): ?array
     {
         $response = Http::get($this->url, [
             'country' => 'gb',
@@ -60,7 +92,7 @@ class NewsService
         }
     }
 
-    private function setCategoryAndRemoveKeys(&$article, $categoryId): void
+    private function setCategoryAndRemoveKeys(&$article, int $categoryId): void
     {
         $article['category_id'] = $categoryId;
         $article['published_at'] = $article['publishedAt'];
@@ -74,7 +106,7 @@ class NewsService
         }
     }
 
-    private function writeHeadlinesToDatabase($mergedHeadlines): ?bool
+    private function writeHeadlinesToDatabase(array $mergedHeadlines): ?bool
     {
         // Retrieve all unique titles from the array of headlines to be inserted
         $titles = array_column($mergedHeadlines, 'title');

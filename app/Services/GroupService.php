@@ -6,7 +6,7 @@ use App\Models\Group;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class GroupService
+class GroupService extends ParentService
 {
     public function getGroups(): array
     {

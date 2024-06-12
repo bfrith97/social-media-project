@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsArticle;
+use App\Services\NewsService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,44 +11,29 @@ use Illuminate\Support\Facades\Session;
 
 class NewsController extends Controller
 {
+    private NewsService $newsService;
     private UserService $userService;
 
-    public function __construct(UserService $userService) {
+    public function __construct(NewsService $newsService, UserService $userService)
+    {
+        $this->newsService = $newsService;
         $this->userService = $userService;
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
-
-        $newsArticles = NewsArticle::with('newsArticleCategory')
-            ->orderByDesc('published_at');
-
-        $tag = request('tag');
-        if ($tag) {
-            if ($tag === 'all') {
-                Session::remove('tag');
-            } else {
-                Session::put('tag', $tag);
-            }
-        }
-
-        if (Session::get('tag')) {
-            $sessionTag = Session::get('tag');
-            $newsArticles->where('category_id', $sessionTag);
-        }
-
-        $newsArticles = $newsArticles->paginate(5);
+        [$newsArticles, $sessionTag] = $this->newsService->getNewsArticles($request);
 
         return view('news.index')->with([
             'newsArticles' => $newsArticles,
-            'tag' => $sessionTag ?? null,
+            'tag' => $sessionTag,
             'notificationsCount' => $notificationsCount,
             'user' => $user,
-            'conversations' => $conversations
+            'conversations' => $conversations,
         ]);
     }
 
@@ -74,14 +60,13 @@ class NewsController extends Controller
     {
         [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
 
-        $newsArticle = NewsArticle::with('newsArticleCategory')
-            ->find($id);
+        $newsArticle = $this->newsService->getNewsArticle($id);
 
         return view('news.show')->with([
             'newsArticle' => $newsArticle,
             'notificationsCount' => $notificationsCount,
             'user' => $user,
-            'conversations' => $conversations
+            'conversations' => $conversations,
         ]);
     }
 

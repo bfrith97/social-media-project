@@ -76,39 +76,7 @@ class ProfileController extends Controller
     public function loadAdditionalPosts($id, $offset)
     {
         [$user] = $this->userService->getUserInformation();
-
-        $limit = 5;
-
-        $validatedData = Validator::make([
-            'offset' => $offset,
-        ], [
-            'offset' => 'required|integer',
-        ])
-            ->getData();
-
-        $profile = User::findOrFail($id);
-        $posts = $profile->ownPosts()->with([
-            'comments' => function ($q) {
-                return $q->limit(5);
-            },
-            'comments.user',
-            'comments.commentLikes',
-            'postLikes'
-        ])
-            ->whereNull('group_id')
-            ->orderByDesc('created_at')
-            ->skip($offset)
-            ->take($limit + 1)
-            ->get();
-
-        $morePostsAvailable = $posts->count() > $limit;
-        if ($morePostsAvailable) {
-            $posts->pop();
-        }
-
-        foreach($posts as &$post) {
-            $post->image_path = asset($post->image_path) . 123;
-        }
+        [$posts, $morePostsAvailable, $validatedData] = $this->profileService->loadAdditionalPosts($id, $offset);
 
         return response()->json([
             'message' => 'Posts retrieved successfully',

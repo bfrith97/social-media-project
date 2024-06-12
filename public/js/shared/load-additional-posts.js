@@ -70,7 +70,7 @@ function addPostHtml(data, button) {
                         <div class="d-flex align-items-center">
                             <!-- Avatar -->
                             <div class="avatar me-2">
-                                <a href="123">
+                                <a href="${post.user.profile_route}">
                                     <img class="avatar-img rounded-circle" src="${post.user.profile_picture}" alt="">
                                 </a>
                             </div>
@@ -163,7 +163,7 @@ function addPostHtml(data, button) {
                     <div class="d-flex mb-3">
                 <!-- Avatar -->
                 <div class="avatar avatar-xs me-2">
-                    <a href="123">
+                    <a href="${post.user.profile_route}">
                         <img class="avatar-img rounded-circle" src="${data['user'].profile_picture}" alt="">
                     </a>
                 </div>

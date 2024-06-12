@@ -8,6 +8,7 @@ use App\Services\NewsService;
 use App\Services\PostService;
 use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -32,8 +33,8 @@ class PostController extends Controller
     public function index()
     {
         [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
-
         [$posts, $moreLoadable] = $this->postService->getFeedPosts($user);
+
         $usersToFollow = $this->userService->getSuggestedUsers($user);
         $news = $this->newsService->getNewsHeadlines();
 
@@ -59,7 +60,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
         $post = $this->postService->storePost($request);
 
@@ -131,70 +132,12 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function loadAdditional($offset)
+    public function loadAdditional($offset): ?JsonResponse
     {
         [$user] = $this->userService->getUserInformation();
+        $this->userService->applyAssetAndRouteToProfileItems($user);
 
-        $limit = 5;
-
-        $validatedData = Validator::make([
-            'offset' => $offset,
-        ], [
-            'offset' => 'required|integer',
-        ])
-            ->getData();
-
-        $posts = Post::with([
-            'user',
-            'comments' => function ($q) {
-                return $q->limit(5);
-            },
-            'comments.user',
-            'comments.commentLikes',
-            'postLikes',
-        ])
-            ->whereHas('user', function ($query) use ($user) {
-                $query->whereHas('followers', function ($subQuery) use ($user) {
-                    $subQuery->where('follower_id', $user->id);
-                });
-                $query->orWhere('user_id', $user->id);
-            })
-            ->whereNull([
-                'group_id',
-                'profile_id',
-            ])
-            ->orderByDesc('created_at')
-            ->skip($validatedData['offset'])
-            ->limit($limit + 1)
-            ->withCount('comments', 'postLikes')
-            ->get();
-
-        $morePostsAvailable = $posts->count() > $limit;
-
-        if ($morePostsAvailable) {
-            $posts->pop();
-        }
-
-        foreach ($posts as &$post) {
-            $post->created_at_formatted = Carbon::parse($post->created_at)
-                ->timezone('Europe/London')
-                ->diffForHumans();
-
-            $post->user->profile_picture = $post->user->profile_picture ? asset($post->user->profile_picture) : '';
-            $post->user->profile_route = route('profiles.show', $post->user->id);
-            $post->image_path = asset($post->image_path);
-
-            foreach ($post->comments as &$comment) {
-                $comment->created_at_formatted = Carbon::parse($comment->created_at)
-                    ->timezone('Europe/London')
-                    ->diffForHumans();;
-                $comment->user->profile_picture = $comment->user->profile_picture ? asset($comment->user->profile_picture) : '';
-                $comment->user->profile_route = route('profiles.show', $comment->user->id);
-            }
-        }
-
-        $user->profile_picture = $user->profile_picture ? asset($user->profile_picture) : '';
-        $user->profile_route = route('profiles.show', $user->id);
+        [$posts, $morePostsAvailable, $validatedData] = $this->postService->loadAdditionalPosts($offset, $user);
 
         if ($posts) {
             return response()->json([

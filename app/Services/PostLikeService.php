@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PostLikeService
+class PostLikeService extends ParentService
 {
     private NotificationService $notificationService;
 

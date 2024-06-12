@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\RetrieveNotifications;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $e, $request) {
-            if($e->getMessage() !== 'Unauthenticated.') {
+            if($e->getMessage() !== 'Unauthenticated.' && config('app.debug')) {
                 dd($e);
             }
         });

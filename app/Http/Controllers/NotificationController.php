@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\NotificationService;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
+    private NotificationService $notificationService;
     private UserService $userService;
 
-    public function __construct(UserService $userService) {
+    public function __construct(NotificationService $notificationService, UserService $userService) {
+        $this->notificationService = $notificationService;
         $this->userService = $userService;
     }
 
@@ -76,10 +80,9 @@ class NotificationController extends Controller
         //
     }
 
-    public function markAllRead()
+    public function markAllRead(): ?JsonResponse
     {
-        $user = Auth::user();
-        $user->unreadNotifications->markasRead();
+        $this->notificationService->markAllNotificationsAsRead();
 
         return response()->json([
             'message' => 'Notifications have been marked as read'

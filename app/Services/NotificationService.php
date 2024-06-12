@@ -10,8 +10,9 @@ use App\Notifications\NewLike;
 use App\Notifications\NewProfilePost;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class NotificationService
+class NotificationService extends ParentService
 {
     public function notifyUserOfProfilePost($post, $profileId): void
     {
@@ -49,6 +50,12 @@ class NotificationService
         if ($like->user_id !== $post->user_id) {
             $post->user->notify(new NewLike($like->user, $post, 'post'));
         }
+    }
+
+    public function markAllNotificationsAsRead(): void
+    {
+        $user = Auth::user();
+        $user->unreadNotifications->markasRead();
     }
 
 }

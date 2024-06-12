@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 use Laravolt\Avatar\Avatar;
 
-class UserFactoryService
+class UserFactoryService extends ParentService
 {
     public static function handleImageAndName()
     {

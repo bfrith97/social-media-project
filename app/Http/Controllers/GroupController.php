@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\GroupService;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -45,7 +46,7 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
         $group = $this->groupService->storeGroup($request);
 

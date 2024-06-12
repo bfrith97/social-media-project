@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
-use App\Models\CommentLike;
-use App\Models\Post;
-use App\Notifications\NewLike;
 use App\Services\ActivityService;
 use App\Services\CommentLikeService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CommentLikeController extends Controller
 {
@@ -40,29 +38,26 @@ class CommentLikeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
-        [$like, $type, $comment] = $this->commentLikeService->storeCommentLike($request);
+        $response = $this->commentLikeService->storeCommentLike($request);
+        if (!$response['success']) {
+            return $this->commentLikeService->returnErrorResponse($response, __METHOD__);
+        }
 
+        [$like, $type, $comment] = $response['data'];
         $this->activityService->storeActivity($like, "$type.show", $comment->item_id, 'bi bi-hand-thumbs-up', 'liked a comment');
 
-        if ($like) {
-            return response()->json([
-                'message' => 'Like added successfully',
-                'like' => [
-                    'id' => $like->id,
-                    'user' => [
-                        'id' => $like->user->id,
-                        'name' => $like->user->name,
-                        'picture' => $like->user->profile_picture ? asset($like->user->profile_picture) : '',
-                    ],
+        return response()->json([
+            'message' => 'Like added successfully',
+            'like' => [
+                'user' => [
+                    'id' => $like->user->id,
+                    'name' => $like->user->name,
+                    'picture' => $like->user->profile_picture ? asset($like->user->profile_picture) : '',
                 ],
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Like not added',
-            ]);
-        }
+            ],
+        ]);
     }
 
     /**
@@ -94,16 +89,13 @@ class CommentLikeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $deleted = $this->commentLikeService->destroyCommentLike($request);
-
-        if ($deleted) {
-            return response()->json([
-                'message' => 'Like removed successfully',
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Like not removed',
-            ]);
+        $response = $this->commentLikeService->destroyCommentLike($request);
+        if (!$response['success']) {
+            return $this->commentLikeService->returnErrorResponse($response, __METHOD__);
         }
+
+        return response()->json([
+            'message' => 'Like removed successfully',
+        ]);
     }
 }

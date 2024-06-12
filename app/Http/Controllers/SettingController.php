@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\SettingService;
 use App\Services\UserService;
 use ConsoleTVs\Profanity\Facades\Profanity;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -70,7 +71,7 @@ class SettingController extends Controller
         ]);
     }
 
-    public function accountUpdate(Request $request)
+    public function accountUpdate(Request $request): ?RedirectResponse
     {
         try {
             $this->settingService->handleAccountUpdate($request);

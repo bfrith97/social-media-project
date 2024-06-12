@@ -11,8 +11,9 @@ use App\Notifications\NewLike;
 use App\Notifications\NewProfilePost;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class MessageService
+class MessageService extends ParentService
 {
     public function storeMessage(Request $request)
     {
@@ -27,9 +28,15 @@ class MessageService
 
     public function getUsersForNewChat(Request $request)
     {
-        return response()->json(User::select('id', 'name')
+        $users = User::whereNot('id', Auth::id())
             ->where('name', 'like', '%' . $request->search . '%')
-            ->get()
-            ->take(7));
+            ->get();
+
+        foreach ($users as &$user) {
+            $user['profile_picture'] = $user->profile_picture ? asset($user->profile_picture) : '';
+            $user['subtitle'] = $user['followed_by_current_user'] ? 'Following' : $user['role'];
+        }
+
+        return $users;
     }
 }

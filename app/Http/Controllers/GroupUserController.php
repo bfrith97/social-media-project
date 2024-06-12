@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GroupUser;
 use App\Services\ActivityService;
 use App\Services\GroupUserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class GroupUserController extends Controller
@@ -37,7 +38,7 @@ class GroupUserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
         $groupUser = $this->groupUserService->storeGroupUser($request);
 
@@ -81,7 +82,7 @@ class GroupUserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): ?JsonResponse
     {
         $deleted = $this->groupUserService->destroyGroupUser($request);
 

@@ -13,7 +13,7 @@ use App\Notifications\NewProfilePost;
 use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 
-class EventService
+class EventService extends ParentService
 {
     public function getEventDates(): array
     {

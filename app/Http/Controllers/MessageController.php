@@ -10,6 +10,7 @@ use App\Services\ActivityService;
 use App\Services\MessageService;
 use App\Services\NewsService;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,7 +50,7 @@ class MessageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
         $message = $this->messageService->storeMessage($request);
 
@@ -98,16 +99,9 @@ class MessageController extends Controller
         //
     }
 
-    public function getUsersForNewChat(Request $request)
+    public function getUsersForNewChat(Request $request): JsonResponse
     {
-        $users = User::whereNot('id', Auth::id())
-            ->where('name', 'like', '%' . $request->search . '%')
-            ->get();
-
-        foreach ($users as &$user) {
-            $user['profile_picture'] = $user->profile_picture ? asset($user->profile_picture) : '';
-            $user['subtitle'] = $user['followed_by_current_user'] ? 'Following' : $user['role'];
-        }
+        $users = $this->messageService->getUsersForNewChat($request);
 
         return response()->json([
             'users' => $users,
