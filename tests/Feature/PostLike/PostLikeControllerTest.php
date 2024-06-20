@@ -1,30 +1,27 @@
 <?php
 
-namespace CommentLike;
+namespace PostLike;
 
-use App\Models\CommentLike;
-use App\Models\User;
+use App\Models\PostLike;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Tests\Traits\ModelFactoryTrait;
 
-class CommentLikeControllerTest extends TestCase
+class PostLikeControllerTest extends TestCase
 {
     use WithFaker, DatabaseTransactions, ModelFactoryTrait;
 
     protected $user;
     protected $post;
-    protected $comment;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        // Create a user and a post with a comment
+        // Create a user and a post
         $this->user = $this->createUser();
         $this->post = $this->createPost($this->user);
-        $this->comment = $this->createComment($this->user, $this->post);
 
         config(['app.debug' => false]);
     }
@@ -34,10 +31,10 @@ class CommentLikeControllerTest extends TestCase
     {
         // Do not use $this->>actingAs($this->user);
 
-        // Make POST request to create comment like
-        $response = $this->json('POST', '/comment-likes', [
+        // Make POST request to create post like
+        $response = $this->json('POST', '/post-likes', [
             'user_id' => $this->user->id,
-            'comment_id' => $this->comment->id,
+            'post_id' => $this->post->id,
         ]);
 
         // Assert correct error response
@@ -47,9 +44,9 @@ class CommentLikeControllerTest extends TestCase
             ]);
 
         // Ensure no like is created
-        $this->assertDatabaseMissing('comment_likes', [
+        $this->assertDatabaseMissing('post_likes', [
             'user_id' => $this->user->id,
-            'comment_id' => $this->comment->id,
+            'post_id' => $this->post->id,
         ]);
     }
 
@@ -57,10 +54,10 @@ class CommentLikeControllerTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        // Make POST request to create comment like
-        $response = $this->json('POST', '/comment-likes', [
+        // Make POST request to create post like
+        $response = $this->json('POST', '/post-likes', [
             'user_id' => 1,
-            'comment_id' => $this->comment->id,
+            'post_id' => $this->post->id,
         ]);
 
         // Assert correct error response
@@ -70,20 +67,20 @@ class CommentLikeControllerTest extends TestCase
             ]);
 
         // Ensure no like is created
-        $this->assertDatabaseMissing('comment_likes', [
+        $this->assertDatabaseMissing('post_likes', [
             'user_id' => $this->user->id,
-            'comment_id' => $this->comment->id,
+            'post_id' => $this->post->id,
         ]);
     }
 
-    public function test_user_can_like_a_comment(): void
+    public function test_user_can_like_a_post(): void
     {
         $this->actingAs($this->user);
 
-        // Make POST request to create comment like
-        $response = $this->json('POST', '/comment-likes', [
+        // Make POST request to create post like
+        $response = $this->json('POST', '/post-likes', [
             'user_id' => $this->user->id,
-            'comment_id' => $this->comment->id,
+            'post_id' => $this->post->id,
         ]);
 
         // Assert success status and JSON
@@ -99,31 +96,31 @@ class CommentLikeControllerTest extends TestCase
                 ],
             ]);
 
-        // Assert that the comment has been liked
+        // Assert that the post has been liked
         $likeData = $response->getData()->like;
         $this->assertEquals($this->user->id, $likeData->user->id);
-        $this->assertDatabaseHas('comment_likes', [
+        $this->assertDatabaseHas('post_likes', [
             'user_id' => $this->user->id,
-            'comment_id' => $this->comment->id,
+            'post_id' => $this->post->id,
         ]);
 
         // Assert the activity is logged
         $this->assertDatabaseHas('activity_log', [
             'log_name' => 'default',
-            'subject_type' => CommentLike::class,
-            'description' => 'liked a comment',
+            'subject_type' => PostLike::class,
+            'description' => 'liked a post',
             'causer_id' => $this->user->id,
         ]);
     }
 
-    public function test_user_like_comment_failure_due_to_missing_ids(): void
+    public function test_user_like_post_failure_due_to_missing_ids(): void
     {
         $this->actingAs($this->user);
 
-        // Make POST request to create comment like with null IDs
-        $response = $this->json('POST', '/comment-likes', [
+        // Make POST request to create post like with null IDs
+        $response = $this->json('POST', '/post-likes', [
             'user_id' => null,
-            'comment_id' => null,
+            'post_id' => null,
         ]);
 
         // Assert that the response status is 422 Unprocessable Entity
@@ -132,18 +129,18 @@ class CommentLikeControllerTest extends TestCase
         // Assert specific validation errors are returned
         $response->assertJsonValidationErrors([
             'user_id' => 'The user id field is required.',
-            'comment_id' => 'The comment id field is required.',
+            'post_id' => 'The post id field is required.',
         ]);
     }
 
-    public function test_user_like_comment_failure_due_to_string_ids(): void
+    public function test_user_like_post_failure_due_to_string_ids(): void
     {
         $this->actingAs($this->user);
 
-        // Make POST request to create comment like with string values
-        $response = $this->json('POST', '/comment-likes', [
+        // Make POST request to create post like with string values
+        $response = $this->json('POST', '/post-likes', [
             'user_id' => 'string',
-            'comment_id' => 'string',
+            'post_id' => 'string',
         ]);
 
         // Assert that the response status is 422 Unprocessable Entity
@@ -152,7 +149,7 @@ class CommentLikeControllerTest extends TestCase
         // Assert specific validation errors are returned
         $response->assertJsonValidationErrors([
             'user_id' => 'The user id field must be an integer.',
-            'comment_id' => 'The comment id field must be an integer.',
+            'post_id' => 'The post id field must be an integer.',
         ]);
     }
 }

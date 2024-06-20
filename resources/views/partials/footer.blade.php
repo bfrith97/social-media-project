@@ -5,23 +5,25 @@
 <footer class="bg-mode py-3 mt-auto">
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <!-- Footer nav START -->
-                <ul class="nav justify-content-center justify-content-md-start lh-1">
-                    <li class="nav-item">
-{{--                        TODO--}}
-                        <a class="nav-link" href="my-profile-about.html">About (TODO)</a>
-                    </li>
-                    <li class="nav-item">
-{{--                        TODO--}}
-                        <a class="nav-link" target="_blank" href="docs/index.html">Docs (TODO)</a>
-                    </li>
-                </ul>
+                <p class="text-end mb-0">
+                    <a target="_blank" href=""> About </a>
+                    (TODO)
+                    <a target="_blank" href="" class="ms-3"> Docs </a>
+                    (TODO)
+                </p>
                 <!-- Footer nav START -->
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <!-- Copyright START -->
-                <p class="text-center text-md-end mb-0">2024 - Made by Brandon Frith
+                <p class="text-center mb-0">POWERED BY LARAVEL 11
+                </p>
+                <!-- Copyright END -->
+            </div>
+            <div class="col-md-4">
+                <!-- Copyright START -->
+                <p class="text-end mb-0">2024 - Made by Brandon Frith
                     <a target="_blank" href="https://www.linkedin.com/in/brandon-f-5ba635130/"> (LinkedIn) </a>
                     <a target="_blank" href="https://github.com/bfrith97"> (GitHub) </a>
                 </p>
