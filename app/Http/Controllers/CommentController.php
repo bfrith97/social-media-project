@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Services\ActivityService;
 use App\Services\CommentService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class CommentController extends Controller
+class CommentController extends BaseController
 {
     private CommentService $commentService;
     private ActivityService $activityService;
@@ -37,30 +39,32 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ?JsonResponse
+    public function store(CommentRequest $request): ?JsonResponse
     {
-        $response = $this->commentService->storeComment($request);
-        if (!$response['success']) {
-            return $this->commentService->returnErrorResponse($response, __METHOD__);
-        }
+        try {
+            $response = $this->commentService->storeComment($request);
 
-        [$comment, $model, $itemType] = $response['data'];
-        $this->activityService->storeActivity($model, "$itemType.show", $comment->item_id, 'bi bi-chat-left-dots', 'commented on a post');
+            [$comment, $model, $itemType] = $response['data'];
+            $this->activityService->storeActivity($model, "$itemType.show", $comment->item_id, 'bi bi-chat-left-dots', 'commented on a post');
 
-        return response()->json([
-            'message' => 'Comment added successfully',
-            'comment' => [
-                'id' => $comment->id,
-                'user' => [
-                    'id' => $comment->user->id,
-                    'name' => $comment->user->name,
-                    'picture' => $comment->user->profile_picture ? asset($comment->user->profile_picture) : '',
+            return response()->json([
+                'message' => 'Comment added successfully',
+                'comment' => [
+                    'id' => $comment->id,
+                    'user' => [
+                        'id' => $comment->user->id,
+                        'name' => $comment->user->name,
+                        'picture' => $comment->user->profile_picture ? asset($comment->user->profile_picture) : '',
+                    ],
+                    'likeCommentRoute' => route('comment_likes.store'),
+                    'csrf' => csrf_token(),
+                    'content' => $comment->content,
                 ],
-                'likeCommentRoute' => route('comment_likes.store'),
-                'csrf' => csrf_token(),
-                'content' => $comment->content,
-            ],
-        ]);
+            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
+        }
     }
 
     /**
@@ -100,21 +104,20 @@ class CommentController extends Controller
      */
     public function loadAdditional($post, $offset): ?JsonResponse
     {
-        [$comments, $moreCommentsAvailable, $validatedData] = $this->commentService->loadAdditionalComments($post, $offset);
+        try {
+            [$comments, $moreCommentsAvailable, $validatedData] = $this->commentService->loadAdditionalComments($post, $offset);
 
-        if ($comments) {
             return response()->json([
                 'message' => 'Comments retrieved successfully',
                 'comments' => $comments,
                 'moreCommentsAvailable' => $moreCommentsAvailable,
                 'newOffset' => $validatedData['offset'] + 5,
                 'likeCommentRoute' => route('comment_likes.store'),
-                'csrf' => csrf_token()
+                'csrf' => csrf_token(),
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Comments not found',
-            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e);
         }
     }
 }

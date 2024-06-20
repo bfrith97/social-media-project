@@ -2,18 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Follow;
+use App\Http\Requests\PostLikeRequest;
 use App\Models\Post;
 use App\Models\PostLike;
-use App\Models\User;
-use App\Notifications\NewComment;
-use App\Notifications\NewFollower;
-use App\Notifications\NewLike;
-use App\Notifications\NewProfilePost;
-use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostLikeService extends ParentService
 {
@@ -24,29 +17,27 @@ class PostLikeService extends ParentService
         $this->notificationService = $notificationService;
     }
 
-    public function storePostLike(Request $request): Model|PostLike
+    public function storePostLike(PostLikeRequest $request): Model|PostLike
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'post_id' => 'required|integer|exists:posts,id',
-        ]);
+        return DB::transaction(function () use ($request) {
+            $validatedData = $request->validated();
+            $this->validateUser($request);
 
-        $post = Post::with('user')
-            ->find($validatedData['post_id']);
-        $like = $post->postLikes()
-            ->createOrFirst($validatedData);
+            $post = Post::with('user')
+                ->findOrFail($validatedData['post_id']);
+            $like = $post->postLikes()
+                ->createOrFirst($validatedData);
 
-        $this->notificationService->notifyUserPostLike($post, $like);
+            $this->notificationService->notifyUserPostLike($post, $like);
 
-        return $like;
+            return $like;
+        });
     }
 
-    public function destroyPostLike(Request $request): ?bool
+    public function destroyPostLike(PostLikeRequest $request): ?bool
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'post_id' => 'required|integer|exists:posts,id',
-        ]);
+        $this->validateUser($request);
+        $validatedData = $request->validated();
 
         return PostLike::where($validatedData)
             ->delete();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class AuthenticatedSessionController extends Controller
 
             return redirect()->back()->withInput($request->only('email', 'remember'))
                 ->withErrors($errors);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // General error handling for other exceptions
             return redirect()->back()->with('error', 'Your login details were incorrect. Please try again.');
         }

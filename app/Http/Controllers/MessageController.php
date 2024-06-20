@@ -2,24 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageSent;
-use App\Events\MyEvent;
-use App\Models\Message;
-use App\Models\User;
-use App\Services\ActivityService;
+use App\Http\Requests\MessageRequest;
 use App\Services\MessageService;
-use App\Services\NewsService;
 use App\Services\UserService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class MessageController extends Controller
+class MessageController extends BaseController
 {
     private MessageService $messageService;
     private UserService $userService;
 
-    public function __construct(MessageService $messageService, UserService $userService) {
+    public function __construct(MessageService $messageService, UserService $userService)
+    {
         $this->messageService = $messageService;
         $this->userService = $userService;
     }
@@ -50,20 +46,19 @@ class MessageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ?JsonResponse
+    public function store(MessageRequest $request): ?JsonResponse
     {
-        $message = $this->messageService->storeMessage($request);
+        try {
+            $message = $this->messageService->storeMessage($request);
 
-        if ($message) {
             return response()->json([
                 'message' => 'Message added successfully',
                 'conversationId' => $message->conversation_id,
                 'content' => $message,
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Message not added',
-            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
         }
     }
 

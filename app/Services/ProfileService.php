@@ -2,16 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Follow;
-use App\Models\Post;
-use App\Models\PostLike;
 use App\Models\User;
-use App\Notifications\NewComment;
-use App\Notifications\NewFollower;
-use App\Notifications\NewLike;
-use App\Notifications\NewProfilePost;
-use ConsoleTVs\Profanity\Facades\Profanity;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +25,7 @@ class ProfileService extends ParentService
                     })
                     ->orderBy('created_at', 'desc');
             },
-            'otherPosts'
+            'otherPosts',
         ])
             ->where('users.id', $id)
             ->firstOrFail();
@@ -47,7 +38,10 @@ class ProfileService extends ParentService
 
     public function getProfileActivity($id)
     {
-        return Activity::with('causer')->where('causer_id', $id)->orderByDesc('created_at')->get();
+        return Activity::with('causer')
+            ->where('causer_id', $id)
+            ->orderByDesc('created_at')
+            ->get();
     }
 
     public function updateProfile(Request $request)
@@ -97,14 +91,15 @@ class ProfileService extends ParentService
             ->getData();
 
         $profile = User::findOrFail($id);
-        $posts = $profile->ownPosts()->with([
-            'comments' => function ($q) {
-                return $q->limit(5);
-            },
-            'comments.user',
-            'comments.commentLikes',
-            'postLikes'
-        ])
+        $posts = $profile->ownPosts()
+            ->with([
+                'comments' => function ($q) {
+                    return $q->limit(5);
+                },
+                'comments.user',
+                'comments.commentLikes',
+                'postLikes',
+            ])
             ->whereNull('group_id')
             ->orderByDesc('created_at')
             ->skip($offset)
@@ -116,7 +111,7 @@ class ProfileService extends ParentService
             $posts->pop();
         }
 
-        foreach($posts as &$post) {
+        foreach ($posts as &$post) {
             $post->image_path = asset($post->image_path) . 123;
         }
 

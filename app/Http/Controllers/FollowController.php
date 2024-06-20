@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FollowRequest;
 use App\Services\ActivityService;
 use App\Services\FollowService;
 use App\Services\UserService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class FollowController extends Controller
+class FollowController extends BaseController
 {
     private FollowService $followService;
     private ActivityService $activityService;
@@ -48,20 +50,20 @@ class FollowController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ?JsonResponse
+    public function store(FollowRequest $request): ?JsonResponse
     {
-        $response = $this->followService->storeFollow($request);
-        if (!$response['success']) {
-            return $this->followService->returnErrorResponse($response, __METHOD__);
-        }
+        try {
+            $response = $this->followService->storeFollow($request);
 
-        [$follow, $followee] = $response['data'];
-        $this->activityService->storeActivity($follow, 'profiles.show', $follow->followee_id, 'bi bi-person-add', 'followed ' . $followee->name);
+            [$follow, $followee] = $response['data'];
+            $this->activityService->storeActivity($follow, 'profiles.show', $follow->followee_id, 'bi bi-person-add', 'followed ' . $followee->name);
 
-        if ($follow) {
             return response()->json([
                 'message' => 'Follow added successfully',
             ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
         }
     }
 
@@ -84,15 +86,17 @@ class FollowController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): ?JsonResponse
+    public function destroy(FollowRequest $request): ?JsonResponse
     {
-        $response = $this->followService->destroyFollow($request);
-        if (!$response['success']) {
-            return $this->followService->returnErrorResponse($response, __METHOD__);
-        }
+        try {
+            $this->followService->destroyFollow($request);
 
-        return response()->json([
-            'message' => 'Follow removed successfully',
-        ]);
+            return response()->json([
+                'message' => 'Follow removed successfully',
+            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
+        }
     }
 }

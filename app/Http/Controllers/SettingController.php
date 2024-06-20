@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AccountRequest;
 use App\Models\Relationship;
 use App\Models\User;
 use App\Services\SettingService;
 use App\Services\UserService;
 use ConsoleTVs\Profanity\Facades\Profanity;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SettingController extends Controller
+class SettingController extends BaseController
 {
     private SettingService $settingService;
     private UserService $userService;
@@ -71,7 +73,7 @@ class SettingController extends Controller
         ]);
     }
 
-    public function accountUpdate(Request $request): ?RedirectResponse
+    public function accountUpdate(AccountRequest $request): ?RedirectResponse
     {
         try {
             $this->settingService->handleAccountUpdate($request);
@@ -81,7 +83,8 @@ class SettingController extends Controller
                 ->with([
                     'accountSuccessMessage' => 'Your account has been updated.',
                 ]);
-        } catch (\Exception $e) {
+
+        } catch (Exception $e) {
             return redirect()
                 ->route('settings.edit')
                 ->with([

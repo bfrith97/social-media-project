@@ -2,20 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Follow;
 use App\Models\Group;
-use App\Models\Post;
-use App\Models\PostLike;
 use App\Models\User;
-use App\Notifications\NewComment;
-use App\Notifications\NewFollower;
-use App\Notifications\NewLike;
-use App\Notifications\NewProfilePost;
-use ConsoleTVs\Profanity\Facades\Profanity;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Activitylog\Models\Activity;
 
 class SearchService extends ParentService
 {

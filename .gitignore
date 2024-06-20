@@ -7,6 +7,7 @@
 /public/assets/images/covers
 /public/assets/images/posts
 /storage/*.key
+/storage/logs
 /vendor
 .env
 .env.backup

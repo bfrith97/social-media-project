@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class NotificationController extends Controller
+class NotificationController extends BaseController
 {
     private NotificationService $notificationService;
     private UserService $userService;

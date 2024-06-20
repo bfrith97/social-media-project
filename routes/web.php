@@ -3,20 +3,19 @@
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommentLikeController;
 use App\Http\Controllers\ConversationController;
-use App\Http\Controllers\GroupUserController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PostLikeController;
-use App\Http\Controllers\NewsController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupUserController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\FollowController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\RetrieveNotifications;
 
 Route::get('/', function () {
     return redirect()->route('posts.index');
@@ -27,6 +26,7 @@ Route::get('/', function () {
 //})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
+
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/comments/load-additional/{post}/{offset}', [CommentController::class, 'loadAdditional'])->name('comments.load-additional');
 
@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/events', EventController::class);
 
     Route::get('/feed', [PostController::class, 'index'])->name('posts.index');
+
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
     Route::get('/posts/load-additional/{offset}', [PostController::class, 'loadAdditional'])->name('posts.load-additional');

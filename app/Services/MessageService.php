@@ -2,28 +2,24 @@
 
 namespace App\Services;
 
-use App\Models\Comment;
-use App\Models\CommentLike;
+use App\Http\Requests\MessageRequest;
 use App\Models\Message;
-use App\Models\Post;
 use App\Models\User;
-use App\Notifications\NewLike;
-use App\Notifications\NewProfilePost;
-use ConsoleTVs\Profanity\Facades\Profanity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MessageService extends ParentService
 {
-    public function storeMessage(Request $request)
+    public function storeMessage(MessageRequest $request)
     {
-        $validatedData = $request->validate([
-            'conversation_id' => 'required|integer|exists:conversations,id',
-            'user_id' => 'required|integer|exists:users,id',
-            'content' => 'required|string',
-        ]);
+        return DB::transaction(function () use ($request) {
+            $validatedData = $request->validated();
+            $this->validateUser($request);
 
-        return Message::create($validatedData);
+            return Message::create($validatedData);
+        });
+
     }
 
     public function getUsersForNewChat(Request $request)

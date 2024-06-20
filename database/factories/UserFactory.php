@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Relationship;
+use App\Models\User;
 use App\Services\UserFactoryService;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 use Laravolt\Avatar\Avatar;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {

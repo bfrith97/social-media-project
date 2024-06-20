@@ -63,7 +63,9 @@ class NewsService extends ParentService
 
             $this->writeHeadlinesToDatabase($mergedHeadlines);
 
-            return NewsArticle::orderByDesc('published_at')->get()->take(5);
+            return NewsArticle::orderByDesc('published_at')
+                ->get()
+                ->take(5);
         });
     }
 

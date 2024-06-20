@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentLikeRequest;
 use App\Services\ActivityService;
 use App\Services\CommentLikeService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
-class CommentLikeController extends Controller
+class CommentLikeController extends BaseController
 {
     private CommentLikeService $commentLikeService;
     private ActivityService $activityService;
@@ -38,26 +39,28 @@ class CommentLikeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ?JsonResponse
+    public function store(CommentLikeRequest $request): ?JsonResponse
     {
-        $response = $this->commentLikeService->storeCommentLike($request);
-        if (!$response['success']) {
-            return $this->commentLikeService->returnErrorResponse($response, __METHOD__);
-        }
+        try {
+            $response = $this->commentLikeService->storeCommentLike($request);
 
-        [$like, $type, $comment] = $response['data'];
-        $this->activityService->storeActivity($like, "$type.show", $comment->item_id, 'bi bi-hand-thumbs-up', 'liked a comment');
+            [$like, $type, $comment] = $response;
+            $this->activityService->storeActivity($like, "$type.show", $comment->item_id, 'bi bi-hand-thumbs-up', 'liked a comment');
 
-        return response()->json([
-            'message' => 'Like added successfully',
-            'like' => [
-                'user' => [
-                    'id' => $like->user->id,
-                    'name' => $like->user->name,
-                    'picture' => $like->user->profile_picture ? asset($like->user->profile_picture) : '',
+            return response()->json([
+                'message' => 'Like added successfully',
+                'like' => [
+                    'user' => [
+                        'id' => $like->user->id,
+                        'name' => $like->user->name,
+                        'picture' => $like->user->profile_picture ? asset($like->user->profile_picture) : '',
+                    ],
                 ],
-            ],
-        ]);
+            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
+        }
     }
 
     /**
@@ -87,15 +90,17 @@ class CommentLikeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(CommentLikeRequest $request)
     {
-        $response = $this->commentLikeService->destroyCommentLike($request);
-        if (!$response['success']) {
-            return $this->commentLikeService->returnErrorResponse($response, __METHOD__);
-        }
+        try {
+            $this->commentLikeService->destroyCommentLike($request);
 
-        return response()->json([
-            'message' => 'Like removed successfully',
-        ]);
+            return response()->json([
+                'message' => 'Like removed successfully',
+            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
+        }
     }
 }

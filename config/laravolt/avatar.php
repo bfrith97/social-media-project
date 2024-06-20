@@ -3,6 +3,9 @@
 /*
  * Set specific configuration variables here
  */
+
+use Laravolt\Avatar\Generator\DefaultGenerator;
+
 return [
 
     /*
@@ -20,7 +23,7 @@ return [
     'driver' => env('IMAGE_DRIVER', 'gd'),
 
     // Initial generator class
-    'generator' => \Laravolt\Avatar\Generator\DefaultGenerator::class,
+    'generator' => DefaultGenerator::class,
 
     // Whether all characters supplied must be replaced with their closest ASCII counterparts
     'ascii' => false,

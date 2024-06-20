@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class NewsController extends Controller
+class NewsController extends BaseController
 {
     private NewsService $newsService;
     private UserService $userService;

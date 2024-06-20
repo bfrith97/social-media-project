@@ -2,12 +2,11 @@
 
 namespace App\Services;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
-use App\Models\User;
-use App\Notifications\NewProfilePost;
 use Carbon\Carbon;
 use ConsoleTVs\Profanity\Facades\Profanity;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PostService extends ParentService
@@ -19,7 +18,7 @@ class PostService extends ParentService
         $this->notificationService = $notificationService;
     }
 
-    public function getFeedPosts($user)
+    public function getFeedPosts($user): array
     {
         $posts = Post::with([
             'user',
@@ -52,38 +51,34 @@ class PostService extends ParentService
         return [$posts, $moreLoadable];
     }
 
-    public function storePost(Request $request)
+    public function storePost(PostRequest $request)
     {
-        $validatedData = $request->validate([
-            'content' => 'required|string',
-            'user_id' => 'required|integer|exists:users,id',
-            'group_id' => 'nullable|integer|exists:groups,id',
-            'profile_id' => 'nullable|integer|exists:users,id',
-            'is_feeling' => 'nullable|boolean',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        return DB::transaction(function () use ($request) {
+            $validatedData = $request->validated();
+            $this->validateUser($request);
 
-        $validatedData['content'] = Profanity::blocker($validatedData['content'])
-            ->strict(false)
-            ->strictClean(true)
-            ->filter();
+            $validatedData['content'] = Profanity::blocker($validatedData['content'])
+                ->strict(false)
+                ->strictClean(true)
+                ->filter();
 
-        if ($request->hasFile('image_path')) {
-            $imageName = time() . '.' . $request->image_path->extension();
-            $request->image_path->move(public_path('assets/images/posts'), $imageName);
-            $validatedData['image_path'] = 'assets/images/posts/' . $imageName;
-        } else {
-            unset($validatedData['profile_picture']);
-        }
+            if ($request->hasFile('image_path')) {
+                $imageName = time() . '.' . $request->image_path->extension();
+                $request->image_path->move(public_path('assets/images/posts'), $imageName);
+                $validatedData['image_path'] = 'assets/images/posts/' . $imageName;
+            } else {
+                unset($validatedData['profile_picture']);
+            }
 
-        $post = Post::create($validatedData);
-        $post->load('user');
+            $post = Post::create($validatedData);
+            $post->load('user');
 
-        if (isset($validatedData['profile_id'])) {
-            $this->notificationService->notifyUserOfProfilePost($post, $validatedData['profile_id']);
-        }
+            if (isset($validatedData['profile_id'])) {
+                $this->notificationService->notifyUserOfProfilePost($post, $validatedData['profile_id']);
+            }
 
-        return $post;
+            return $post;
+        });
     }
 
     public function getPost($id)
@@ -97,7 +92,7 @@ class PostService extends ParentService
         return $post;
     }
 
-    public function loadAdditionalPosts($offset, $user)
+    public function loadAdditionalPosts($offset, $user): array
     {
         $limit = 5;
 
@@ -151,7 +146,7 @@ class PostService extends ParentService
             foreach ($post->comments as &$comment) {
                 $comment->created_at_formatted = Carbon::parse($comment->created_at)
                     ->timezone('Europe/London')
-                    ->diffForHumans();;
+                    ->diffForHumans();
                 $comment->user->profile_picture = $comment->user->profile_picture ? asset($comment->user->profile_picture) : '';
                 $comment->user->profile_route = route('profiles.show', $comment->user->id);
             }

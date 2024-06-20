@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\GroupRequest;
 use App\Models\Group;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,22 +21,19 @@ class GroupService extends ParentService
         return [$allGroups, $mostPopularGroups];
     }
 
-    public function storeGroup(Request $request): ?bool
+    public function storeGroup(GroupRequest $request): ?bool
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'website' => 'required|string|max:255',
-            'private' => 'required|boolean',
-        ]);
+        $validatedData = $request->validated();
 
         return Group::create($validatedData);
     }
 
     public function getGroup($id): array|RedirectResponse
     {
-        $group = Group::with('members', 'posts', 'events', 'groupCategory')->withCount('members', 'posts', 'events')->find($id);
-        if(!$group) {
+        $group = Group::with('members', 'posts', 'events', 'groupCategory')
+            ->withCount('members', 'posts', 'events')
+            ->find($id);
+        if (!$group) {
             return redirect()->back();
         }
 

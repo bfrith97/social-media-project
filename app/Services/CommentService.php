@@ -2,16 +2,12 @@
 
 namespace App\Services;
 
+use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
-use App\Models\User;
-use App\Notifications\NewProfilePost;
 use Carbon\Carbon;
 use ConsoleTVs\Profanity\Facades\Profanity;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CommentService extends ParentService
@@ -23,67 +19,29 @@ class CommentService extends ParentService
         $this->notificationService = $notificationService;
     }
 
-    protected function createErrorResponse($message, $error): JsonResponse
+    public function storeComment(CommentRequest $request): array
     {
-        return response()->json([
-            'message' => $message,
-            'error' => $error,
-        ]);
-    }
+        return DB::transaction(function () use ($request) {
+            $validatedData = $request->validated();
+            $this->validateUser($request);
 
-    protected function createSuccessResponse($data): JsonResponse
-    {
-        [$comment] = $data;
-        return response()->json([
-            'message' => 'Comment added successfully',
-            'comment' => $this->formatCommentData($comment),
-        ]);
-    }
+            $validatedData['content'] = Profanity::blocker($validatedData['content'])
+                ->strict(false)
+                ->strictClean(true)
+                ->filter();
 
-    public function storeComment(Request $request): array
-    {
-        $validatedData = $request->validate([
-            'content' => 'required|string',
-            'user_id' => 'required|integer|exists:users,id',
-            'item_id' => 'required|integer',
-            'item_type' => 'required|string|in:App\Models\Post,App\Models\NewsArticle',
-        ]);
+            $model = $validatedData['item_type']::findOrFail($validatedData['item_id']);
+            $comment = $model->comments()
+                ->create($validatedData);
 
-        if ($validatedData['user_id'] != Auth::id()) {
+            $this->notificationService->notifyUserOfComment($model, $comment, $validatedData['item_type']);
+            $type = $validatedData['item_type'] === Post::class ? 'posts' : 'news';
+
             return [
-                'success' => false,
-                'error' => 'User ID mismatch',
-                'code' => 401,
+                'success' => true,
+                'data' => [$comment, $model, $type],
             ];
-        }
-
-        $validatedData['content'] = Profanity::blocker($validatedData['content'])
-            ->strict(false)
-            ->strictClean(true)
-            ->filter();
-
-        $model = $validatedData['item_type']::find($validatedData['item_id']);
-        if (!$model) {
-            return [
-                'success' => false,
-                'error' => 'Invalid item type or ID.',
-            ];
-        }
-
-        $comment = $model->comments()
-            ->create($validatedData);
-
-        $this->notificationService->notifyUserOfComment($model, $comment, $validatedData['item_type']);
-
-        $type = $validatedData['item_type'] === Post::class ? 'posts' : 'news';
-        return [
-            'success' => true,
-            'data' => [
-                $comment,
-                $model,
-                $type,
-            ],
-        ];
+        });
     }
 
 
@@ -119,10 +77,6 @@ class CommentService extends ParentService
             $comment->user->profile_picture = $comment->user->profile_picture ? asset($comment->user->profile_picture) : '';
         }
 
-        return [
-            $comments,
-            $moreCommentsAvailable,
-            $validatedData,
-        ];
+        return [$comments, $moreCommentsAvailable, $validatedData];
     }
 }

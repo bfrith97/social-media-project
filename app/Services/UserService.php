@@ -19,16 +19,15 @@ class UserService extends ParentService
                             $q->whereNot('user_id', Auth::id());
                         },
                         'messages' => function ($q) {
-                            $q->with('user')->oldest();
-                        }
+                            $q->with('user')
+                                ->oldest();
+                        },
                     ])
                         ->withCount('messages')
-                        ->orderByDesc(
-                            Message::select('created_at')
+                        ->orderByDesc(Message::select('created_at')
                             ->whereColumn('conversation_id', 'conversations.id')
-                                ->latest()
-                                ->take(1)
-                        );
+                            ->latest()
+                            ->take(1));
                 },
             ])
                 ->withCount('conversations')
@@ -38,9 +37,9 @@ class UserService extends ParentService
             $notificationsCount = $user->unreadNotifications->count();
 
             return [$user, $conversations, $notificationsCount];
-        } else {
-            return redirect()->route('login');
         }
+
+        return redirect()->route('login');
     }
 
     public function getSuggestedUsers(User $user)

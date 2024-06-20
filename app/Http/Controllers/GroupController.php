@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Services\GroupService;
 use App\Services\UserService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class GroupController extends Controller
+class GroupController extends BaseController
 {
     private GroupService $groupService;
     private UserService $userService;
 
-    public function __construct(GroupService $groupService, UserService $userService) {
+    public function __construct(GroupService $groupService, UserService $userService)
+    {
         $this->groupService = $groupService;
         $this->userService = $userService;
     }
@@ -31,7 +33,7 @@ class GroupController extends Controller
             'suggestedGroups' => [],
             'notificationsCount' => $notificationsCount,
             'user' => $user,
-            'conversations' => $conversations
+            'conversations' => $conversations,
         ]);
     }
 
@@ -48,16 +50,15 @@ class GroupController extends Controller
      */
     public function store(Request $request): ?JsonResponse
     {
-        $group = $this->groupService->storeGroup($request);
+        try {
+            $this->groupService->storeGroup($request);
 
-        if ($group) {
             return response()->json([
                 'message' => 'Group added successfully',
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Group not added',
-            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
         }
     }
 
@@ -74,7 +75,7 @@ class GroupController extends Controller
             'memberNames' => $memberNames,
             'notificationsCount' => $notificationsCount,
             'user' => $user,
-            'conversations' => $conversations
+            'conversations' => $conversations,
         ]);
     }
 

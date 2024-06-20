@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Models\Login as LoginModel;
 use Carbon\Carbon;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Http\Request;
 

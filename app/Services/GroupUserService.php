@@ -2,33 +2,31 @@
 
 namespace App\Services;
 
-use App\Models\Group;
+use App\Http\Requests\GroupUserRequest;
 use App\Models\GroupUser;
-use App\Models\Post;
-use App\Models\User;
-use App\Notifications\NewProfilePost;
-use ConsoleTVs\Profanity\Facades\Profanity;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GroupUserService extends ParentService
 {
-    public function storeGroupUser(Request $request): GroupUser
+    public function storeGroupUser(GroupUserRequest $request): GroupUser
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'group_id' => 'required|integer|exists:users,id',
-        ]);
+        return DB::transaction(function () use ($request) {
+            $validatedData = $request->validated();
+            $this->validateUser($request);
 
-        return GroupUser::createOrFirst($validatedData);
+            return GroupUser::createOrFirst($validatedData);
+        });
     }
 
-    public function destroyGroupUser(Request $request): ?bool
+    public function destroyGroupUser(GroupUserRequest $request): ?bool
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'group_id' => 'required|integer|exists:users,id',
-        ]);
+        return DB::transaction(function () use ($request) {
+            $validatedData = $request->validated();
+            $this->validateUser($request);
 
-        return GroupUser::where($validatedData)->delete();
+            return GroupUser::where($validatedData)
+                ->delete();
+        });
+
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -33,7 +34,7 @@ class PasswordController extends Controller
             ]);
 
             return redirect()->route('settings.edit')->with('passwordSuccessMessage', 'Your Password has been updated.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->route('settings.edit')->with('passwordErrorMessage', 'Your Password was not changed. Please try again.');
         }
     }

@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostLikeRequest;
 use App\Models\Post;
 use App\Models\PostLike;
 use App\Models\User;
 use App\Notifications\NewLike;
 use App\Services\ActivityService;
 use App\Services\PostLikeService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class PostLikeController extends Controller
+class PostLikeController extends BaseController
 {
     private PostLikeService $postLikeService;
     private ActivityService $activityService;
@@ -42,13 +44,13 @@ class PostLikeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ?JsonResponse
+    public function store(PostLikeRequest $request): ?JsonResponse
     {
-        $like = $this->postLikeService->storePostLike($request);
+        try {
+            $like = $this->postLikeService->storePostLike($request);
 
-        $this->activityService->storeActivity($like, 'posts.show', $like->post_id, 'bi bi-hand-thumbs-up', 'liked a post');
+            $this->activityService->storeActivity($like, 'posts.show', $like->post_id, 'bi bi-hand-thumbs-up', 'liked a post');
 
-        if ($like) {
             return response()->json([
                 'message' => 'Like added successfully',
                 'like' => [
@@ -60,10 +62,9 @@ class PostLikeController extends Controller
                     ],
                 ],
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Like not added',
-            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
         }
     }
 
@@ -94,18 +95,17 @@ class PostLikeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): ?JsonResponse
+    public function destroy(PostLikeRequest $request): ?JsonResponse
     {
-        $deleted = $this->postLikeService->destroyPostLike($request);
+        try {
+            $this->postLikeService->destroyPostLike($request);
 
-        if ($deleted) {
             return response()->json([
                 'message' => 'Like removed successfully',
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Like not removed',
-            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
         }
     }
 }

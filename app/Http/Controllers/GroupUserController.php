@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GroupUserRequest;
 use App\Models\GroupUser;
 use App\Services\ActivityService;
 use App\Services\GroupUserService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class GroupUserController extends Controller
+class GroupUserController extends BaseController
 {
     private GroupUserService $groupUserService;
     private ActivityService $activityService;
@@ -38,20 +40,18 @@ class GroupUserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ?JsonResponse
+    public function store(GroupUserRequest $request): ?JsonResponse
     {
-        $groupUser = $this->groupUserService->storeGroupUser($request);
+        try {
+            $groupUser = $this->groupUserService->storeGroupUser($request);
+            $this->activityService->storeActivity($groupUser, 'groups.show', $groupUser->group_id, 'bi bi-people', 'joined a group');
 
-        $this->activityService->storeActivity($groupUser, 'groups.show', $groupUser->group_id, 'bi bi-people', 'joined a group');
-
-        if ($groupUser) {
             return response()->json([
                 'message' => 'Group member added successfully',
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Group member not added',
-            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
         }
     }
 
@@ -82,18 +82,17 @@ class GroupUserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): ?JsonResponse
+    public function destroy(GroupUserRequest $request): ?JsonResponse
     {
-        $deleted = $this->groupUserService->destroyGroupUser($request);
+        try {
+            $this->groupUserService->destroyGroupUser($request);
 
-        if ($deleted) {
             return response()->json([
                 'message' => 'Group User removed successfully',
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Group User not removed',
-            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
         }
     }
 }

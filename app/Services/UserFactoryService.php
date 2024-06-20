@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 use Laravolt\Avatar\Avatar;
@@ -13,10 +14,11 @@ class UserFactoryService extends ParentService
         $client = new Client();
         try {
             $response = $client->get('http://personator.nmxldev.com');
-            $personDetails = json_decode($response->getBody()->getContents(), true);
+            $personDetails = json_decode($response->getBody()
+                ->getContents(), true);
 
             if (!isset($personDetails['data'])) {
-                throw new \Exception('Data not found');
+                throw new Exception('Data not found');
             }
 
             $pictureUrl = $personDetails['data']['photo']['full_url'];
@@ -36,12 +38,12 @@ class UserFactoryService extends ParentService
                 $name = $personDetails['data']['first_name'] . ' ' . $personDetails['data']['surname'];
                 $picture = 'assets/images/avatars/' . $filename; // Relative URL for web access
             } else {
-                throw new \Exception("Failed to download image");
+                throw new Exception("Failed to download image");
             }
 
             return [$name, $picture];
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Handle the case where the external image could not be downloaded or data was not found
             $avatar = new Avatar();
             $name = fake()->firstName() . ' ' . fake()->lastName();

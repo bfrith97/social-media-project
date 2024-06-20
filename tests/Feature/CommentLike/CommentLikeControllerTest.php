@@ -2,36 +2,34 @@
 
 namespace CommentLike;
 
-use App\Models\Comment;
 use App\Models\CommentLike;
-use App\Models\Post;
 use App\Models\User;
-use App\Services\CommentLikeService;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
-use Mockery;
 use Tests\TestCase;
+use Tests\Traits\ModelFactoryTrait;
 
 class CommentLikeControllerTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, DatabaseTransactions, ModelFactoryTrait;
+
+    protected $user;
+    protected $post;
+    protected $comment;
 
     public function setUp(): void
     {
         parent::setUp();
+
         // Create a user and a post with a comment
-        $this->user = User::factory()
-            ->create();
-        $this->post = Post::factory()
-            ->create(['user_id' => $this->user->id]);
-        $this->comment = Comment::factory()
-            ->create([
-                'user_id' => $this->user->id,
-                'item_id' => $this->post->id,
-                'item_type' => Post::class,
-            ]);
+        $this->user = $this->createUser();
+        $this->post = $this->createPost($this->user);
+        $this->comment = $this->createComment($this->user, $this->post);
+
+        config(['app.debug' => false]);
     }
 
+    //Tests
     public function test_user_not_logged_in(): void
     {
         // Do not use $this->>actingAs($this->user);
@@ -68,7 +66,7 @@ class CommentLikeControllerTest extends TestCase
         // Assert correct error response
         $response->assertStatus(403)
             ->assertJson([
-                'error' => 'User ID mismatch',
+                'message' => 'Authentication error',
             ]);
 
         // Ensure no like is created

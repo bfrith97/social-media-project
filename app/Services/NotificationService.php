@@ -2,14 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewComment;
 use App\Notifications\NewFollower;
 use App\Notifications\NewLike;
 use App\Notifications\NewProfilePost;
-use ConsoleTVs\Profanity\Facades\Profanity;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationService extends ParentService

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ConversationRequest;
 use App\Services\ConversationService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ConversationController extends Controller
+class ConversationController extends BaseController
 {
     private ConversationService $conversationService;
 
@@ -34,15 +36,20 @@ class ConversationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ?JsonResponse
+    public function store(ConversationRequest $request): ?JsonResponse
     {
-        [$conversation, $participant, $newConversation] = $this->conversationService->storeConversation($request);
+        try {
+            [$conversation, $participant, $newConversation] = $this->conversationService->storeConversation($request);
 
-        return response()->json([
-            'conversation' => $conversation,
-            'participant' => $participant ?? null,
-            'isNewConversation' => $newConversation,
-        ]);
+            return response()->json([
+                'conversation' => $conversation,
+                'participant' => $participant ?? null,
+                'isNewConversation' => $newConversation,
+            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
+        }
     }
 
     /**

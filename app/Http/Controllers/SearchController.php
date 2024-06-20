@@ -10,7 +10,7 @@ use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SearchController extends Controller
+class SearchController extends BaseController
 {
     private SearchService $searchService;
 

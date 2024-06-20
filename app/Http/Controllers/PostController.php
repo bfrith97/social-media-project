@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Services\ActivityService;
 use App\Services\NewsService;
 use App\Services\PostService;
 use App\Services\UserService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
     private PostService $postService;
     private UserService $userService;
@@ -60,32 +62,37 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ?JsonResponse
+    public function store(PostRequest $request): ?JsonResponse
     {
-        $post = $this->postService->storePost($request);
+        try {
+            $post = $this->postService->storePost($request);
 
-        $this->activityService->storeActivity($post, 'posts.show', $post->id, 'bi bi-box-arrow-right', 'created a post');
+            $this->activityService->storeActivity($post, 'posts.show', $post->id, 'bi bi-box-arrow-right', 'created a post');
 
-        return response()->json([
-            'message' => 'Post added successfully',
-            'post' => [
-                'id' => $post->id,
-                'user' => [
-                    'id' => $post->user->id,
-                    'name' => $post->user->name,
-                    'role' => $post->user->role,
-                    'company' => $post->user->company,
-                    'profile_picture' => $post->user->profile_picture ? asset($post->user->profile_picture) : '',
-                    'profile_route' => route('profiles.show', $post->user->id),
+            return response()->json([
+                'message' => 'Post added successfully',
+                'post' => [
+                    'id' => $post->id,
+                    'user' => [
+                        'id' => $post->user->id,
+                        'name' => $post->user->name,
+                        'role' => $post->user->role,
+                        'company' => $post->user->company,
+                        'profile_picture' => $post->user->profile_picture ? asset($post->user->profile_picture) : '',
+                        'profile_route' => route('profiles.show', $post->user->id),
+                    ],
+                    'content' => $post->content,
+                    'image_path' => $post->image_path,
+                    'comment_route' => route('comments.store'),
+                    'post_like_route' => route('post_likes.store'),
+                    'is_feeling' => $post->is_feeling,
                 ],
-                'content' => $post->content,
-                'image_path' => $post->image_path,
-                'comment_route' => route('comments.store'),
-                'post_like_route' => route('post_likes.store'),
-                'is_feeling' => $post->is_feeling,
-            ],
-            'csrf' => csrf_token(),
-        ]);
+                'csrf' => csrf_token(),
+            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e, $request);
+        }
     }
 
     /**
@@ -93,16 +100,21 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
+        try {
+            [$user, $conversations, $notificationsCount] = $this->userService->getUserInformation();
 
-        $post = $this->postService->getPost($id);
+            $post = $this->postService->getPost($id);
 
-        return view('posts.show')->with([
-            'post' => $post,
-            'user' => $user,
-            'notificationsCount' => $notificationsCount,
-            'conversations' => $conversations,
-        ]);
+            return view('posts.show')->with([
+                'post' => $post,
+                'user' => $user,
+                'notificationsCount' => $notificationsCount,
+                'conversations' => $conversations,
+            ]);
+
+        } catch (Exception $e) {
+            return $this->handleException($e);
+        }
     }
 
     /**
@@ -151,10 +163,10 @@ class PostController extends Controller
                 'like_comment_route' => route('comment_likes.store'),
                 'csrf' => csrf_token(),
             ]);
-        } else {
-            return response()->json([
-                'message' => 'Posts not found',
-            ]);
         }
+
+        return response()->json([
+            'message' => 'Posts not found',
+        ]);
     }
 }

@@ -2,16 +2,11 @@
 
 namespace App\Services;
 
+use App\Http\Requests\FollowRequest;
 use App\Models\Follow;
-use App\Models\Post;
 use App\Models\User;
-use App\Notifications\NewComment;
-use App\Notifications\NewFollower;
-use App\Notifications\NewLike;
-use App\Notifications\NewProfilePost;
-use ConsoleTVs\Profanity\Facades\Profanity;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class FollowService extends ParentService
 {
@@ -36,50 +31,35 @@ class FollowService extends ParentService
         }
     }
 
-    public function storeFollow(Request $request): array
+    public function storeFollow(FollowRequest $request): array
     {
-        $validatedData = $request->validate([
-            'follower_id' => 'required|integer|exists:users,id',
-            'followee_id' => 'required|integer|exists:users,id',
-        ]);
+        return DB::transaction(function () use ($request) {
+            $this->validateUser($request, 'follower_id');
+            $validatedData = $request->validated();
 
-        if ($validatedData['follower_id'] != Auth::id()) {
+            $follow = Follow::create($validatedData);
+
+            $follower = User::find($validatedData['follower_id']);
+            $followee = User::find($validatedData['followee_id']);
+
+            $this->notificationService->notifyUserOfFollow($followee, $follower);
+
             return [
-                'success' => false,
-                'error' => 'User ID mismatch',
-                'code' => 401,
+                'success' => true,
+                'data' => [$follow, $followee],
             ];
-        }
-
-        $follow = Follow::create($validatedData);
-
-        $follower = User::find($validatedData['follower_id']);
-        $followee = User::find($validatedData['followee_id']);
-
-        $this->notificationService->notifyUserOfFollow($followee, $follower);
-
-        return [
-            'success' => true,
-            'data' => [$follow, $followee],
-        ];
+        });
     }
 
-    public function destroyFollow(Request $request): array|bool
+
+    public function destroyFollow(FollowRequest $request): array|bool
     {
-        $validatedData = $request->validate([
-            'follower_id' => 'required|integer|exists:users,id',
-            'followee_id' => 'required|integer|exists:users,id',
-        ]);
+        return DB::transaction(function () use ($request) {
+            $this->validateUser($request, 'follower_id');
+            $validatedData = $request->validated();
 
-        if ($validatedData['follower_id'] != Auth::id()) {
-            return [
-                'success' => false,
-                'error' => 'User ID mismatch',
-                'code' => 401,
-            ];
-        }
-
-        return Follow::where($validatedData)
-            ->delete();
+            return Follow::where($validatedData)
+                ->delete();
+        });
     }
 }
