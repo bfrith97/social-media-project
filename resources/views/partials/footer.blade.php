@@ -1,5 +1,5 @@
-@if(Route::currentRouteName() != 'messages.index' && Route::currentRouteName() != 'login' && Route::currentRouteName() != 'regist)
-    <x-messages.chat.chat :conversations="tr($conversati" :user="tr($u"/>
+@if(\Route::currentRouteName() != 'messages.index' && \Route::currentRouteName() != 'login' && \Route::currentRouteName() != 'register')
+    <x-messages.chat.chat :conversations="$conversations" :user="$user"/>
 @endif
 
 <footer class="bg-mode py-3 mt-auto">
@@ -32,30 +32,30 @@
 </footer>
 
 <!-- Bootstrap JS -->
-<script src="{{ e( asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}}"></script>
+<script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
 <!-- Vendors -->
-<script src="{{ e( asset('assets/vendor/tiny-slider/dist/tiny-slider.js}}"></script>
-<script src="{{ e( asset('assets/vendor/OverlayScrollbars-master/js/OverlayScrollbars.min.js}}"></script>
-<script src="{{ e( asset('assets/vendor/choices.js/public/assets/scripts/choices.min.js}}"></script>
-<script src="{{ e( asset('assets/vendor/glightbox-master/dist/js/glightbox.min.js}}"></script>
-<script src="{{ e( asset('assets/vendor/flatpickr/dist/flatpickr.min.js}}"></script>
-<script src="{{ e( asset('assets/vendor/plyr/plyr.js}}"></script>
-<script src="{{ e( asset('assets/vendor/dropzone/dist/min/dropzone.min.js}}"></script>
-<script src="{{ e( asset('assets/vendor/zuck.js/dist/zuck.min.js}}"></script>
-<script src="{{ e( asset('assets/js/zuck-stories.js}}"></script>
-<script src="{{ e( asset('assets/js/functions.js}}"></script>
+<script src="{{ asset('assets/vendor/tiny-slider/dist/tiny-slider.js') }}"></script>
+<script src="{{ asset('assets/vendor/OverlayScrollbars-master/js/OverlayScrollbars.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/choices.js/public/assets/scripts/choices.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/glightbox-master/dist/js/glightbox.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/flatpickr/dist/flatpickr.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/plyr/plyr.js') }}"></script>
+<script src="{{ asset('assets/vendor/dropzone/dist/min/dropzone.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/zuck.js/dist/zuck.min.js') }}"></script>
+<script src="{{ asset('assets/js/zuck-stories.js') }}"></script>
+<script src="{{ asset('assets/js/functions.js') }}"></script>
 
 <!-- Stacked JS -->
-@stack(nt(')
-<script src="{{ e( asset('js/nav/search.js}}"></script>
-<script src="{{ e( asset('js/nav/notifications.js}}"></script>
-@if(if(Route::currentRouteName() != 'messages.index' && Route::currentRouteName() != 'l)
-<script src="{{ho e( asset('js/messages/chat.}}"></script>
+@stack('js')
+<script src="{{ asset('js/nav/search.js') }}"></script>
+<script src="{{ asset('js/nav/notifications.js') }}"></script>
+@if(\Route::currentRouteName() != 'messages.index' && \Route::currentRouteName() != 'login')
+<script src="{{ asset('js/messages/chat.js') }}"></script>
 @endif
 
 <!-- Theme Functions -->
-<script src="{{ho e( asset('assets/js/functions.}}"></script>
+<script src="{{ asset('assets/js/functions.js') }}"></script>
 
 </body>
 </html>
