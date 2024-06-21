@@ -3,6 +3,7 @@
 namespace Post;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -12,7 +13,7 @@ class PostControllerTest extends TestCase
 {
     use WithFaker, DatabaseTransactions, ModelFactoryTrait;
 
-    protected $user;
+    protected User $user;
 
     public function setUp(): void
     {
@@ -92,7 +93,7 @@ class PostControllerTest extends TestCase
                 'message' => 'Post added successfully',
             ]);
 
-        // Assert that no post as been created
+        // Assert that a post as been created
         $this->assertDatabaseHas('posts', [
             'user_id' => $this->user->id,
             'is_feeling' => 0,
@@ -108,7 +109,7 @@ class PostControllerTest extends TestCase
         ]);
     }
 
-    public function test_user_follow_failure_due_to_missing_ids(): void
+    public function test_user_post_failure_due_to_missing_ids(): void
     {
         $this->actingAs($this->user);
 
@@ -129,7 +130,7 @@ class PostControllerTest extends TestCase
         ]);
     }
 
-    public function test_user_follow_failure_due_to_string_ids(): void
+    public function test_user_post_failure_due_to_string_ids(): void
     {
         $this->actingAs($this->user);
 

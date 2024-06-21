@@ -2,7 +2,9 @@
 
 namespace PostLike;
 
+use App\Models\Post;
 use App\Models\PostLike;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -12,8 +14,8 @@ class PostLikeControllerTest extends TestCase
 {
     use WithFaker, DatabaseTransactions, ModelFactoryTrait;
 
-    protected $user;
-    protected $post;
+    protected User $user;
+    protected Post $post;
 
     public function setUp(): void
     {

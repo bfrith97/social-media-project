@@ -3,6 +3,7 @@
 namespace Follow;
 
 use App\Models\Follow;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -12,8 +13,8 @@ class FollowControllerTest extends TestCase
 {
     use WithFaker, DatabaseTransactions, ModelFactoryTrait;
 
-    protected $follower;
-    protected $followee;
+    protected User $follower;
+    protected User $followee;
 
     public function setUp(): void
     {

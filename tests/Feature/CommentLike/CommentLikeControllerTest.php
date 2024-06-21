@@ -2,7 +2,9 @@
 
 namespace CommentLike;
 
+use App\Models\Comment;
 use App\Models\CommentLike;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -13,9 +15,9 @@ class CommentLikeControllerTest extends TestCase
 {
     use WithFaker, DatabaseTransactions, ModelFactoryTrait;
 
-    protected $user;
-    protected $post;
-    protected $comment;
+    protected User $user;
+    protected Post $post;
+    protected Comment $comment;
 
     public function setUp(): void
     {
