@@ -89,9 +89,9 @@ class NewsService extends ParentService
             }
 
             return $slicedArray;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     private function setCategoryAndRemoveKeys(&$article, int $categoryId): void
