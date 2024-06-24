@@ -73,7 +73,7 @@ class CommentControllerTest extends TestCase
         $userServiceMock = Mockery::mock(UserService::class);
 
         // Create an instance of the controller
-        $controller = new CommentController($postServiceMock, $activityServiceMock, $userServiceMock);
+        $controller = new CommentController($postServiceMock, $activityServiceMock);
 
         // Call the store method
         $response = $controller->store($request);

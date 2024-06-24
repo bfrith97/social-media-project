@@ -5,7 +5,6 @@ namespace Tests\Feature\PostLike;
 use App\Models\Post;
 use App\Models\PostLike;
 use App\Models\User;
-use App\Notifications\NewFollower;
 use App\Notifications\NewLike;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;

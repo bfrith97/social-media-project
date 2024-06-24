@@ -2,15 +2,12 @@
 
 namespace Tests\Unit\PostLike;
 
-use App\Http\Controllers\CommentLikeController;
 use App\Http\Controllers\PostLikeController;
-use App\Http\Requests\CommentLikeRequest;
 use App\Http\Requests\PostLikeRequest;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\ActivityService;
-use App\Services\CommentLikeService;
 use App\Services\PostLikeService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;

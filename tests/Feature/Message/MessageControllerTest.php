@@ -4,8 +4,6 @@ namespace Tests\Feature\Message;
 
 use App\Models\Conversation;
 use App\Models\ConversationParticipant;
-use App\Models\NewsArticle;
-use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
