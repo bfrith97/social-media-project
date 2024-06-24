@@ -44,7 +44,7 @@ class CommentLikeControllerTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        // Mock the FollowRequest
+        // Mock the CommentLikeRequest
         $request = Mockery::mock(CommentLikeRequest::class);
         $request->allows('validated')
             ->andReturns([
@@ -60,6 +60,7 @@ class CommentLikeControllerTest extends TestCase
             ->createOrFirst($data);
         $type = $comment->item_type === Post::class ? 'posts' : 'news';
 
+        // Mock the CommentLikeService
         $commentLikeServiceMock = Mockery::mock(CommentLikeService::class);
         $commentLikeServiceMock->expects('storeCommentLike')
             ->with($request)

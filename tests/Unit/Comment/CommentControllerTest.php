@@ -43,7 +43,7 @@ class CommentControllerTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        // Mock the FollowRequest
+        // Mock the CommentRequest
         $request = Mockery::mock(CommentRequest::class);
         $request->allows('validated')
             ->andReturns([
@@ -53,12 +53,12 @@ class CommentControllerTest extends TestCase
             ]);
 
         $data = $request->validated();
-        // Mock the FollowService
         $comment = new Comment($data);
 
         $model = $data['item_type']::findOrFail($data['item_id']);
         $type = $data['item_type'] === Post::class ? 'posts' : 'news';
 
+        // Mock the CommentService
         $postServiceMock = Mockery::mock(CommentService::class);
         $postServiceMock->expects('storeComment')
             ->with($request)

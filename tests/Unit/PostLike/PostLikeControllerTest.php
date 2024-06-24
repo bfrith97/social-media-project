@@ -62,6 +62,7 @@ class PostLikeControllerTest extends TestCase
         $like = $post->postLikes()
             ->createOrFirst($data);
 
+        // Mock the PostLikeService
         $postLikeServiceMock = Mockery::mock(PostLikeService::class);
         $postLikeServiceMock->expects('storePostLike')
             ->with($request)

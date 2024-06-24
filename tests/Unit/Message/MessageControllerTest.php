@@ -55,7 +55,7 @@ class MessageControllerTest extends TestCase
     {
         $this->actingAs($this->userOne);
 
-        // Mock the PostRequest
+        // Mock the MessageRequest
         $request = Mockery::mock(MessageRequest::class);
         $request->allows('validated')
             ->andReturns([
@@ -64,7 +64,7 @@ class MessageControllerTest extends TestCase
                 'content' => 'content example',
             ]);
 
-        // Mock the PostService
+        // Mock the MessageService
         $message = new Message($request->validated());
         $messageServiceMock = Mockery::mock(MessageService::class);
         $messageServiceMock->expects('storeMessage')
