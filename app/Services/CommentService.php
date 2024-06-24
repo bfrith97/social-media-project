@@ -37,10 +37,7 @@ class CommentService extends ParentService
             $this->notificationService->notifyUserOfComment($model, $comment, $validatedData['item_type']);
             $type = $validatedData['item_type'] === Post::class ? 'posts' : 'news';
 
-            return [
-                'success' => true,
-                'data' => [$comment, $model, $type],
-            ];
+            return [$comment, $model, $type];
         });
     }
 

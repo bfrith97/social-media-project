@@ -1,6 +1,6 @@
 <?php
 
-namespace Comment;
+namespace Tests\Feature\Comment;
 
 use App\Models\NewsArticle;
 use App\Models\Post;

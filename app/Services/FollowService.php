@@ -37,17 +37,14 @@ class FollowService extends ParentService
             $this->validateUser($request, 'follower_id');
             $validatedData = $request->validated();
 
-            $follow = Follow::create($validatedData);
+            $follow = Follow::createOrFirst($validatedData);
 
             $follower = User::find($validatedData['follower_id']);
             $followee = User::find($validatedData['followee_id']);
 
             $this->notificationService->notifyUserOfFollow($followee, $follower);
 
-            return [
-                'success' => true,
-                'data' => [$follow, $followee],
-            ];
+            return [$follow, $followee];
         });
     }
 

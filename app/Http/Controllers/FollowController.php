@@ -53,9 +53,8 @@ class FollowController extends BaseController
     public function store(FollowRequest $request): ?JsonResponse
     {
         try {
-            $response = $this->followService->storeFollow($request);
+            [$follow, $followee] = $this->followService->storeFollow($request);
 
-            [$follow, $followee] = $response['data'];
             $this->activityService->storeActivity($follow, 'profiles.show', $follow->followee_id, 'bi bi-person-add', 'followed ' . $followee->name);
 
             return response()->json([

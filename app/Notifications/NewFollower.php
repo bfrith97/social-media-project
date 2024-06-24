@@ -12,7 +12,7 @@ class NewFollower extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected User $follower;
+    public User $follower;
 
     public function __construct(User $follower)
     {

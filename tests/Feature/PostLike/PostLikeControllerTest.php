@@ -1,12 +1,15 @@
 <?php
 
-namespace PostLike;
+namespace Tests\Feature\PostLike;
 
 use App\Models\Post;
 use App\Models\PostLike;
 use App\Models\User;
+use App\Notifications\NewFollower;
+use App\Notifications\NewLike;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Tests\Traits\ModelFactoryTrait;
 
@@ -154,4 +157,33 @@ class PostLikeControllerTest extends TestCase
             'post_id' => 'The post id field must be an integer.',
         ]);
     }
+
+    public function test_post_like_sends_notification(): void
+    {
+        $this->actingAs($this->user);
+
+        // Mock notification service
+        Notification::fake();
+
+        // Create a post by a different user
+        $postUser = User::factory()->create();
+        $post = Post::factory()->create(['user_id' => $postUser->id]);
+
+        // Make POST request to create post like
+        $this->json('POST', '/post-likes', [
+            'user_id' => $this->user->id,
+            'post_id' => $post->id,
+        ]);
+
+        // Assert notification was sent
+        Notification::assertSentTo(
+            [$postUser],
+            NewLike::class,
+            function ($notification, $channels) use ($post) {
+                return $notification->model->id === $post->id &&
+                    $notification->liker->id === $this->user->id;
+            }
+        );
+    }
+
 }

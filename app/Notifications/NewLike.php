@@ -13,9 +13,9 @@ class NewLike extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected User $liker;
-    protected Model $model;
-    protected string $item;
+    public User $liker;
+    public Model $model;
+    public string $item;
 
     public function __construct(User $liker, Model $model, string $item)
     {

@@ -1,13 +1,15 @@
 <?php
 
-namespace CommentLike;
+namespace Tests\Feature\CommentLike;
 
 use App\Models\Comment;
 use App\Models\CommentLike;
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\NewLike;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Tests\Traits\ModelFactoryTrait;
 
@@ -26,7 +28,10 @@ class CommentLikeControllerTest extends TestCase
         // Create a user and a post with a comment
         $this->user = $this->createUser();
         $this->post = $this->createPost($this->user);
-        $this->comment = $this->createComment($this->user, $this->post);
+
+        // Create a comment by a different user
+        $this->commentUser = $this->createUser();
+        $this->comment = $this->createComment($this->commentUser, $this->post);
 
         config(['app.debug' => false]);
     }
@@ -157,4 +162,29 @@ class CommentLikeControllerTest extends TestCase
             'comment_id' => 'The comment id field must be an integer.',
         ]);
     }
+
+    public function test_comment_like_sends_notification(): void
+    {
+        $this->actingAs($this->user);
+
+        // Mock notification service
+        Notification::fake();
+
+        // Make POST request to create comment like
+        $this->json('POST', '/comment-likes', [
+            'user_id' => $this->user->id,
+            'comment_id' => $this->comment->id,
+        ]);
+
+        // Assert notification was sent
+        Notification::assertSentTo(
+            [$this->commentUser],
+            NewLike::class,
+            function ($notification, $channels) {
+                return $notification->model->id === $this->comment->id &&
+                    $notification->liker->id === $this->user->id;
+            }
+        );
+    }
+
 }

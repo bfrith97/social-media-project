@@ -42,9 +42,8 @@ class CommentController extends BaseController
     public function store(CommentRequest $request): ?JsonResponse
     {
         try {
-            $response = $this->commentService->storeComment($request);
+            [$comment, $model, $itemType] = $this->commentService->storeComment($request);
 
-            [$comment, $model, $itemType] = $response['data'];
             $this->activityService->storeActivity($model, "$itemType.show", $comment->item_id, 'bi bi-chat-left-dots', 'commented on a post');
 
             return response()->json([

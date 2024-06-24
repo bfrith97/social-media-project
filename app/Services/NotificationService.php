@@ -42,10 +42,10 @@ class NotificationService extends ParentService
         }
     }
 
-    public function notifyUserPostLike($post, $like): void
+    public function notifyUserPostLike($post, $like)
     {
         if ($like->user_id !== $post->user_id) {
-            $post->user->notify(new NewLike($like->user, $post, 'post'));
+            return $post->user->notify(new NewLike($like->user, $post, 'post'));
         }
     }
 
