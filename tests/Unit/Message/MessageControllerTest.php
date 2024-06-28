@@ -14,6 +14,7 @@ use App\Services\UserService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use Mockery;
 use Tests\TestCase;
 use Tests\Traits\ModelFactoryTrait;
@@ -84,5 +85,49 @@ class MessageControllerTest extends TestCase
         ], JSON_THROW_ON_ERROR), $response->content());
 
         Mockery::close();
+    }
+
+    public function test_follow_request_validation_passes_with_correct_data(): void
+    {
+        $data = [
+            'conversation_id' => $this->conversation->id,
+            'user_id' => $this->userOne->id,
+            'content' => 'content example',
+        ];
+
+        // Manually create the validator instance
+        $validator = Validator::make($data, (new MessageRequest())->rules());
+
+        // Check if the data passes the validation
+        $validatedData = $validator->validate();
+
+        // Expect the validation to succeed
+        $this->assertTrue($validator->passes());
+
+        // Assert that the data has been validated
+        $this->assertEquals([
+            'conversation_id' => $this->conversation->id,
+            'user_id' => $this->userOne->id,
+            'content' => 'content example',
+        ], $validatedData);
+    }
+
+    public function test_follow_request_validation_fails_with_incorrect_data(): void
+    {
+        $data = [
+            'conversation_id' => $this->conversation->id,
+            'user_id' => $this->userOne->id,
+            'content' => null,
+        ];
+
+        // Manually create the validator instance
+        $validator = Validator::make($data, (new MessageRequest())->rules());
+
+        // Expect the validation to fail
+        $this->assertFalse($validator->passes());
+
+        // Check for specific error related to content
+        $this->assertArrayHasKey('content', $validator->errors()
+            ->messages());
     }
 }

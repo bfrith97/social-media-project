@@ -14,7 +14,9 @@ use App\Services\UserService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use Mockery;
+use Spatie\Activitylog\Models\Activity;
 use Tests\TestCase;
 use Tests\Traits\ModelFactoryTrait;
 
@@ -98,5 +100,87 @@ class PostControllerTest extends TestCase
         ], JSON_THROW_ON_ERROR), $response->content());
 
         Mockery::close();
+    }
+
+    public function test_post_request_validation_passes_with_correct_data(): void
+    {
+        $data = [
+            'content' => 'Sample post',
+            'user_id' => $this->user->id,
+        ];
+
+        // Manually create the validator instance
+        $validator = Validator::make($data, (new PostRequest())->rules());
+
+        // Check if the data passes the validation
+        $validatedData = $validator->validate();
+
+        // Expect the validation to succeed
+        $this->assertTrue($validator->passes());
+
+        // Assert that the data has been validated
+        $this->assertEquals([
+            'content' => 'Sample post',
+            'user_id' => $this->user->id,
+        ], $validatedData);
+    }
+
+    public function test_post_request_validation_fails_with_incorrect_data(): void
+    {
+        $data = [
+            'content' => null,
+            'user_id' => $this->user->id,
+        ];
+
+        // Manually create the validator instance
+        $validator = Validator::make($data, (new PostRequest())->rules());
+
+        // Expect the validation to fail
+        $this->assertFalse($validator->passes());
+
+        // Check for specific error related to content
+        $this->assertArrayHasKey('content', $validator->errors()
+            ->messages());
+    }
+
+    public function test_activity_service_returns_correct_response(): void
+    {
+        $this->actingAs($this->user);
+
+        // Mock the CommentRequest
+        $request = Mockery::mock(PostRequest::class);
+        $request->allows('validated')
+            ->andReturns([
+                'content' => 'Sample post',
+                'user_id' => $this->user->id,
+                'is_feeling' => 0,
+            ]);
+
+        $data = $request->validated();
+
+        $post = Post::create($data);
+
+        // Create an instance of the service being tested
+        $service = new ActivityService();
+
+        // Call the method under test
+        $result = $service->storeActivity($post, 'posts.show', $post->id, 'bi bi-box-arrow-right', 'created a post');
+        unset($result['id'], $result['created_at'], $result['updated_at']);
+
+        // Assertions to verify the correct behavior
+        $this->assertInstanceOf(Activity::class, $result);
+        $this->assertEquals([
+            "log_name" => "default",
+            "properties" => [
+                "route" => route("posts.show", $post->id),
+                "icon" => "bi bi-box-arrow-right",
+            ],
+            "causer_id" => $this->user->id,
+            "causer_type" => "App\Models\User",
+            "batch_uuid" => null,
+            "subject_id" => $post->id,
+            "subject_type" => "App\Models\Post",
+            "description" => "created a post",
+        ], $result->attributesToArray());
     }
 }

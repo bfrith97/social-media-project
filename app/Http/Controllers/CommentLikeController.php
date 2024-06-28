@@ -42,9 +42,8 @@ class CommentLikeController extends BaseController
     public function store(CommentLikeRequest $request): ?JsonResponse
     {
         try {
-            $response = $this->commentLikeService->storeCommentLike($request);
+            [$like, $type, $comment] = $this->commentLikeService->storeCommentLike($request);
 
-            [$like, $type, $comment] = $response;
             $this->activityService->storeActivity($like, "$type.show", $comment->item_id, 'bi bi-hand-thumbs-up', 'liked a comment');
 
             return response()->json([
